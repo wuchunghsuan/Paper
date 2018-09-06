@@ -1,0 +1,4 @@
+SCache.*
+!SCache.tex
+!SCache.pdf
+.DS_Store
