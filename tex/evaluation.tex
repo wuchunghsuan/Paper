@@ -124,6 +124,7 @@ Terasort consists of two consecutive shuffles. The first shuffle reads the input
 As shown in Figure \ref{fig:terasort}, we present the first shuffle as the evaluation of shuffle optimization. At the same time, we use the second shuffle to evaluate in the dimension of scheduling locality (Figure \ref{fig:terashuffle}). For the first shuffle, Spark with SCache runs 2 $\times$ faster during the reduce stage with the input data in a range from 10GB to 200GB. At the same time, Figure \ref{fig:terashuffle} reveals that SCache pre-scheduling produces exactly same network traffic of the second shuffle as Spark, which implies that SCache pre-scheduling can obtain the best locality while balancing the load. In contrast, Spark delays scheduling reduce tasks with the shuffle map output to achieve this optimum.
 
 \begin{figure*}
+	\centering
 	\includegraphics[width=0.85\textwidth]{fig/tpcds}
 	\caption{TPC-DS Benchmark Evaluation}
 	\label{fig:tpcds}
