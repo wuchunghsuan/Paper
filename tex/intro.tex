@@ -58,6 +58,11 @@ To make things worse, we note that the above deficiencies generally exist in mos
 
 % challenge point by point, inside the problem
 
+
+{\color{blue}
+In order to visually describe above-mentioned resources scheduling and analyze deficiencies, we propose \textit{Framework Resources Quantification}(FRQ) model. FRQ model quantifies computing and I/O resources and displays resources scheduling strategy of DAG framework in time dimension. We use FRQ model to help us analyze the deficiencies of resources scheduling and optimize it.
+}
+
 Can we efficiently optimize the data shuffling without significantly changing every framework?
 In this paper, we answer this question in the affirmative with S(huffle)Cache, an opne source plug-in system which provides a shuffle-specific optimization for different DAG computing frameworks.
 Specifically, SCache takes over the whole shuffle phase from the underlying framework by providing a cross-framework API for both shuffle write and read.
@@ -75,5 +80,10 @@ The main challenge to achieve this optimization is \textit{pre-scheduling reduce
 The second challenge is the \textit{in-memory data management}. To prevent shuffle data touching the disk, SCache leverages extra memory to store the shuffle data. However, the memory is a precious resource for DAG computing. To minimize the reserved memory while maximizing the performance gain of optimization and memory utilization, we propose two constraints: all-or-nothing and context-aware (Section \ref{memorymanage}).
 %The memory management scheme follows these two contraints to switch shuffle data blocks on and off reserved memory.
 
+{\color{red}
 We have implemented SCache and a customized Apache Spark \cite{apachespark}. The performance of SCache is evaluated with both simulations and testbed experiments on a 50-node Amazon EC2 cluster. We conduct basic test GroupByTest. We also evaluate Terasort \cite{spark-tera} benchmark and standard workloads like TPC-DS \cite{tpcds} for multi-tenant modeling. In a nutshell, SCache can eliminate explicit shuffle process by at most $89\%$ in varied application scenarios. More impressively, SCache reduces $~40\%$ of overall completion time of TPC-DS queries on average.
+}
 
+{\color{blue}
+We have implemented SCache, a customized Apache Spark \cite{apachespark} and a customized Apache Hadoop. We have also designed a mathematic model called \textit{Framework Resources Quantification}(FRQ) model. We use FRQ model to analyze the principle of SCache and calculate the time of each phase of computing job. The performance of SCache is evaluated with both simulations and testbed experiments on a 50-node Amazon EC2 cluster on both Apache Spark and Apache Hadoop. On Apache Spark, we conduct basic test GroupByTest. We also evaluate Terasort \cite{spark-tera} benchmark and standard workloads like TPC-DS \cite{tpcds} for multi-tenant modeling. On Apache Hadoop, we focus on Terasort benchmark. In a nutshell, SCache can eliminate explicit shuffle process by at most $89\%$ in varied application scenarios. More impressively, SCache reduces $~40\%$ of overall completion time of TPC-DS queries on average on Apache Spark. On Apache Hadoop, Scache optimize end-to-end Terasort completion time by 15\%.
+}
