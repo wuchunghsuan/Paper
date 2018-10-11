@@ -246,7 +246,7 @@ Table \ref{table1} shows the calculational results of FRQ model in the lab envir
 	\end{aligned}
 \end{equation}
 
-Table \ref{table2} shows the calculational results of FRQ model in Amazon EC2 environment. \(V_{Map}, V_{Shuffle},\) and \(V_{Reduce}\) are modified because of the different hardware devices. We also set K to the same empirical value. The formulas in the table are all the same except \(T_{P\_Shuffle}\). In this environment, Terasort on Hadoop Mapreduce satisfies the situation in Figure \ref{fig:model_scache2}(\(V_{Map} \times R < V_{Shuffle}\)), thus the formula of \(T_{P\_Shuffle}\) is Equation \ref{equation_Tpshuffle2}. In the case of Legacy, \(T_{P\_Shuffle}\) is still euqal to \(T_{Shuffle}\).
+Table \ref{table2} shows the calculational results of FRQ model in Amazon EC2 environment. \(V_{Map}, V_{Shuffle},\) and \(V_{Reduce}\) are modified because of the different hardware devices. We also set K to the same empirical value. The formulas in the table are all the same except \(T_{P\_Shuffle}\). In this environment, Terasort on Hadoop Mapreduce satisfies the situation in Figure \ref{fig:model_scache2}(\(V_{Map} \times R < V_{Shuffle}\)), thus the formula of \(T_{P\_Shuffle}\) is Equation \ref{equation_Tpshuffle2}. In the previous case, \(T_{P\_Shuffle}\) is still euqal to \(T_{Shuffle}\).
 
 \begin{figure}
 	\centering
@@ -263,7 +263,7 @@ Table \ref{table2} shows the calculational results of FRQ model in Amazon EC2 en
 				\label{fig:hadoop_net2}
 			\end{minipage}
 		\end{subfigure}
-		\caption{\color{blue}Network utilization of one node when using SCache}
+		\caption{\color{blue}Network utilization on Hadoop Mapreduce with SCache}
 		\label{fig:hadoop_net}
 	\end{minipage}
 \end{figure}
