@@ -1,4 +1,7 @@
 SCache.*
 !SCache.tex
 !SCache.pdf
+coverletter.*
+!coverletter.tex
+!coverletter.pdf
 .DS_Store
