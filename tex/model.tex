@@ -13,10 +13,10 @@ In this chapter, we introduce \textit{Framework Resources Quantification}(FRQ) m
 FRQ model quantifies computing and I/O resources and displays them in time dimension. According to FRQ model, we can calculate the execution time required by the application under any circumstances, including different DAG framework, hardware environment, and so on. Therefore FRQ model is able to help us analyze the resources scheduling of DAG framework and evaluate their performance. We will first introduce FRQ model in Subsection \ref{model_overview}. In the following Subsection \ref{model_analysis}, we will use FRQ model to describe three different computation job and analyze their performance. In the last Subsection \ref{model_verification}, we will use the actual experimental results to verify the FRQ model.
 
 \subsection{The FRQ Model}\label{model_overview}
-The current distributed parallel computing frameworks mostly use DAG(Directed acyclic graph) to describe computation logic. A shuffle phase is required between each adjacent DAG computation phase. In order to better analyze the relationship between the computation phase and the shuffle phase, we propose FRQ model. After quantifying computing and I/O resources, FRQ model is able to describe different resource scheduling strategies. For convenience, we introduce FRQ model by taking a simple MapReduce as an example in this section.
+The current distributed parallel computing frameworks mostly use \textit{Directed acyclic graphs}(DAGs) to describe computation logic. A shuffle phase is required between each adjacent DAG computation phase. In order to better analyze the relationship between the computation phase and the shuffle phase, we propose FRQ model. After quantifying computing and I/O resources, FRQ model is able to describe different resource scheduling strategies. For convenience, we introduce FRQ model by taking a simple MapReduce as an example in this section.
 
 Figure \ref{fig:model_basic} shows how the FRQ model describes a MapReduce task. FRQ model has five input parameters:
-\begin{itemize}
+\begin{enumerate}
 	\item Input Data Size\((D)\): The data size of the computation phase.
 	\item Data Conversion Rate\((R)\): The conversion rate of the input data to the shuffle data during a computation phase. This conversion rate depends on the algorithm used in the computation phase.
     \item Computation Round Number\((N)\): The number of rounds needed to complete the computation phase using the current computation resources. The number of rounds depends on the current computation resources and the settings of the computation job. Take Hadoop MapReduce as an example, suppose we have 50 CPUs and enough memory, the Map phase consists of 200 map tasks. Then we need 4 rounds of computation to complete the Map phase.
@@ -24,7 +24,7 @@ Figure \ref{fig:model_basic} shows how the FRQ model describes a MapReduce task.
     The computation speed for each computation phase. The computation speed depends on the algorithm used in the computation phase.
     \item Shuffle Speed\((V_{Shuffle})\): 
     Transmission speed during shuffle. Shuffle speed depends on Network and storage device bandwidth.
-\end{itemize}
+\end{enumerate}
 
 We can calculate the execution time of each phase of the job with these five parameters. Obviously, the total execution time of job in this case is the sum of the Map phase time and Reduce phase time:
 \begin{equation}
