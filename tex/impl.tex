@@ -33,7 +33,7 @@ The daemon bridges the communication between {\color{blue}DAG framework} and SCa
 % }
 {\color{blue}
 When a DAG job is submitted, the DAG information will be generated in framework master scheduler. 
-Before the computing tasks begin, the shuffle dependecies are determined based on job configuration.
+Before the computing tasks begin, the shuffle dependencies are determined based on job configuration.
 }
 For each shuffle dependency, the shuffle ID, the type of partitioner, the number of map tasks, and the number of reduce tasks are included.  If there is a specialized partitioner, such as range partitioner, in the shuffle dependencies, the daemon will insert a sampling application before the {\color{blue}computing job}. We will elaborate the sampling procedure in the Section \ref{sampling}.
 % \begin{minipage}{\columnwidth}

@@ -22,7 +22,7 @@ Shuffle write starts at the end of a map task and writes the partitioned map out
 Shuffle read starts at the beginning of a reduce task and fetches the partitioned data from remote as its input. 
 
 %In short, shuffle is loosely coupled with application context and it's I/O intensive.
-\textbf{Impact of shuffle process}. Shuffle is I/O intensive, which might introduces a significant latency to the application. 
+\textbf{Impact of shuffle process}. Shuffle is I/O intensive, which might introduce a significant latency to the application. 
 Reports show that 60\% of MapReduce jobs at Yahoo! and 20\% at Facebook are shuffle-heavy workloads \cite{shufflewatcher}. 
 For those shuffle-heavy jobs, the shuffle latency may even dominate Job Completion Time (JCT).
 For instance, a MapReduce trace analysis from Facebook shows that shuffle accounts for 33\% JCT on average, up to 70\% in shuffle-heavy jobs \cite{managing}.

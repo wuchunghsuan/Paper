@@ -16,3 +16,11 @@
 
 - complete biography
 - At least 3 tpds ref
+
+## v2.1
+
+- FRQ model displays utilization of resources in time dimension and calculate exectuion  -》 execution
+- 统一SCache写法
+- , shuffle phase delay the execution time of reduce phase.  -> delays
+- which might introduces extra network traffic in cluster.  => introduce
+- , the shuffle dependecies are determined based on job configuration.  =》 dependencies
