@@ -1,5 +1,4 @@
 \section{Related Work}
-This section describes related work of shuffle optimization.
 
 {\color{blue}
 \textbf{Modeling}: Most well-known DAG computing frameworks use similar \textit{Bulk Synchronize Parallel}(BSP)\cite{valiant1990bridging} model to control data synchronization in each computing phase, i.e. \textit{stage} in Spark, \textit{superstep} in Pregel\cite{malewicz2010pregel} and so on(Apache Hadoop Madpreduce\footnote{http://hadoop.apache.com/} can also be considered as a special case of only one superstep in BSP model). 
@@ -12,8 +11,24 @@ The model in \cite{verma2011aria} is not able to accurately describe the overhea
 Different from these models, our FRQ model quantifies computing and I/O resources and displays them in time dimension. FRQ model focuses on describing the overhead caused by shuffle in different scheduling strategies, which satisfy our demand.
 }
 
-\textbf{Pre-scheduling}: Slow-start from Apache Hadoop MapReduce is the most classic approach to handle shuffle overhead. Starfish \cite{starfish} gets sampled data statics for self-tuning system parameters (e.g. slow-start, map and reduce slot ratio, etc). DynMR \cite{dynmr} dynamically starts reduce tasks in late map stage to decrease the time of waiting for outputs of map tasks. All of them left the explicit I/O time in an occupied computation slot. Instead, SCache can start shuffle pre-fetching without consuming slots. iShuffle \cite{ishuffle} decouples shuffle from reducers and designs a centralized shuffle controller. But it can neither handle multiple shuffles nor schedule multiple rounds of reduce tasks. iHadoop \cite{ihadoop} aggressively pre-schedules tasks in multiple successive stages, in order to start fetching data from previous stage earlier. But we have proved that randomly assign tasks may hurt the overall performance in Section \ref{randomassign}. Different from these works, SCache pre-schedules multiple shuffles without breaking load balancing by combining DAG information and heuristic algorithms.
+\textbf{Pre-scheduling}: Slow-start from Apache Hadoop MapReduce is a classic approach to handle shuffle overhead. 
+Starfish \cite{starfish} gets sampled data statics for self-tuning system parameters (e.g. slow-start, etc). 
+DynMR \cite{dynmr} dynamically starts reduce tasks in late map stage. 
+All of them have the explicit I/O time in occupied slots. 
+SCache instead starts shuffle pre-fetching without consuming slots. 
+iShuffle \cite{ishuffle} decouples shuffle from reducers and designs a centralized shuffle controller. 
+But it can neither handle multiple shuffles nor schedule multiple rounds of reduce tasks. 
+iHadoop \cite{ihadoop} aggressively pre-schedules tasks in multiple successive stages to start fetching shuffle. 
+But we have proved that randomly assign tasks may hurt the overall performance in Section \ref{randomassign}. 
+Different from these works, SCache pre-schedules multiple shuffles without breaking load balancing. 
 
-\textbf{Delay-scheduling}: Delay Scheduling \cite{delay} delays tasks assignment to get better data locality, which can reduce the network traffic. ShuffleWatcher \cite{shufflewatcher} delays shuffle fetching when network is saturated. At the same time, it achieves better data locality. Both Quincy \cite{quincy} and Fair Scheduling \cite{preemptive} can reduce shuffle data by optimizing data locality of map tasks. But all of them can not mitigate explicit I/O in both map and reduce tasks. In addition their optimizations fluctuate under different network performances and data distributions, whereas SCache can provide a stable performance gain by shuffle in-memory caching and pre-fetching.
+%  by combining DAG information and heuristic algorithms.
+\textbf{Delay-scheduling}: Delay Scheduling \cite{delay} delays tasks assignment to get better data locality, which can reduce the network traffic. 
+ShuffleWatcher \cite{shufflewatcher} delays shuffle fetching when network is saturated. 
+At the same time, it achieves better data locality. 
+Both Quincy \cite{quincy} and Fair Scheduling \cite{preemptive} can reduce shuffle data by optimizing data locality of map tasks. 
+But all of them cannot mitigate explicit I/O in both map and reduce tasks. 
+In addition, their optimizations fluctuate under different network performances and data distributions, whereas SCache can provide a stable performance gain by shuffle data pre-fetching and in-memory caching.
 
-\textbf{Network layer optimization}: Varys \cite{varys} and Aalo \cite{aalo} provide the network layer optimization for shuffle transfer. Though the efforts are limited throughout whole shuffle process, they can be easily applied on SCache to further improve the performance.
+\textbf{Network layer optimization}: Varys \cite{varys} and Aalo \cite{aalo} provide the network layer optimization for shuffle transfer. 
+Though the efforts are limited throughout whole shuffle process, they can be easily applied on SCache to further improve the performance.
