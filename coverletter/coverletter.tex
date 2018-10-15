@@ -20,10 +20,10 @@ FRQ model quantifies computing and I/Oresources and displays them in time dimens
 Furthermore, FRQ model can calculate execution time of DAG framework under difference resources allocation strategies. 
 \item 
 In conference paper, we only implement SCache on Spark. To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce. 
-By employing shuffle data management, SCache can also optimize the computing performance of Hadoop Mapreduce.
+By employing shuffle data management, SCache can also optimize the computing performance of Hadoop MapReduce.
 \item
-In experiment, we append two parts. First we verify FRQ model under two different environments, the error between calculated value and experimental value is basically below 10\%. Furthermore, we evaluate the performance of SCache on Hadoop Mapreduce in the same environment as conference paper.
-After utilizing pre-fetching of SCache, Hadoop Mapreduce with SCache optimize overall job execution time by 15\%.
+In experiment, we append two parts. First we verify FRQ model under two different environments, the error between calculated value and experimental value is basically below 10\%. Furthermore, we evaluate the performance of SCache on Hadoop MapReduce in the same environment as conference paper.
+After utilizing pre-fetching of SCache, Hadoop MapReduce with SCache optimize overall job execution time by 15\%.
 \end{enumerate}
 
 Besides the major contributions, we also revise the paper in many places, including writing and more related work. We believe that the added content makes sufficient contribution to this journal submission.

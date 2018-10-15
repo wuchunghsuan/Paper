@@ -3,7 +3,7 @@
 In large-scale data-parallel analytics, shuffle, or the cross-network read and aggregation of partitioned data between tasks with data dependencies, usually brings in large overhead. Due to the dependency constrains, execution of those descendant tasks could be delayed by logy shuffles.
 To reduce shuffle overhead, we present \textit{SCache}, an open source plug-in system that particularly focuses on shuffle optimization. 
 {\color{blue}
-During shuffle optimization process, we propose a performance model called \textit{Framework Resources Quantification}(FRQ) model. 
+During shuffle optimization process, we propose a performance model called \textit{Framework Resources Quantification} (FRQ) model. 
 FRQ model displays utilization of resources in time dimension and calculate execution time of computing jobs on different DAG frameworks. 
 We use FRQ model to assist in analyzing shuffle process and verify SCache shuffle optimization by mathematics.
 }

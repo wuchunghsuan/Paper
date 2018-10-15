@@ -279,7 +279,7 @@ Inside the $SWAP\_TASKS$, tasks will be selected and swapped without exceeding t
 	\small
 	\Procedure{\Large m\_schedule}{$m, host\_id, p\_reduces, \text{\emph{shuffles}}$}
 		\State $m\gets$ partition number of map tasks
-		\Comment \emph{shuffles} is the previous schedule result 
+		\Comment \emph{shuffles} are the previous schedule result 
 		\ForAll{$r$ in $p\_reduces$}
 			\State $r.size \mathrel{+}= \text{\emph{shuffles}}\left[r.rid\right].size$
 			\State $new\_prob\gets \text{\emph{shuffles}}\left[r.rid\right].size / r.size$

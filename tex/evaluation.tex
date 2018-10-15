@@ -12,12 +12,12 @@ Then we use a recognized shuffle intensive benchmark --- Terasort to evaluate SC
 In order to prove the performance gain of SCache with a real production workload, we also evaluate Spark TPC-DS\footnote{https://github.com/databricks/spark-sql-perf} and present the overall performance improvement.
 {\color{blue}
 To prove SCache compatibility as a cross-framework plug-in, we implemented SCache on both Hadoop MapReduce and Spark. 
-Due to the simple DAG computing in Hadoop MapReduce, we only use Terasort as a shuffle-heavy benchmark to evaluate the performance of Hadoop Mapreduce with SCache.
+Due to the simple DAG computing in Hadoop MapReduce, we only use Terasort as a shuffle-heavy benchmark to evaluate the performance of Hadoop MapReduce with SCache.
 }
 Finally, we measure the overhead of weighted reservoir sampling. 
 In summary, SCache can decrease ~$89\%$ time of Spark shuffle without introducing extra network transfer.
 More impressively, the overall completion time of TPC-DS can be improved ~$40\%$ on average by applying the optimization from SCache.
-{\color{blue}Meanwhile, Hadoop Mapreduce with SCache optimize job completion time by up to 15\% and an average of 13\%}
+{\color{blue}Meanwhile, Hadoop MapReduce with SCache optimize job completion time by up to 15\% and an average of 13\%}
 
 % Because a complex Spark application consists of multiple stages. The completion time of each stage varies under different input data, configurations and different number of stages. This uncertainty leads to the dilemma that dramatic fluctuation occurs in overall performance comparison. To present a straightforward illustration, we limit the scope of most evaluations in a single stage.
 \begin{figure*}
@@ -80,7 +80,7 @@ We run the experiments on a 50-node m4.xlarge cluster on Amazon EC2\footnote{htt
 Each node has 16GB memory and 4 CPUs. The network bandwidth provided by Amazon is insufficient. 
 Our evaluations reveal the bandwidth is only about 300 Mbps (see Figure \ref{fig:util}).
 
-\subsection{Simple DAG Analysis}
+\subsection{Simple DAG Analysis}\label{simpledag}
 %\subsubsection{Hardware Utilization}
 We first run the same single shuffle test shown in Figure \ref{fig:util}. 
 For each stage, we run 5 rounds of tasks with different input size. 
@@ -177,13 +177,13 @@ It implies that the heuristic locality swap of SCache can obtain the best locali
 \end{figure}
 
 {\color{blue}
-\subsection{Hadoop Mapreduce with SCache}
+\subsection{Hadoop MapReduce with SCache}
 
 To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce as the external shuffle service and co-scheduler. Although \textit{pre-scheduling reduce tasks} is not critical for the simple DAG computing in Hadoop MapReduce, some shuffle-heavy jobs on Hadoop Madpreduce can still be optimized by SCache shuffle data management.
 
-Figure \ref{fig:hadoop_terasort} shows the hardware resource utilization of Hadoop Mapreduce running Terasort. Both figures have the same proportion of time. Hadoop MapReduce with SCache brings 15\% of total time optimization with 384GB input data size. 
-As shown in the Figure \ref{fig:hadoop_terasort_origin}, Hadoop Mapreduce without SCache writes intermediate data locally in the Map phase. The shuffle phase and reduce phase start simultaneously. Because the large amount of shuffle data reaches the network bottleneck, The beginning part of reduce needs to wait needs to wait for network transfer. This causes the CPU resources to be idle. 
-As shown in the Figure \ref{fig:hadoop_terasort_scache}, Hadoop Madpreduce with SCache start pre-fetching in the Map phase. This avoids the Reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilize the idle IO throughput in the Map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after better fine-grained utilization of hardware resources, Hadoop Mapreduce with SCache optimize Terasort overall completion time by up to 15\% and an average of 13\% with input data sizes from 128GB to 512GB.
+Figure \ref{fig:hadoop_terasort} shows the hardware resource utilization of Hadoop MapReduce running Terasort. Both figures have the same proportion of time. Hadoop MapReduce with SCache brings 15\% of total time optimization with 384GB input data size. 
+As shown in the Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache writes intermediate data locally in the Map phase. The shuffle phase and reduce phase start simultaneously. Because the large amount of shuffle data reaches the network bottleneck, the beginning part of reduce needs to wait needs to wait for network transfer. This causes the CPU resources to be idle. 
+As shown in the Figure \ref{fig:hadoop_terasort_scache}, Hadoop Madpreduce with SCache start pre-fetching in the Map phase. This avoids the Reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilizes the idle IO throughput in the Map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after better fine-grained utilization of hardware resources, Hadoop MapReduce with SCache optimize Terasort overall completion time by up to 15\% and an average of 13\% with input data sizes from 128GB to 512GB.
 }
 
 \begin{figure}
@@ -192,23 +192,23 @@ As shown in the Figure \ref{fig:hadoop_terasort_scache}, Hadoop Madpreduce with 
 		\begin{subfigure}{\linewidth}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/hadoop_terasort_scache}
-				\caption{\color{blue}Hadoop Mapreduce With SCache}
+				\caption{\color{blue}Hadoop MapReduce With SCache}
 				\label{fig:hadoop_terasort_scache}
 			\end{minipage}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/hadoop_terasort_origin}
-				\caption{\color{blue}Hadoop Mapreduce Without SCache}
+				\caption{\color{blue}Hadoop MapReduce Without SCache}
 				\label{fig:hadoop_terasort_origin}
 			\end{minipage}
 		\end{subfigure}
-		\caption{\color{blue}CPU utilization and I/O throughput of a node during a Hadoop Mapreduce Terasort job}
+		\caption{\color{blue}CPU utilization and I/O throughput of a node during a Hadoop MapReduce Terasort job}
 		\label{fig:hadoop_terasort}
 	\end{minipage}
 \end{figure}
 
 \begin{figure}
 	\includegraphics[width=\linewidth]{fig/hadoop_terasort_time}
-	\caption{\color{blue}Hadoop Mapreduce Terasort completion time}
+	\caption{\color{blue}Hadoop MapReduce Terasort completion time}
 	\label{fig:hadoop_terasort_time}
 \end{figure}
 
