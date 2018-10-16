@@ -48,3 +48,16 @@
 - The execution is seperated into the phases: Read, Map, Collect, Spill, Merge, Shuffle, Merge, and Reduce.  -》 separated
 - 完成bio
 - 完成作者，添加通讯作者
+
+## fzw revision
+
+- shuffle-sensitive -> shuffle-heavy
+- textit groupbytest
+- varied  application  -scenarios-.
+- modify section4 description.
+- original scheduler in framework -master-.
+- When a DAG job is submitted, the DAG information will be generated in framework task scheduler.
+- Before the computing tasks begin, the shuffle dependencies are determined based on DAG.
+- modification in subsection Analysis of cross-framework capability.
+- taking a simple MapReduce job.
+- IO -> I/O
