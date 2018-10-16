@@ -8,13 +8,13 @@ This section presents an overview of the implementation of SCache.
 We first present the system overview and the detail of sampling in Subsection \ref{arch}. 
 The following \ref{memorymanage} subsection focuses on the two constraints on memory management.
 In Subsection \ref{crossframework}, we will evaluate cross-framework capability of SCache based on Hadoop MapReduce and Spark. 
-At last, we discuss the cost of adapting SCache and the fault tolerance. 
+At last, we discuss the cost of adapting SCache and fault tolerance. 
 }
 
 
 \subsection{System Overview}\label{arch}
 SCache consists of three components: a distributed shuffle data management system, a DAG co-scheduler, and a %{\color{red}daemon inside Spark.}
-{\color{blue} worker daemon. As a plug-in system, SCache needs to rely on a DAG framework.} As shown in Figure \ref{fig:architecture}, SCache employs the legacy master-slaves architecture like GFS \cite{gfs} for shuffle data management system. 
+{\color{blue} worker daemon. As a plug-in system, SCache needs to rely on a DAG framework.} As shown in Figure \ref{fig:architecture}, SCache employs the legacy master-slaves architecture like GFS \cite{gfs} for the shuffle data management system. 
 The master node of SCache coordinates the shuffle blocks globally with application context. The worker node reserves memory to store blocks.
 The coordination provides two guarantees: (a)data is stored in memory before tasks start and (b)data is scheduled on-off memory with all-or-nothing and context-aware constraints. 
 The daemon bridges the communication between %{\color{red}Spark}
@@ -91,7 +91,7 @@ For each shuffle dependency, the shuffle ID, the type of partitioner, the number
 % \end{minipage}
 
 When a map task finishes computing, the shuffle write implementation of DAG framework is modified to call the SCache API and move all the blocks out of {\color{blue}framework worker} through memory copy. 
-After that the slot will be released (without being blocked on disk operations).
+After that, the slot will be released (without being blocked on disk operations).
 When a block of the map output (i.e., "map output" in Figure \ref{fig:shuffle}) is received, the SCache worker will send the block ID and the size to the master.
 If the collected map output data reach the observation threshold, the DAG co-scheduler will run the scheduling Algorithm \ref{hminheap} or \ref{mhminheap} to pre-schedule the reduce tasks and then broadcast the scheduling result to start pre-fetching on each worker.
 % After that, when a map task is finished, each node will receive a broadcast message. 
@@ -211,7 +211,7 @@ If all the units are completed, SCache selects victims based on two factors-\tex
 % }
 {\color{blue}
 \subsection{Analysis of cross-framework capability}\label{crossframework}
-Shuffle optimization of SCache inevitably requires modification on dependent DAG framework. SCache provides API through RPC, such as \textit{putBlock (blockId)}, \textit{getBlock (blockId)}, and \textit{getScheduleResult (shuffleId)}. In order to use SCache, we mainly need to modify the two parts of the framework: (a)We need to insert codes in the DAG scheduler to let framework provide DAG information and follow pre-scheduled result of SCache. (b)The shuffle data between the Map task and the Reduce task should be transfered to SCahce Storge Management.
+Shuffle optimization of SCache inevitably requires modification on dependent DAG framework. SCache provides API through RPC, such as \textit{putBlock (blockId)}, \textit{getBlock (blockId)}, and \textit{getScheduleResult (shuffleId)}. In order to use SCache, we mainly need to modify the two parts of the framework: (a)We need to insert codes in the DAG scheduler to let framework provide DAG information and follow the pre-scheduled result of SCache. (b)The shuffle data between the Map task and the Reduce task should be transferred to SCahce Storge Management.
 
 To prove the cross-framework capability of SCache, we adapt SCache on Hadoop MapReduce and Spark respectively. Taking Hadoop MapReduce as an example, we insert codes in ResourceManager and modify codes in MapTask and ReduceTask to call SCache API through RPC. It takes about 400 lines of code. In Spark, we mainly modified the DAGScheduler and the corresponding data fetcher. 
 It only takes about 500 lines of code. Such hundreds of lines of code modification are very small compared to the hundreds of thousands of lines of code in DAG framework. we believe that the costs of enabling SCache on other DAG computing frameworks, such as Tez \cite{tez}, are also very low.

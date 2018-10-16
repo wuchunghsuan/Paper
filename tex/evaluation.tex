@@ -160,32 +160,6 @@ In this shuffle, Spark schedules a reduce task to the node that produces most in
 By doing this, Spark minimizes the shuffle data through network. 
 At the same time, Figure \ref{fig:terashuffle} reveals that SCache produces exactly same network traffic as Spark. 
 It implies that the heuristic locality swap of SCache can obtain the best locality while balancing the load. 
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.85\textwidth]{fig/tpcds}
-	\caption{TPC-DS Benchmark Evaluation}
-	\label{fig:tpcds}
-	\vspace{-1em}
-\end{figure*}
-\begin{figure}
-	\centering
-	\includegraphics[width=0.6\linewidth]{fig/sampling}
-	\caption{Sampling Overhead}
-	\label{fig:sampling}
-	\vspace{-1em}
-\end{figure}
-
-{\color{blue}
-\subsection{Hadoop MapReduce with SCache}
-
-To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce as the external shuffle service and co-scheduler. Although \textit{pre-scheduling reduce tasks} is not critical for the simple DAG computing in Hadoop MapReduce, some shuffle-heavy jobs on Hadoop Madpreduce can still be optimized by SCache shuffle data management.
-
-Figure \ref{fig:hadoop_terasort} shows the hardware resource utilization of Hadoop MapReduce running Terasort. Both figures have the same proportion of time. Hadoop MapReduce with SCache brings 15\% of total time optimization with 384GB input data size. 
-As shown in the Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache writes intermediate data locally in the map phase. The shuffle phase and reduce phase start simultaneously. Because the large amount of shuffle data reaches the network bottleneck, the beginning part of reduce needs to wait needs to wait for network transfer. This causes the CPU resources to be idle. 
-As shown in the Figure \ref{fig:hadoop_terasort_scache}, Hadoop Madpreduce with SCache start pre-fetching in the map phase. This avoids the reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilizes the idle IO throughput in the map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after better fine-grained utilization of hardware resources, Hadoop MapReduce with SCache optimize Terasort overall completion time by up to 15\% and an average of 13\% with input data sizes from 128GB to 512GB.
-}
-
 \begin{figure}
 	\centering
 	\begin{minipage}[hb]{\linewidth}
@@ -205,11 +179,36 @@ As shown in the Figure \ref{fig:hadoop_terasort_scache}, Hadoop Madpreduce with 
 		\label{fig:hadoop_terasort}
 	\end{minipage}
 \end{figure}
-
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.85\textwidth]{fig/tpcds}
+	\caption{TPC-DS Benchmark Evaluation}
+	\label{fig:tpcds}
+	\vspace{-1em}
+\end{figure*}
 \begin{figure}
 	\includegraphics[width=\linewidth]{fig/hadoop_terasort_time}
 	\caption{\color{blue}Hadoop MapReduce Terasort completion time}
 	\label{fig:hadoop_terasort_time}
+\end{figure}
+
+
+{\color{blue}
+\subsection{Hadoop MapReduce with SCache}
+
+To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce as the external shuffle service and co-scheduler. Although \textit{pre-scheduling reduce tasks} is not critical for the simple DAG computing such as Hadoop MapReduce, some shuffle-heavy jobs on Hadoop MapReduce can still be optimized by SCache shuffle data management.
+
+Figure \ref{fig:hadoop_terasort} shows the hardware resource utilization of Hadoop MapReduce running Terasort. Both figures have the same proportion of time. Hadoop MapReduce with SCache brings 15\% of total time optimization with 384GB input data size. 
+As shown in Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache writes intermediate data locally in the map phase. The shuffle phase and reduce phase start simultaneously. Because a large amount of shuffle data reaches the network bottleneck, the beginning part of reduce needs to wait for network transfer. This causes the CPU resources to be idle. 
+As shown in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce with SCache start pre-fetching in the map phase. This avoids the reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilizes the idle IO throughput in the map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after better fine-grained utilization of hardware resources, Hadoop MapReduce with SCache optimize Terasort overall completion time by up to 15\% and an average of 13\% with input data sizes from 128GB to 512GB.
+}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\linewidth]{fig/sampling}
+	\caption{Sampling Overhead}
+	\label{fig:sampling}
+	\vspace{-1em}
 \end{figure}
 
 \subsection{Production Workload}

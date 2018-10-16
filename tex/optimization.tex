@@ -131,7 +131,7 @@ So the pre-scheduling can be made if the "prediction" of size of shuffle block i
 % \fi
 
 For the most DAG applications with random large scale input, 
-the $BlockSize_{ji}$ in a particular shuffle can be predicted with decent accuracy by liner regression model (i.e., equation \ref{linearregresion}) based on observation that the ratio of map output size and input size are invariant given the same job configuration \cite{ishuffle, predict}: 
+the $BlockSize_{ji}$ in a particular shuffle can be predicted with decent accuracy by liner regression model (i.e., equation \ref{linearregresion}) based on observation that the ratio of map output size and input size are invariant given the same job configuration \cite{guo2017ishuffle, predict}: 
 \begin{equation}
 \label{linearregresion}
 \begin{aligned}
