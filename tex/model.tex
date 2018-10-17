@@ -33,13 +33,15 @@ We can calculate the execution time of each phase of the job with these five par
     T_{Job} &= T_{Map} + T_{Reduce}
 \end{aligned}
 \end{equation}
-map phase time depends on input data size and Map computation speed:
+
+Map phase time depends on input data size and map computation speed:
 \begin{equation}
 \label{equation_Tmap}
 \begin{aligned}
     T_{Map} &= {{\frac{D}{V_{Map}}}}
 \end{aligned}
 \end{equation}
+
 The reduce phase time formula is as follows:
 \begin{equation}
 \label{equation_Treduce}
@@ -91,6 +93,7 @@ The FRQ model can describe a variety of resource scheduling strategies. First, w
     T_{Job} &= T_{Map} + T_{Shuffle} + T_{Reduce}
 \end{aligned}
 \end{equation}
+
 Apache Spark uses this scheduling strategy by default. Due to serialization, the I/O resource is idle during the reduce phase and map phase. The scheduling strategy is simple and has a lot of room for optimization.
 
 Figure \ref{fig:model_hadoop} shows one of the optimization methods. In this scheduling strategy, shuffle phase and reduce phase start at the same time. In this case, \(T_{P\_Shuffle}\) is equal to \(T_{Shuffle}\). Due to the increase in \(T_{P\_Shuffle}\), the time of reduce phase increases (according to equation \ref{equation_Treduce}). Because the shuffle phase and the computation phase are executed in parallel, the total execution time of a job is the sum of \(T_{Map}\) and \(T_{Reduce}\) (see equation \ref{equation_Tjob}). The execution time of the shuffle phase is hidden in the reduce phase. This scheduling strategy is used by Hadoop MapReduce. After analyzing this model, we believe that this strategy will be more efficient than the above serial strategy in the same situation. Meanwhile, we found that the I/O resource in the map phase is still idle. This scheduling strategy can be optimized.
@@ -273,7 +276,7 @@ Table \ref{table2} shows the calculational results of the FRQ model in Amazon EC
 	\end{minipage}
 \end{figure}
 
-In order to verify the above-mentioned two cases when using SCache, we monitor network utilization and plot it in Figure \ref{fig:hadoop_net}. Figure \ref{fig:hadoop_net1} shows the utilization of Terasort in the in-house environment. The network utilization remains high until the shuffle phase is completed. This situation is consistent with Figure \ref{fig:model_scache1}. Figure \ref{fig:hadoop_net2} shows the utilization in Amazon EC2 environment. 
+In order to verify the above-mentioned two cases when using SCache, we monitor network utilization as Figure \ref{fig:hadoop_net}. Figure \ref{fig:hadoop_net1} shows the utilization of Terasort in the in-house environment. The network utilization remains high until the shuffle phase is completed. This situation is consistent with Figure \ref{fig:model_scache1}. Figure \ref{fig:hadoop_net2} shows the utilization in Amazon EC2 environment. 
 The network utilization has 5 regular peaks. This situation is also consistent with Figure \ref{fig:model_scache2}. Therefore, we believe that the FRQ model is able to accurately describe the performance of a framework with SCache.
 
 In terms of accuracy, the experimental values are all greater than the calculated values. This is because the application has some extra overhead at runtime, such as network warm-up, the overhead of allocating slots, and so on. In the case where the input data is small and the total time is short, the error caused by the overhead is amplified. Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is basically below 10\%, such errors are within tolerance. Therefore, we believe that the FRQ model can accurately describe DAG frameworks.
