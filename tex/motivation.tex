@@ -23,9 +23,9 @@ Shuffle read starts at the beginning of a reduce task and fetches the partitione
 
 %In short, shuffle is loosely coupled with application context and it's I/O intensive.
 \textbf{Impact of shuffle process}. Shuffle is I/O intensive, which might introduce a significant latency to the application. 
-Reports show that 60\% of MapReduce jobs at Yahoo! and 20\% at Facebook are shuffle-heavy workloads \cite{shufflewatcher}. 
+Reports show that $60\%$ of MapReduce jobs at Yahoo! and $20\%$ at Facebook are shuffle-heavy workloads \cite{shufflewatcher}. 
 For those shuffle-heavy jobs, the shuffle latency may even dominate Job Completion Time (JCT).
-For instance, a MapReduce trace analysis from Facebook shows that shuffle accounts for 33\% JCT on average, up to 70\% in shuffle-heavy jobs \cite{managing}.
+For instance, a MapReduce trace analysis from Facebook shows that shuffle accounts for $33\%$ JCT on average, up to $70\%$ in shuffle-heavy jobs \cite{managing}.
 % Besides, the completion time of shuffle correlates with the performance of storage devices, network and even applications.
 % This variation may bring a huge challenge for operators to find the correct configuration of the DAG framework.
 
@@ -72,8 +72,8 @@ At first, both shuffle write and read are tightly coupled with task execution, w
 This blocking I/O operation along with synchronized shuffle read may introduce significant latency, especially in an I/O performance bounded cluster.
 Besides, the legacy of storing shuffle data on disk is inefficient in modern clusters with large memory. 
 Compared to input dataset, the size of shuffle data is relatively small. 
-For example, the shuffle size of Spark Terasort\footnote{https://github.com/ehiggs/spark-terasort} is less than 25\% of input data. 
-The data reported in \cite{makingsense} also show that the amount of data shuffled is less than the input data by as much as 10\%-20\%. 
+For example, the shuffle size of Spark Terasort\footnote{https://github.com/ehiggs/spark-terasort} is less than $25\%$ of input data. 
+The data reported in \cite{makingsense} also show that the amount of data shuffled is less than the input data by as much as $10\%-20\%$. 
 On the other hand, memory based distributed storage systems have been proposed \cite{memcached, tachyon, ramcloud} to move data back to memory, 
 but most of the DAG frameworks still store shuffle data on disks (e.g., Spark \cite{apachespark}, Hadoop MapReduce, Dryad \cite{dryad}, etc).
 We argue that the memory capacity is large enough to store the short-living shuffle data with cautious management.

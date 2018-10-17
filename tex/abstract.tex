@@ -4,7 +4,7 @@ In large-scale data-parallel analytics, shuffle, or the cross-network read and a
 To reduce shuffle overhead, we present \textit{SCache}, an open source plug-in system that particularly focuses on shuffle optimization. 
 {\color{blue}
 During shuffle optimization process, we propose a performance model called \textit{Framework Resources Quantification} (FRQ) model. 
-FRQ model displays utilization of resources in time dimension and calculate execution time of computing jobs on different DAG frameworks. 
+The FRQ model displays utilization of resources in the time dimension and calculates execution time of computing jobs on different DAG frameworks. 
 We use FRQ model to assist in analyzing shuffle process and verify SCache shuffle optimization by mathematics.
 }
 By extracting and analyzing shuffle dependencies prior to the actual task execution, SCache can adopt heuristic pre-scheduling combining with shuffle size prediction to pre-fetch shuffle data and balance load on each node. 
@@ -15,6 +15,6 @@ Meanwhile, SCache takes full advantage of the system memory to accelerate the sh
 % }
 {\color{blue}
 We have implemented SCache as the external shuffle service and co-scheduler on both Apache Spark and Apache Hadoop. The performance of SCache is evaluated with both simulations and testbed experiments on a 50-node Amazon EC2 cluster.
-Those evaluations have demonstrated that, by incorporating SCache, the shuffle overhead of Spark can be reduced by nearly $89\%$, and the overall completion time of TPC-DS queries improves $40\%$ on average. On Apache Hadoop, SCache optimize end-to-end Terasort completion time by 15\%.
+Those evaluations have demonstrated that, by incorporating SCache, the shuffle overhead of Spark can be reduced by nearly $89\%$, and the overall completion time of TPC-DS queries improves $40\%$ on average. On Apache Hadoop, SCache optimizes end-to-end Terasort completion time by $15\%$.
 }
 \end{abstract}
