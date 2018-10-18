@@ -1,10 +1,10 @@
-{\color{blue}
+{\color{black}
 \section{Framework Resources Quantification Model}\label{model}
 
 \begin{figure*}
     \centering
 	\includegraphics[width=0.85\textwidth]{fig/model_basic}
-	\caption{\color{blue}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce}
+	\caption{\color{black}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce}
     \label{fig:model_basic}
     \vspace{-1em}
 \end{figure*}
@@ -72,16 +72,16 @@ For shuffle-heavy computing jobs, we can optimize the job completion time by red
 		\begin{subfigure}{\linewidth}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/model_original}
-				\caption{\color{blue}Full Serial MapReduce}
+				\caption{\color{black}Full Serial MapReduce}
 				\label{fig:model_original}
 			\end{minipage}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/model_hadoop}
-				\caption{\color{blue}Half Parallel MapReduce}
+				\caption{\color{black}Half Parallel MapReduce}
 				\label{fig:model_hadoop}
 			\end{minipage}
 		\end{subfigure}
-		\caption{\color{blue}Framework Resources Quantification (FRQ) Model with Different Scheduling Strategies}
+		\caption{\color{black}Framework Resources Quantification (FRQ) Model with Different Scheduling Strategies}
 		\label{fig:model_strategies}
 	\end{minipage}
 \end{figure}
@@ -104,16 +104,16 @@ Figure \ref{fig:model_hadoop} shows one of the optimization methods. In this sch
 		\begin{subfigure}{\linewidth}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/model_scache1}
-				\caption{\color{blue}If \(V_{Map} \times R \ge V_{Shuffle}\)}
+				\caption{\color{black}If \(V_{Map} \times R \ge V_{Shuffle}\)}
 				\label{fig:model_scache1}
 			\end{minipage}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/model_scache2}
-				\caption{\color{blue}If \(V_{Map} \times R < V_{Shuffle}\)}
+				\caption{\color{black}If \(V_{Map} \times R < V_{Shuffle}\)}
 				\label{fig:model_scache2}
 			\end{minipage}
 		\end{subfigure}
-		\caption{\color{blue}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce in Different Environments}
+		\caption{\color{black}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce in Different Environments}
 		\label{fig:model_scache}
 	\end{minipage}
 \end{figure}
@@ -124,7 +124,7 @@ Figure \ref{fig:model_scache} shows the scheduling strategy for Hadoop MapReduce
 \begin{enumerate}
     \item 
     \(V_{Map} \times R \ge V_{Shuffle}\) (Figure \ref{fig:model_scache1}): 
-	The meaning of \(V_{Map} \times R\) is the speed at which shuffle data is generated. The meaning of the inequality is that the speed of generating shuffle data(\(V_{Map} \times R\)) is greater than or equal to the shuffle speed(\(V_{Shuffle}\)). When the Round1 of the map phase ends, the SCache starts shuffling data until the end of the shuffle phase. Due to shuffle speed is slower, the shuffle phase is uninterrupted. SCache transmits the shuffle data generated in the last round of map phase during the reduce phase. Therefore \(T_{PShuffle}\) is equal to one-\(N\) of the total time of the shuffle phase:
+	The meaning of \(V_{Map} \times R\) is the speed at which shuffle data is generated. The meaning of the inequality is that the speed of generating shuffle data (\(V_{Map} \times R\)) is greater than or equal to the shuffle speed (\(V_{Shuffle}\)). When the Round1 of the map phase ends, the SCache starts shuffling data until the end of the shuffle phase. Due to shuffle speed is slower, the shuffle phase is uninterrupted. SCache transmits the shuffle data generated in the last round of map phase during the reduce phase. Therefore \(T_{PShuffle}\) is equal to one-\(N\) of the total time of the shuffle phase:
 	\begin{equation}
 		\label{equation_Tpshuffle1}
 		\begin{aligned}
@@ -162,7 +162,7 @@ Compared to the original Hadoop MapReduce resource scheduling strategy, Hadoop M
 
 \begin{table*}[!t]
 \renewcommand{\arraystretch}{1.3}
-\caption{\color{blue}Hadoop MapReduce on 4 nodes cluster in the FRQ model}
+\caption{\color{black}Hadoop MapReduce on 4 nodes cluster in the FRQ model}
 \label{table1}
 \centering
 \(D\): GB, \(V_{i}\): GB/s, \(T_{i}\): s
@@ -204,7 +204,7 @@ Compared to the original Hadoop MapReduce resource scheduling strategy, Hadoop M
 \begin{table*}[!t]
 
 \renewcommand{\arraystretch}{1.3}
-\caption{\color{blue}Hadoop MapReduce on 50 AWS m4.xlarge nodes cluster in the FRQ model}
+\caption{\color{black}Hadoop MapReduce on 50 AWS m4.xlarge nodes cluster in the FRQ model}
 \label{table2}
 \centering
 \(D\): GB, \(V_{i}\): GB/s, \(T_{i}\): s
@@ -262,16 +262,16 @@ Table \ref{table2} shows the calculational results of the FRQ model in Amazon EC
 		\begin{subfigure}{\linewidth}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/hadoop_net1}
-				\caption{\color{blue}If \(V_{Map} \times R \ge V_{Shuffle}\)}
+				\caption{\color{black}If \(V_{Map} \times R \ge V_{Shuffle}\)}
 				\label{fig:hadoop_net1}
 			\end{minipage}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/hadoop_net2}
-				\caption{\color{blue}If \(V_{Map} \times R < V_{Shuffle}\)}
+				\caption{\color{black}If \(V_{Map} \times R < V_{Shuffle}\)}
 				\label{fig:hadoop_net2}
 			\end{minipage}
 		\end{subfigure}
-		\caption{\color{blue}Network utilization on Hadoop MapReduce with SCache}
+		\caption{\color{black}Network utilization on Hadoop MapReduce with SCache}
 		\label{fig:hadoop_net}
 	\end{minipage}
 \end{figure}

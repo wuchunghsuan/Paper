@@ -1,7 +1,7 @@
 \section{Related Work}
 
-{\color{blue}
-\textbf{Modeling}: Most representative DAG computing frameworks use similar \textit{Bulk Synchronize Parallel} (BSP)\cite{valiant1990bridging} model to control data synchronization in each computing phase, i.e. \textit{stage} in Spark, \textit{superstep} in Pregel\cite{malewicz2010pregel} and so on (Apache Hadoop MapReduce\footnote{http://hadoop.apache.com/} can also be considered as a special case of only one superstep in BSP model). 
+{\color{black}
+\textbf{Modeling}: Most representative DAG computing frameworks use similar \textit{Bulk Synchronize Parallel} (BSP)\cite{valiant1990bridging} model to control data synchronization in each computing phase, i.e. \textit{stage} in Spark, \textit{superstep} in Pregel\cite{malewicz2010pregel} and so on (Hadoop MapReduce can also be considered as a special case of only one superstep in BSP model). 
 In the process of optimizing the shuffle phases between adjacent computing phases, we design a performance model to assist in analyzing computing process.
 There are also lots of performance models for MapReduce have been proposed, such as \cite{verma2011aria, khan2016hadoop, herodotou2011hadoop, chen2014cresp}.
 Verma et al. \cite{verma2011aria} proposed the ARIA model to estimate the required resources based on the job information, the amount of input data and a specified soft deadline.

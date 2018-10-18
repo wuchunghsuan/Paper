@@ -10,14 +10,14 @@ Then we use a recognized shuffle intensive benchmark --- Terasort to evaluate SC
 \end{figure}
 
 In order to prove the performance gain of SCache with a real production workload, we also evaluate Spark TPC-DS\footnote{https://github.com/databricks/spark-sql-perf} and present the overall performance improvement.
-{\color{blue}
+{\color{black}
 To prove the compatibility of SCache as a cross-framework plug-in, we implemented SCache on both Hadoop MapReduce and Spark. 
 Due to the simple DAG computing in Hadoop MapReduce, we only use Terasort as a shuffle-heavy benchmark to evaluate the performance of Hadoop MapReduce with SCache.
 }
 Finally, we measure the overhead of weighted reservoir sampling. 
 In summary, SCache can decrease ~$89\%$ time of Spark shuffle without introducing extra network transfer.
 More impressively, the overall completion time of TPC-DS can be improved ~$40\%$ on average by applying the optimization from SCache.
-{\color{blue}Meanwhile, Hadoop MapReduce with SCache optimizes job completion time by up to $15\%$ and an average of $13\%$}
+{\color{black}Meanwhile, Hadoop MapReduce with SCache optimizes job completion time by up to $15\%$ and an average of $13\%$}
 
 % Because a complex Spark application consists of multiple stages. The completion time of each stage varies under different input data, configurations and different number of stages. This uncertainty leads to the dilemma that dramatic fluctuation occurs in overall performance comparison. To present a straightforward illustration, we limit the scope of most evaluations in a single stage.
 \begin{figure*}
@@ -146,7 +146,7 @@ In addition, the heuristic algorithm can achieve a balanced pre-scheduling resul
 In overall, SCache can help Spark decrease by ~$89\%$ overhead of the whole shuffle process. 
 
 \subsection{Terasort}
-We also evaluate Terasort\footnote{https://github.com/ehiggs/spark-terasort}-a recognized shuffle intensive benchmark for distributed system analysis.
+We also evaluate Terasort-a recognized shuffle intensive benchmark for distributed system analysis. 
 Terasort consists of two consecutive shuffles. 
 The first shuffle reads the input data and uses a hash partition function for re-partitioning. 
 As shown in Figure \ref{fig:terasort}, Spark with SCache runs 2 $\times$ faster during the reduce stage of the first shuffle, which is consistent with the results in Section \ref{simpledag}. 
@@ -166,16 +166,16 @@ It implies that the heuristic locality swap of SCache can obtain the best locali
 		\begin{subfigure}{\linewidth}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/hadoop_terasort_scache}
-				\caption{\color{blue}Hadoop MapReduce With SCache}
+				\caption{\color{black}Hadoop MapReduce With SCache}
 				\label{fig:hadoop_terasort_scache}
 			\end{minipage}
 			\begin{minipage}{\linewidth}
 				\includegraphics[width=\linewidth]{fig/hadoop_terasort_origin}
-				\caption{\color{blue}Hadoop MapReduce Without SCache}
+				\caption{\color{black}Hadoop MapReduce Without SCache}
 				\label{fig:hadoop_terasort_origin}
 			\end{minipage}
 		\end{subfigure}
-		\caption{\color{blue}CPU utilization and I/O throughput of a node during a Hadoop MapReduce Terasort job}
+		\caption{\color{black}CPU utilization and I/O throughput of a node during a Hadoop MapReduce Terasort job}
 		\label{fig:hadoop_terasort}
 	\end{minipage}
 \end{figure}
@@ -188,12 +188,12 @@ It implies that the heuristic locality swap of SCache can obtain the best locali
 \end{figure*}
 \begin{figure}
 	\includegraphics[width=\linewidth]{fig/hadoop_terasort_time}
-	\caption{\color{blue}Hadoop MapReduce Terasort completion time}
+	\caption{\color{black}Hadoop MapReduce Terasort completion time}
 	\label{fig:hadoop_terasort_time}
 \end{figure}
 
 
-{\color{blue}
+{\color{black}
 \subsection{Hadoop MapReduce with SCache}
 
 To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce as the external shuffle service and co-scheduler. Although \textit{pre-scheduling reduce tasks} is not critical for the simple DAG computing such as Hadoop MapReduce, some shuffle-heavy jobs on Hadoop MapReduce can still be optimized by SCache shuffle data management.
