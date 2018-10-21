@@ -73,12 +73,12 @@ As a result, even we can effectively resolve the above deficiencies by modifying
 
 
 {\color{black}
-In order to analyze above-mentioned resources scheduling strategies, we propose a performance model called \textit{Framework Resources Quantification} (FRQ) model. The FRQ model quantifies computing and I/O resources and displays resources scheduling strategies of DAG frameworks in the time dimension. We use the FRQ model to assist in analyze the deficiencies of resources scheduling and optimize it. 
+In order to analyze above-mentioned resources scheduling strategies, we propose a new performance model called \textit{Framework Resources Quantification} (FRQ) model. The FRQ model quantifies computing and I/O resources and visualizes the resources scheduling strategies of DAG frameworks in the time dimension. We use the FRQ model to assist in analyzing the deficiencies of resources scheduling and optimize it. 
 The FRQ model has five parameters: \textit{Input Data Size, Data Conversion Rate, Computation Round Number, Computation Speed,} and \textit{Shuffle  Speed}.
-According to the above five parameters and the scheduling strategy of the DAG framework, the FRQ model is able to calculate the execution time of each phase of a computing job. 
-Taking Apache Hadoop MapReduce as a simple DAG computing example, we model each phase of the computing by the FRQ model, including Map, Shuffle and Reduce.
+According to the above five parameters and the scheduling strategy of the DAG framework, the FRQ model is able to predict the execution time of each phase of a computing job. 
+Taking Apache Hadoop MapReduce as a simple DAG computing example, we model each phase of the computing by the FRQ model, including Map, Shuffle, and Reduce.
 By revealing the relationships between the various phases, the FRQ model assists us in discovering the irrationality of resource scheduling during computing.
-I/O resource in the map phase is not fully utilized. Furthermore, due to coupling with reduce phase, shuffle phase delays the execution time of reduce phase. 
+I/O resources in the map phase are not fully utilized. Furthermore, due to coupling with reduce phase, shuffle phase delays the execution time of reduce phase. 
 This situation will be amplified in shuffle-heavy tasks.
 }
 
@@ -121,5 +121,5 @@ To minimize the reserved memory while maximizing the performance gain, we propos
 % }
 
 {\color{black}
-We have implemented SCache on both Apache Spark \cite{apachespark} and Hadoop MapReduce. We have also designed a performance model called \textit{Framework Resources Quantification} (FRQ) model to analyze the shuffle optimization of SCache and calculate the execution time of each phase of a computing job. The performance of SCache is evaluated with both simulations and testbed experiments on a 50-node Amazon EC2 cluster on both Apache Spark and Apache Hadoop. On Apache Spark, we conduct a basic test - \textit{GroupByTest}. We also evaluate the system with Terasort\footnote{https://github.com/ehiggs/spark-terasort} benchmark and standard workloads like TPC-DS\footnote{http://www.tpc.org/tpcds/} for multi-tenant modeling. On Apache Hadoop, we focus on Terasort benchmark. In a nutshell, SCache can eliminate explicit shuffle time by at most $89\%$ in varied applications. More impressively, SCache reduces $~40\%$ of overall completion time of TPC-DS queries on average on Apache Spark. On Apache Hadoop, SCache optimizes end-to-end Terasort completion time by $15\%$.
+We have implemented SCache on both Apache Spark \cite{apachespark} and Hadoop MapReduce. We have also designed a performance model called FRQ model to analyze the shuffle optimization of SCache and predict the execution time of each phase of a computing job. The performance of SCache is evaluated with both simulations and testbed experiments on a 50-node Amazon EC2 cluster on both Apache Spark and Apache Hadoop. On Apache Spark, we conduct a basic test - \textit{GroupByTest}. We also evaluate the system with Terasort\footnote{https://github.com/ehiggs/spark-terasort} benchmark and standard workloads like TPC-DS\footnote{http://www.tpc.org/tpcds/} for multi-tenant modeling. On Apache Hadoop, we focus on Terasort benchmark. In a nutshell, SCache can eliminate explicit shuffle time by at most $89\%$ in varied applications. More impressively, SCache reduces $~40\%$ of overall completion time of TPC-DS queries on average on Apache Spark. On Apache Hadoop, SCache optimizes end-to-end Terasort completion time by $15\%$.
 }
