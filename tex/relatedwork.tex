@@ -3,12 +3,14 @@
 {\color{black}
 \textbf{Modeling}: Most representative DAG computing frameworks use similar \textit{Bulk Synchronize Parallel} (BSP)\cite{valiant1990bridging} model to control data synchronization in each computing phase, i.e. \textit{stage} in Spark, \textit{superstep} in Pregel\cite{malewicz2010pregel} and so on (Hadoop MapReduce can also be considered as a special case of only one superstep in BSP model). 
 In the process of optimizing the shuffle phases between adjacent computing phases, we design a performance model to assist in analyzing computing process.
-There are also lots of performance models for MapReduce have been proposed, such as \cite{verma2011aria, khan2016hadoop, herodotou2011hadoop, chen2014cresp}.
+There are also lots of performance models for MapReduce have been proposed, such as \cite{verma2011aria, khan2016hadoop, herodotou2011hadoop, chen2014cresp, farhat2016stochastic}.
 Verma et al. \cite{verma2011aria} proposed the ARIA model to estimate the required resources based on the job information, the amount of input data and a specified soft deadline.
 Khan et al. \cite{khan2016hadoop} proposed the HP model which extends the ARIA model. The HP model adds scaling factors and uses a simple linear regression to estimate the job execution time on larger datasets.
 In \cite{herodotou2011hadoop}, Herodotou proposed a detailed set of mathematical performance models for describing the execution of a MapReduce job. The execution is separated into the phases: Read, Map, Collect, Spill, Merge, Shuffle, Merge, and Reduce. The set of performance models describe each above-mentioned phases and combine into an overall MapReduce job model. 
 Chen et al. \cite{chen2014cresp} proposed the CRESP model which is a cost model that estimates the performance of a job then 
 provisions the resources for the job.
+Farshid Farhat et al.\cite{farhat2016stochastic} proposed a closed-form queuing model which focus on stragglers. The proposed model is parameterized by the task inter-arrival times to the mappers, the delayed tailed service times, and the number of mappers, which is uesed to optimize the stragglers.
+
 
 However, the above models are not able to accurately describe the overhead caused by the shuffle process under different scheduling strategies. 
 Different from these models, our FRQ model quantifies computing and I/O resources and visualizes them in the time dimension. FRQ model focuses on describing the overhead caused by the shuffle process in different scheduling strategies, which satisfies our demand.

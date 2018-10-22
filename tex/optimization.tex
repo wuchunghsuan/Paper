@@ -218,7 +218,7 @@ Inside the $SWAP\_TASKS$, tasks will be selected and swapped without exceeding t
 \label{hminheap}
 	\begin{algorithmic}[1]
 	\small
-	\Procedure{\Large schedule}{$m, host\_ids, p\_reduces$}
+	\Procedure{schedule}{$m, host\_ids, p\_reduces$}
 		\State $m\gets$ partition number of map tasks
 		\State $R\gets$ sort $p\_reduces$ by size in non-increasing order
 		\State $M\gets$ min-heap $\left\{ host\_id \rightarrow \left( \left[ reduces \right], size \right) \right\}$
@@ -249,7 +249,7 @@ Inside the $SWAP\_TASKS$, tasks will be selected and swapped without exceeding t
 		% \Comment{$pSize$ is $r$ size array of predicted size of reduces}
 		\Return $M$
 	\EndProcedure
-	\Procedure{\Large swap\_tasks}{$M, reduce, upper\_bound$}
+	\Procedure{swap\_tasks}{$M, reduce, upper\_bound$}
 		\State Swap tasks between node $host\_id$ and node $assigned\_id$
 		\State of $reduce$ without exceeding the $upper\_bound$
 		\State of both nodes.
@@ -277,7 +277,7 @@ Inside the $SWAP\_TASKS$, tasks will be selected and swapped without exceeding t
 \label{mhminheap}
 	\begin{algorithmic}[1]
 	\small
-	\Procedure{\Large m\_schedule}{$m, host\_id, p\_reduces, \text{\emph{shuffles}}$}
+	\Procedure{m\_schedule}{$m, host\_id, p\_reduces, \text{\emph{shuffles}}$}
 		\State $m\gets$ partition number of map tasks
 		\Comment \emph{shuffles} are the previous schedule result 
 		\ForAll{$r$ in $p\_reduces$}
