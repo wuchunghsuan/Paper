@@ -5,8 +5,13 @@ Despite the differences among data-intensive frameworks, their communication is 
 Such shuffle phase places a significant burden for both the disk and network I/O, thus heavily affecting the end-to-end application performance. 
 For instance, a MapReduce trace analysis from Facebook shows that shuffle accounts for $33\%$ of the job completion time on average, and up to $70\%$ in shuffle-heavy jobs \cite{managing}.
 
-Although continuous efforts of performance optimization have been made among a variety of computing frameworks \cite{sync, babu, tachyon, pacman, quincy, delay, ibrahim2012maestro, sharma2012mrorchestrator}, 
-the shuffle is often poorly optimized in practice.
+{\color{yellow}
+Various efforts of performance optimization have been made among computing frameworks, both at the software and hardware levels \cite{sync, tachyon, heintz2016end, zhang2015prism, cheng2017improving, chen2017heterogeneous}. However, the shuffle phase is often poorly optimized in practice.
+% }
+% {\color{red}
+% Although continuous efforts of performance optimization have been made among a variety of computing frameworks\cite{sync, babu, tachyon, pacman, quincy, delay, ibrahim2012maestro, sharma2012mrorchestrator}, 
+% the shuffle is often poorly optimized in practice.
+% }
 % take over shuffle
 %shuffle characteristic
 In particular, we observe that one major deficiency lies in the lack of fine-grained, coordinated management among different system resources.
