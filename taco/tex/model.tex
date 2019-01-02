@@ -250,7 +250,7 @@ Table \ref{table1} shows the calculational results of the FRQ model in the in-ho
 	\end{aligned}
 \end{equation}
 
-Table \ref{table2} shows the calculational results of the FRQ model in Amazon EC2 environment. \(V_{Map}, V_{Shuffle},\) and \(V_{Reduce}\) are modified because of the different hardware devices. We also set K to the same empirical value. The formulas in the table are all the same except \(T_{P\_Shuffle}\). In this environment, Terasort on Hadoop MapReduce satisfies the situation in Figure \ref{fig:model_scache2} (\(V_{Map} \times R < V_{Shuffle}\)), thus the formula of \(T_{P\_Shuffle}\) is Equation \ref{equation_Tpshuffle2}. In the previous case, \(T_{P\_Shuffle}\) is still equal to \(T_{Shuffle}\).
+Table \ref{table2} shows the calculational results of the FRQ model in Amazon EC2 environment. \;\(V_{Map}, V_{Shuffle},\) and \(V_{Reduce}\) are modified because of the different hardware devices. We also set K to the same empirical value. The formulas in the table are all the same except \(T_{P\_Shuffle}\). In this environment, Terasort on Hadoop MapReduce satisfies the situation in Figure \ref{fig:model_scache2} (\(V_{Map} \times R < V_{Shuffle}\)), thus the formula of \(T_{P\_Shuffle}\) is Equation \ref{equation_Tpshuffle2}. In the previous case, \(T_{P\_Shuffle}\) is still equal to \(T_{Shuffle}\).
 
 \begin{figure}
 	\centering

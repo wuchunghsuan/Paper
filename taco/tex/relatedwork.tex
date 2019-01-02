@@ -9,7 +9,7 @@ Khan et al. \cite{khan2016hadoop} proposed the HP model which extends the ARIA m
 In \cite{herodotou2011hadoop}, Herodotou proposed a detailed set of mathematical performance models for describing the execution of a MapReduce job. The execution is separated into the phases: Read, Map, Collect, Spill, Merge, Shuffle, Merge, and Reduce. The set of performance models describe each above-mentioned phases and combine into an overall MapReduce job model. 
 Chen et al. \cite{chen2014cresp} proposed the CRESP model which is a cost model that estimates the performance of a job then 
 provisions the resources for the job.
-Farshid Farhat et al.\cite{farhat2016stochastic} proposed a closed-form queuing model which focus on stragglers. The proposed model is parameterized by the task inter-arrival times to the mappers, the delayed tailed service times, and the number of mappers, which is uesed to optimize the stragglers.
+Farshid Farhat et al.\cite{farhat2016stochastic} proposed a closed-form queuing model which focus on stragglers. The proposed model is parameterized by the task inter-arrival times to the mappers, the delayed tailed service times, and the number of mappers, which is used to optimize the stragglers.
 
 
 However, the above models are not able to accurately describe the overhead caused by the shuffle process under different scheduling strategies. 
