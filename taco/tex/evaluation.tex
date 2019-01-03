@@ -189,11 +189,11 @@ It implies that the heuristic locality swap of SCache can obtain the best locali
 \subsection{Hadoop MapReduce with SCache}
 
 To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce. 
-Although the effect of \textit{pre-scheduling} will be alleviated by the simple DAG computing, some shuffle-heavy jobs can still be optimized by SCache shuffle data management.
+Although the simple DAG computing alleviates the effect of \textit{pre-scheduling}, the shuffle-heavy jobs can still be optimized by the SCache shuffle data management.
 
 % Figure \ref{fig:hadoop_terasort} shows the hardware resource utilization of Hadoop MapReduce running Terasort. Both figures have the same proportion of time. 
 As Figure \ref{fig:hadoop_terasort} shows, Hadoop MapReduce with SCache brings $15\%$ of total time optimization with 384GB input data size. 
-As shown in Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache writes intermediate data locally in the map phase. The shuffle phase and the reduce phase start simultaneously. Because a large amount of shuffle data reaches the network bottleneck, the beginning part of reduce needs to wait for network transfer. This causes the CPU resources to be idle. 
+As shown in Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache writes intermediate data locally in the map phase. The shuffle phase and the reduce phase start simultaneously. Because a large amount of shuffle data reaches the network bottleneck, the beginning part of reduce phase needs to wait for network transfer. This causes the CPU resources to be idle. 
 On the other hand, in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce with SCache starts pre-fetching in the map phase. This avoids the reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilizes the idle I/O throughput in the map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after better fine-grained utilization of hardware resources, Hadoop MapReduce with SCache optimizes Terasort overall completion time by up to $15\%$ and an average of $13\%$ with input data sizes from 128GB to 512GB.
 }
 

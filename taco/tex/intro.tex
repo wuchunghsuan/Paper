@@ -82,7 +82,7 @@ As a result, even we can effectively resolve the above deficiencies by modifying
 
 
 {\color{blue}
-In order to analyze above-mentioned resources scheduling strategies, we propose a new performance model called \textit{Framework Resources Quantification} (FRQ) model. The FRQ model quantifies computing and I/O resources and visualizes the resources scheduling strategies of DAG frameworks in the time dimension. We use the FRQ model to assist in analyzing the deficiencies of resources scheduling and optimize it. 
+To analyze resources scheduling strategies as mentioned above, we propose a new performance model called \textit{Framework Resources Quantification} (FRQ) model. The FRQ model quantifies computing and I/O resources and visualizes the resources scheduling strategies of DAG frameworks in the time dimension. We use the FRQ model to assist in analyzing the deficiencies of resources scheduling and optimize it. 
 The FRQ model has five parameters: \textit{Input Data Size, Data Conversion Rate, Computation Round Number, Computation Speed,} and \textit{Shuffle  Speed}.
 According to the above five parameters and the scheduling strategy of the DAG framework, the FRQ model is able to predict the execution time of each phase of a computing job. 
 Taking Apache Hadoop MapReduce as a simple DAG computing example, we model each phase of the computing by the FRQ model, including Map, Shuffle, and Reduce.
