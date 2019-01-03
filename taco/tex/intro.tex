@@ -1,3 +1,12 @@
+\begin{figure}
+	\centering
+	\includegraphics
+		[width=.5\linewidth]
+		{fig/workflow}
+	\caption{Workflow Comparison between Legacy DAG Computing Frameworks and Frameworks with SCache}
+	\label{fig:workflow}
+\end{figure}
+
 \section{Introduction}\label{sec:introduction}
 Recent years have witnessed the widespread use of sophisticated frameworks, such as Hadoop MapReduce\footnote{http://hadoop.apache.com/}, Dryad \cite{dryad}, Spark \cite{spark}, and Apache Tez \cite{tez}.
 Most of them define jobs as directed acyclic graphs (DAGs), such as map-reduce pipeline in Hadoop MapReduce, lineage of resilient distributed datasets (RDDs) in Spark, vertices and edges in Dryad and Tez, etc.
@@ -5,7 +14,7 @@ Despite the differences among data-intensive frameworks, their communication is 
 Such shuffle phase places a significant burden for both the disk and network I/O, thus heavily affecting the end-to-end application performance. 
 For instance, a MapReduce trace analysis from Facebook shows that shuffle accounts for $33\%$ of the job completion time on average, and up to $70\%$ in shuffle-heavy jobs \cite{managing}.
 
-{\color{yellow}
+{\color{blue}
 Various efforts of performance optimization have been made among computing frameworks, both at the software and hardware levels \cite{sync, tachyon, heintz2016end, zhang2015prism, cheng2017improving, chen2017heterogeneous, yviquel2018cluster, kaitoua2014hadoop, wasi2017comprehensive}. However, the shuffle phase is often poorly optimized in practice.
 }
 % {\color{red}
@@ -22,14 +31,7 @@ Once scheduled, a fixed bundle of resources (i.e., CPU, memory, disk, and networ
 Such task aggregation together with the coarse-grained scheduling effectively simplifies task management.
 However, since a cluster has a limited number of slots, attaching the I/O intensive shuffle phase to the CPU/memory intensive computation phase results in a poor multiplexing between computational and I/O resources.
 %The map task in Figure \ref{fig:workflow} well explains such deficiency: the I/O resource allocated to the stage is always idle during the computation time, and the computation/memory resource is totally wasted during the shuffle write attached to it, and vice versa.
-\begin{figure}
-	\centering
-	\includegraphics
-		[width=.6\linewidth]
-		{fig/workflow}
-	\caption{Workflow Comparison between Legacy DAG Computing Frameworks and Frameworks with SCache}
-	\label{fig:workflow}
-\end{figure}
+
 
 Moreover, the shuffle read phase introduces all-to-all communication pattern across the network, and such network I/O procedure is also poorly coordinated.
 Note that the shuffle read phase starts fetching data only after the corresponding reduce task starts.
@@ -85,8 +87,8 @@ The FRQ model has five parameters: \textit{Input Data Size, Data Conversion Rate
 According to the above five parameters and the scheduling strategy of the DAG framework, the FRQ model is able to predict the execution time of each phase of a computing job. 
 Taking Apache Hadoop MapReduce as a simple DAG computing example, we model each phase of the computing by the FRQ model, including Map, Shuffle, and Reduce.
 By revealing the relationships between the various phases, the FRQ model assists us in discovering the irrationality of resource scheduling during computing.
-I/O resources in the map phase are not fully utilized. Furthermore, due to coupling with reduce phase, shuffle phase delays the execution time of reduce phase. 
-This situation will be amplified in shuffle-heavy tasks.
+% I/O resources in the map phase are not fully utilized. Furthermore, due to coupling with reduce phase, shuffle phase delays the execution time of reduce phase. 
+% This situation will be amplified in shuffle-heavy tasks.
 }
 
 Can we efficiently optimize the data shuffling without significantly changing DAG frameworks?

@@ -59,13 +59,20 @@ As shown in Figure \ref{fig:util},
 the data transfer causes a high demand of network bandwidth, which may result in network congestion and further slow down the network transfer.
 It also happens in other frameworks that follow Bulk Synchronous Parallel (BSP) paradigm, such as Hadoop MapReduce, Dryad \cite{dryad}, etc.
 % The previous work \cite{coflow, managing} also proves that the network transfer can introduce significant overhead in DAG computing.
-
-\begin{figure}
-	\includegraphics[width=0.8\linewidth]{fig/util}
+\begin{figure*}
+	\centering
+	\begin{subfigure}[b]{0.47\linewidth}
+		\includegraphics[width=\linewidth]{fig/util}
+		\caption{Original Spark}
+		\label{fig:util}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.47\linewidth}
+		\includegraphics[width=\linewidth]{fig/scache_util}
+		\caption{Spark With SCache}
+		\label{fig:scache_util}
+	\end{subfigure}
 	\caption{CPU utilization and I/O throughput of a node during a Spark single shuffle application}
-	\label{fig:util}
-	\vspace{-1em}
-\end{figure}
+\end{figure*}
 
 \subsubsection{Inefficient Persistent Storage Operation}
 At first, both shuffle write and read are tightly coupled with task execution, which results in a blocking I/O operation. 
@@ -79,18 +86,17 @@ but most of the DAG frameworks still store shuffle data on disks (e.g., Spark \c
 We argue that the memory capacity is large enough to store the short-living shuffle data with cautious management.
 
 \subsubsection{Multi-round Tasks Execution}\label{multi}
-Both experience and DAG framework manuals recommend that multi-round execution of each stage will benefit the performance of applications.
+Both experience and DAG framework manuals(e.g., Hadoop\footnote{http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html} and Spark\footnote{http://spark.apache.org/docs/1.6.2/configuration.html}) recommend that multi-round execution of each stage will benefit the performance of applications.
 For a cluster with $n$ slots, the number of tasks should be $n \times k \; (k \geq 1)$. 
-For example, Hadoop MapReduce Tutorial\footnote{http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html} suggests that \textit{10-100 maps} per-node and \textit{0.95 or 1.75 $\times$ number of nodes $\times$ number of maximum container reduces} per-node seem to be the right level of parallelism. 
-Spark configuration also recommends $2\text{-}3$ tasks per CPU core\footnote{http://spark.apache.org/docs/1.6.2/configuration.html} (i.e., $k = 2\text{-}3$).
-
+% For example, Hadoop MapReduce Tutorial\footnote{http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html} suggests that \textit{10-100 maps} per-node and \textit{0.95 or 1.75 $\times$ number of nodes $\times$ number of maximum container reduces} per-node seem to be the right level of parallelism. 
+% Spark configuration also recommends $2\text{-}3$ tasks per CPU core\footnote{http://spark.apache.org/docs/1.6.2/configuration.html} (i.e., $k = 2\text{-}3$).
 Since the shuffle data becomes available as soon as the end of a task's execution, 
 and the network is idle during the map stage ("Network TX" during map stage in Figure \ref{fig:util}), 
 the property of multi-round tasks can be leveraged to hide the cost by starting shuffle data transfer at the end rounds of map tasks. 
 % optimize the shuffle read operations if the destination host of the shuffle data can be predicted a priori. 
 % There are at least two persistent storage operations for each shuffle data block. At first, Spark will write shuffle data to the persistent storage after map task execution (i.e. \textit{shuffle write} in Figure \ref{fig:util}). During the \textit{shuffle read}, Spark will read shuffle data from remote and local persistent storage, which is the second operation. The persistence of shuffle data was designed for fault tolerance. But we believe it is not necessary for today's cluster. Recall that shuffle data only exist in a short time scale. But the Mean Time To Failure (MTTF) for a server is counted in the scale of year \cite{tachyon}, which is exponential compared with the duration of a shuffle. In addition, the capacity of memory and network has been increasing rapidly in recent years. As a result, numbers of memory based distributed storage system have been proposed \cite{memcached, tachyon, ramcloud}. On the other hand, the size of shuffle data is relatively small. For example, shuffle size of Spark Terasort \cite{spark-tera} is less than 25\% of input data. The data reported in  \cite{makingsense} also shows that the amount of data shuffled is less than input data, by as much as 10\%-20\%. We argue that removing persistent storage and using memory to achieve shuffle fault tolerance is feasible and efficient.
 
-Based on these observations, most of the DAG frameworks share the execution paradigm as well as the expense of shuffle process. 
+% Based on these observations, most of the DAG frameworks share the execution paradigm as well as the expense of shuffle process. 
 To mitigate the shuffle overhead, we propose an optimization that starts shuffle read ahead of reduce stage to overlap the I/O operations in multi-round map tasks, and uses memory to store the shuffle data. 
 To achieve this optimization:
 \begin{itemize}

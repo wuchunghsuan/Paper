@@ -6,35 +6,25 @@ Two heuristic algorithms (Algorithm \ref{hminheap}, \ref{mhminheap}) and a co-sc
 
 \begin{figure}
     \centering
+    % \begin{minipage}{0.42\textwidth}
+    %     \centering
+    %     \includegraphics[width=0.9\textwidth]{fig/reduce_cdf} % first figure itself
+	% 	\caption{Shuffle Time Fraction CDF of OpenCloud Trace}
+	% 	\label{fig:cdf}
+    % \end{minipage}\hfill
     \begin{minipage}{0.42\textwidth}
-        \centering
-        \includegraphics[width=0.9\textwidth]{fig/reduce_cdf} % first figure itself
-		\caption{Shuffle Time Fraction CDF of OpenCloud Trace}
-		\label{fig:cdf}
-    \end{minipage}\hfill
-    \begin{minipage}{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{fig/sim} % second figure itself
 		\caption{Stage Completion Time Improvement of OpenCloud Trace}
 		\label{fig:sim}
-    \end{minipage}
+	\end{minipage}
+	\begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{fig/shuffle} % first figure itself
+		\caption{Shuffle Data Prediction}
+		\label{fig:shuffle}
+    \end{minipage}\hfill
 \end{figure}
-
-% \begin{figure}
-% 	\centering
-% 	\includegraphics[width=0.45\linewidth]{fig/reduce_cdf}
-% 	\caption{Shuffle Time Fraction CDF of OpenCloud Trace}
-% 	\label{fig:cdf}
-% 	\vspace{10em}
-% \end{figure}
-
-% \begin{figure}
-% 	\centering
-% 	\includegraphics[width=0.4\linewidth]{fig/sim}
-% 	\caption{Stage Completion Time Improvement of OpenCloud Trace}
-% 	\label{fig:sim}
-% 	\vspace{-1em}
-% \end{figure}
 
 \subsection{Decouple Shuffle from Execution}
 % \ifrevision
@@ -91,16 +81,10 @@ That is, the task-node mapping is established a priori, and then it is enforced 
 \subsubsection{Problem of Random Mapping}\label{randomassign}
 The simplest way of pre-scheduling is mapping tasks to nodes randomly and evenly. 
 In order to evaluate the effectiveness of random mapping, we use traces from OpenCloud\footnote{\label{fn:trace}http://ftp.pdl.cmu.edu/pub/datasets/hla/dataset.html} for the simulation.
-Note that most of the traces from OpenCloud are shuffle-light workload as shown in Figure \ref{fig:cdf}. 
+% Note that most of the traces from OpenCloud are shuffle-light workload as shown in Figure \ref{fig:cdf}. 
 The average shuffle read time is $3.2\%$ of total reduce completion time.
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\linewidth]{fig/shuffle}
-	\caption{Shuffle Data Prediction}
-	\label{fig:shuffle}
-	\vspace{-1em}
-\end{figure}
+
 As shown in Figure \ref{fig:sim}, the baseline (i.e., red dotted line) is the stage completion time with Spark FIFO scheduling algorithm. 
 We then remove the shuffle read time of each task and run the simulation under three scheduling schemes: random mapping, Spark FIFO, and our heuristic MinHeap.
 Random mapping works well when there is only one round of tasks, but the performance drops as the round number grows. 
@@ -180,51 +164,11 @@ The data locality skew results in a missing of other reduce tasks' data in the o
 % \reversemarginpar
 % \marginpar{D6,E3}
 % \fi
-To handle this corner case, we introduce another methodology, named \emph{weighted reservoir sampling}, as a substitution of linear regression. 
-Note that linear regression will be replaced only when a RangePartitioner or a customized non-hash partitioner occurs. 
-For each map task, we use classic reservoir sampling to randomly pick $s \times p$ of samples, where $p$ is the number of reduce tasks and $s$ is a tunable number. 
-After that, the map function is called locally to process the sampled data (\textit{Sampling} in Figure \ref{fig:shuffle}). 
-Finally, the partitioned outputs are collected with the $InputSize_j$ as the weight of the samples.
-Note that sampling does not consume the input data of map tasks. 
-The $BlockSize_{ji}$ can be calculated by:
-\begin{equation}
-\label{equationsample}
-\begin{aligned}
-	BlockSize_{ji} &= {{InputSize_j \times \frac{sample_i}{s \times p}}} \\
-	sample_i &= \text{number of samples for $reduce_i$}
-\end{aligned}
-\end{equation}
-% The classic reservoir sampling is designed for randomly choosing \textit{k} samples from \textit{n} items, where \textit{n} is either a very large or an unknown number \cite{reservoir}. 
-In Figure \ref{fig:range_pre_sample}, when $s$ is set to $3$, the result of sampling prediction is much better than linear regression. 
-The variance of the normalization between sampling prediction and reduce distribution is because the standard deviation of the prediction results is relatively small compared to the average prediction size, which is $0.0015$ in this example. 
-Figure \ref{fig:prediction_relative_error} further proves that the sampling prediction can provide precise result even in the dimension of absolute input size of reduce task. 
-On the other hand, the result of linear regression comes out with a large relative error. 
-Though the weighted reservoir sampling is precise, it also introduced extra overhead. 
-We will show the overhead evaluation of sampling in Section \ref{evaluation}.
-
-During both of the predictions, the composition of each reduce partition is calculated as well. We define $prob_i$ as
-\begin{equation}
-\label{equationprob}
-\begin{aligned}
-	prob_i &= \max_{0 \leq j \leq m} \frac{BlockSize_{kji}}{reduceSize_i} \\
-    m &= \text{number of map tasks}
-\end{aligned}
-\end{equation}
-This parameter is used to achieve a better data locality while performing shuffle pre-scheduling. 
-
-
-\subsubsection{Heuristic MinHeap Scheduling}\label{h-minheap}
-
-% \ifrevision
-% \marginpar{\tiny PC2,C1,D7/9,E4}
-% \fi
-As long as the input sizes of reduce tasks are available, the pre-scheduling is a classic scheduling problem without considering the data locality. 
-But ignoring the data locality can introduce extra network transfer. 
-In order to balance load while minimizing the network traffic, we present the Heuristic MinHeap scheduling algorithm (Algorithm \ref{hminheap}).   
 
 \noindent
 \begin{minipage}{0.95\columnwidth}
 \begin{algorithm}[H]
+\begin{multicols}{2}
 \caption{Heuristic MinHeap Scheduling for Single Shuffle}
 \label{hminheap}
 	\begin{algorithmic}[1]
@@ -253,11 +197,6 @@ In order to balance load while minimizing the network traffic, we present the He
 				\State SWAP\_TASKS$\left(M, reduce, upper\_bound\right)$
 			\EndIf
 		\EndFor
-		% \Comment{$m$ is the number of input data}
-		% \Comment{$r$ is partition number of reduces}
-		% \Comment{$hosts$ is array of (hostid, partitionids[], size)}
-		% \Comment{$c$ is $r*m$ array of composition data}
-		% \Comment{$pSize$ is $r$ size array of predicted size of reduces}
 		\Return $M$
 	\EndProcedure
 	\Procedure{swap\_tasks}{$M, reduce, upper\_bound$}
@@ -265,21 +204,57 @@ In order to balance load while minimizing the network traffic, we present the He
 		\State of $reduce$ without exceeding the $upper\_bound$
 		\State of both nodes.
 		\State Return if it is impossible.
-		% \State $reduces \gets M\left[reduce.host\_id\right].reduce$	
-		% \State $candidates \gets$ Select from $reduces$ that $assigned\_id \neq host\_id$ \textbf{and} total size closest to $reduce.size$
-		% \State $\Delta size \gets sizeOf\left(candidates\right) - reduce.size$
-		% \State $size\_host \gets M\left[reduce.host\_id\right].size - \Delta size$
-		% \State $size\_assigned \gets M\left[reduce.assigned\_id\right].size + \Delta size$
-		% \If{$size\_host\leq upper\_bound$ \textbf{and} \\
-		% 	\qquad \; $size\_assigned\leq upper\_bound$}
-		% 	\State Swap $candidates$ and $reduce$
-		% 	\State Update $size$ in $M$
-		% 	\State Update $assigned\_host$ in $candidates$ and $reduce$
-		% \EndIf
 	\EndProcedure
 	\end{algorithmic}
+\end{multicols}
 \end{algorithm}
 \end{minipage}
+
+To handle this corner case, we introduce another methodology, named \emph{weighted reservoir sampling}, as a substitution of linear regression. 
+Note that linear regression will be replaced only when a RangePartitioner or a customized non-hash partitioner occurs. 
+For each map task, we use classic reservoir sampling to randomly pick $s \times p$ of samples, where $p$ is the number of reduce tasks and $s$ is a tunable number. 
+After that, the map function is called locally to process the sampled data (\textit{Sampling} in Figure \ref{fig:shuffle}). 
+Finally, the partitioned outputs are collected with the $InputSize_j$ as the weight of the samples.
+Note that sampling does not consume the input data of map tasks. 
+The $BlockSize_{ji}$ can be calculated by:
+\begin{equation}
+\label{equationsample}
+\begin{aligned}
+	BlockSize_{ji} &= {{InputSize_j \times \frac{sample_i}{s \times p}}} \\
+	sample_i &= \text{number of samples for $reduce_i$}
+\end{aligned}
+\end{equation}
+% The classic reservoir sampling is designed for randomly choosing \textit{k} samples from \textit{n} items, where \textit{n} is either a very large or an unknown number \cite{reservoir}. 
+% In Figure \ref{fig:range_pre_sample}, when $s$ is set to $3$, the result of sampling prediction is much better than linear regression. 
+% The variance of the normalization between sampling prediction and reduce distribution is because the standard deviation of the prediction results is relatively small compared to the average prediction size, which is $0.0015$ in this example. 
+% Figure \ref{fig:prediction_relative_error} further proves that the sampling prediction can provide precise result even in the dimension of absolute input size of reduce task. 
+% On the other hand, the result of linear regression comes out with a large relative error. 
+% Though the weighted reservoir sampling is precise, it also introduced extra overhead. 
+% We will show the overhead evaluation of sampling in Section \ref{evaluation}.
+{\color{blue}
+Figure \ref{fig:prediction_relative_error} proves that the sampling prediction can provide much more accurate result than the linear regression. 
+We will show the overhead evaluation of sampling in Section \ref{evaluation}. 
+}
+
+During both of the predictions, the composition of each reduce partition is calculated as well. We define $prob_i$ as
+\begin{equation}
+\label{equationprob}
+\begin{aligned}
+	prob_i &= \max_{0 \leq j \leq m} \frac{BlockSize_{kji}}{reduceSize_i} \\
+    m &= \text{number of map tasks}
+\end{aligned}
+\end{equation}
+This parameter is used to achieve a better data locality while performing shuffle pre-scheduling. 
+
+
+\subsubsection{Heuristic MinHeap Scheduling}\label{h-minheap}
+
+% \ifrevision
+% \marginpar{\tiny PC2,C1,D7/9,E4}
+% \fi
+As long as the input sizes of reduce tasks are available, the pre-scheduling is a classic scheduling problem without considering the data locality. 
+But ignoring the data locality can introduce extra network transfer. 
+In order to balance load while minimizing the network traffic, we present the Heuristic MinHeap scheduling algorithm (Algorithm \ref{hminheap}).   
 
 For the pre-scheduling itself (i.e., the first $while$ in Algorithm \ref{hminheap}), the algorithm maintains a min-heap to simulate the load of each node 
 and applies the longest processing time rule (LPT) \cite{design} to achieve $4/3\text{-}approximation$ optimum. 
@@ -315,6 +290,7 @@ which leads to a higher probability of tasks swap in $SWAP\_TASKS$.
 \begin{algorithm}[H]
 \caption{Accumulated Heuristic Scheduling for Multi-Shuffles}
 \label{mhminheap}
+\begin{multicols}{2}
 	\begin{algorithmic}[1]
 	\small
 	\Procedure{m\_schedule}{$m, host\_id, p\_reduces, \text{\emph{shuffles}}$}
@@ -325,22 +301,29 @@ which leads to a higher probability of tasks swap in $SWAP\_TASKS$.
 			\State $new\_prob\gets \text{\emph{shuffles}}\left[r.rid\right].size / r.size$
 			\If{$new\_prob\geq r.prob$}
 				\State $r.prob\gets new\_prob$
-				\State $r.host\_id\gets \text{\emph{shuffles}}\left[r.rid\right].assigned\_host$
+				\State \begin{varwidth}[t]{\linewidth}
+					$r.host\_id$ \par
+					  \hskip\algorithmicindent $\gets \text{\emph{shuffles}}\left[r.rid\right].assigned\_host$
+					\end{varwidth}
 			\EndIf
 		\EndFor
-		\State $M\gets$ $SCHEDULE\left(m, host\_id, p\_reduces\right)$
+		\State $M\gets$ $SCHEDULE\left(m, host\_id, p\_reduces\right)$\par
+		\hskip\algorithmicindent
 		\ForAll{$host\_id$ in $M$}
 			\Comment Re-shuffle
 			\ForAll{$r$ in $M\left[host\_id\right].reduces$}
-				\If{$host\neq \text{\emph{shuffles}}\left[r.rid\right].assigned\_host$}
+				\If{$host\neq$\par
+					\hskip\algorithmicindent $\text{\emph{shuffles}}\left[r.rid\right].assigned\_host$}
 				\State Re-shuffle data to $host$
-				\State $\text{\emph{shuffles}}\left[r.rid\right].assigned\_host\gets host$
+				\State $\text{\emph{shuffles}}\left[r.rid\right].assigned\_host$\par
+					\hskip\algorithmicindent$\gets host$
 				\EndIf
 			\EndFor
 		\EndFor
 		\Return $M$
 	\EndProcedure
 	\end{algorithmic}
+\end{multicols}
 \end{algorithm}
 \end{minipage}
 

@@ -3,11 +3,11 @@ This section reveals the evaluation of SCache with comprehensive workloads and b
 First we run a job with single shuffle to analyze hardware utilization and see the impacts of different components from the scope of a task to a job. 
 Then we use a recognized shuffle intensive benchmark --- Terasort to evaluate SCache with different data partition schemes.
 
-\begin{figure}
-	\includegraphics[width=.8\linewidth]{fig/scache_util}
-	\caption{CPU utilization and I/O throughput of a node during a Spark single shuffle application with SCache}
-	\label{fig:scache_util}
-\end{figure}
+% \begin{figure}
+% 	\includegraphics[width=.8\linewidth]{fig/scache_util}
+% 	\caption{CPU utilization and I/O throughput of a node during a Spark single shuffle application with SCache}
+% 	\label{fig:scache_util}
+% \end{figure}
 
 In order to prove the performance gain of SCache with a real production workload, we also evaluate Spark TPC-DS\footnote{https://github.com/databricks/spark-sql-perf} and present the overall performance improvement.
 {\color{blue}
@@ -177,7 +177,7 @@ It implies that the heuristic locality swap of SCache can obtain the best locali
 \end{figure}
 \begin{figure*}
 	\centering
-	\includegraphics[width=\textwidth]{fig/tpcds}
+	\includegraphics[width=.9\textwidth]{fig/tpcds}
 	\caption{TPC-DS Benchmark Evaluation}
 	\label{fig:tpcds}
 	\vspace{-1em}
@@ -188,11 +188,13 @@ It implies that the heuristic locality swap of SCache can obtain the best locali
 {\color{blue}
 \subsection{Hadoop MapReduce with SCache}
 
-To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce as the external shuffle service and co-scheduler. Although \textit{pre-scheduling reduce tasks} is not critical for the simple DAG computing such as Hadoop MapReduce, some shuffle-heavy jobs on Hadoop MapReduce can still be optimized by SCache shuffle data management.
+To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce. 
+Although the effect of \textit{pre-scheduling} will be alleviated by the simple DAG computing, some shuffle-heavy jobs can still be optimized by SCache shuffle data management.
 
-Figure \ref{fig:hadoop_terasort} shows the hardware resource utilization of Hadoop MapReduce running Terasort. Both figures have the same proportion of time. Hadoop MapReduce with SCache brings $15\%$ of total time optimization with 384GB input data size. 
+% Figure \ref{fig:hadoop_terasort} shows the hardware resource utilization of Hadoop MapReduce running Terasort. Both figures have the same proportion of time. 
+As Figure \ref{fig:hadoop_terasort} shows, Hadoop MapReduce with SCache brings $15\%$ of total time optimization with 384GB input data size. 
 As shown in Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache writes intermediate data locally in the map phase. The shuffle phase and the reduce phase start simultaneously. Because a large amount of shuffle data reaches the network bottleneck, the beginning part of reduce needs to wait for network transfer. This causes the CPU resources to be idle. 
-As shown in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce with SCache starts pre-fetching in the map phase. This avoids the reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilizes the idle I/O throughput in the map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after better fine-grained utilization of hardware resources, Hadoop MapReduce with SCache optimizes Terasort overall completion time by up to $15\%$ and an average of $13\%$ with input data sizes from 128GB to 512GB.
+On the other hand, in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce with SCache starts pre-fetching in the map phase. This avoids the reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilizes the idle I/O throughput in the map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after better fine-grained utilization of hardware resources, Hadoop MapReduce with SCache optimizes Terasort overall completion time by up to $15\%$ and an average of $13\%$ with input data sizes from 128GB to 512GB.
 }
 
 
@@ -210,6 +212,15 @@ It is because that those queries contain shuffle-heavy operations such as "group
 The overall reduction portion of query time that SCache achieved is $40\%$ on average. 
 Since this evaluation presents the overall job completion time of queries, we believe that our shuffle optimization is promising.
 
+
+\subsection{Overhead of Sampling}
+We evaluate the overhead of sampling with different input sizes and numbers of nodes. 
+In Figure \ref{fig:sampling}, the overhead of sampling only grows with the increase of input size on each node, but remains relatively stable when the cluster size scales up.
+Since the shuffle data is short-lived, write-once, and read-once, the central controller of SCache does not have to collect and manage complex metadata. 
+Meanwhile, most of the optimizations such as fetching and storing shuffle data are finished by workers independently. 
+So the cost of pre-scheduling algorithm and memory management are unlikely to make the master become the bottleneck of the scalability.
+Combined with the sampling overhead evaluation, we believe that SCache is scalable.
+
 \begin{figure}
     \centering
     \begin{minipage}{0.5\textwidth}
@@ -225,11 +236,3 @@ Since this evaluation presents the overall job completion time of queries, we be
 		\label{fig:sampling}
     \end{minipage}
 \end{figure}
-
-\subsection{Overhead of Sampling}
-We evaluate the overhead of sampling with different input sizes and numbers of nodes. 
-In Figure \ref{fig:sampling}, the overhead of sampling only grows with the increase of input size on each node, but remains relatively stable when the cluster size scales up.
-Since the shuffle data is short-lived, write-once, and read-once, the central controller of SCache does not have to collect and manage complex metadata. 
-Meanwhile, most of the optimizations such as fetching and storing shuffle data are finished by workers independently. 
-So the cost of pre-scheduling algorithm and memory management are unlikely to make the master become the bottleneck of the scalability.
-Combined with the sampling overhead evaluation, we believe that SCache is scalable.
