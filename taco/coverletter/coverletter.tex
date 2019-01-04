@@ -49,20 +49,17 @@ We propose a new performance model called \textit{Framework Resources Quantifica
 The FRQ model quantifies computing and I/O resources by five input parameters. 
 Furthermore, the FRQ model visualizes the resources scheduling strategies of the DAG frameworks in the time dimension. 
 In this paper, we use the model to analyze the deficiencies of the resources scheduling strategies and then optimize them.
-
-% The proposed model is not only to predict the job completion time, but also to theoretically analyze DAG frameworks.
-% The FRQ models DAG frameworks according to the resource scheduling strategy of each DAG framework by mutiple parameters.
-% Through modeling, the FRQ model can indicate which parameters of the DAG framework are important and which parts of the DAG framework can be optimized. 
-% Furthermore, the FRQ models can classify DAG frameworks based on their scheduling stratagies.
-% According to the theoretical analysis results of the FRQ model, we are able to optimize DAG frameworks more accurately.
 \item 
-In the conference paper, we only implemented SCache on Spark. 
-To demonstrate the compatibility and adaptability of SCache as a cross-framework plug-in, we also extended SCache on Hadoop MapReduce. 
-Our experiments show that SCache can also optimize the computing performance of Hadoop MapReduce.
+In the conference paper, we only implement SCache on Spark. 
+In this paper, we implement SCache on Hadoop MapReduce. 
+By using the FRQ model to analyze Hadoop MapReduce, we can figure out that SCache is feasible to optimize the shuffle phases. 
+Meanwhile, our experiments are also consistent with the analysis of the model.
+This result demonstrates the compatibility and adaptability of SCache as a cross-framework plug-in.
+% To demonstrate the compatibility and adaptability of SCache as a cross-framework plug-in, we also extended SCache on Hadoop MapReduce. 
 \item
 We append two parts to the evaluation section. 
 Firstly, we evaluate the FRQ model in both our in-house environment and Amazon EC2 environment. The error between the FRQ’s calculated value and the experimental value is mainly below $10\%$. 
-Secondly, we evaluate the performance of Hadoop MapReduce with SCache. We use the same Amazon EC2 environment as the conference paper(50-nodes m4.xlarge cluster).
+Secondly, we evaluate the performance of Hadoop MapReduce with SCache. We use the same Amazon EC2 environment as the conference paper (50-nodes m4.xlarge cluster).
 According to the experiments, Hadoop MapReduce with SCache optimizes job completion time by up to $15\%$ and an average of $13\%$.
 \end{enumerate}
 
