@@ -139,7 +139,7 @@ The reason is that before moving data out of Spark's JVM, the serialization is i
 In the reduce task, most of the shuffle overhead is introduced by network transfer delay. 
 By doing shuffle data pre-fetching based on the pre-scheduling results, the explicit network transfer is perfectly overlapped in the map stage. 
 With the help of the co-scheduling scheme, SCache guarantees that each reduce task has the benefit of shuffle pre-fetching. 
-The in-memory cache of shuffle data further reduce the shuffle read time. 
+The in-memory cache of shuffle data further reduces the shuffle read time. 
 As a result, the combination of these optimizations decreases ~$100\%$ overhead of the shuffle read in a reduce task (Figure \ref{fig:reducetask}). 
 In addition, the heuristic algorithm can achieve a balanced pre-scheduling result, thus providing ~$80\%$ improvement in reduce stage completion time (Figure \ref{fig:reducestage}).
 

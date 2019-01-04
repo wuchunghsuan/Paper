@@ -229,7 +229,7 @@ Compared to the original Hadoop MapReduce resource scheduling strategy, Hadoop M
 \end{table*}
 
 \subsection{Model Verification}\label{model_verification}
-To verify the FRQ model, we run experiments on two environments: (a) 50 Amazon EC2 m4.xlarge nodes cluster as shown in Subsection \ref{stepup}. (b) 4 in-house nodes cluster with 128GB memory and 32 cores per node. To simplify the calculation of the FRQ model, we run the Terasort as an experimental application on a Hadoop Mapreduce framework. We deployed Hadoop with SCache and without SCache in both environments.
+To verify the FRQ model, we run experiments on two environments: (a) 50 Amazon EC2 m4.xlarge nodes cluster as shown in Subsection \ref{stepup}. (b) 4 in-house nodes cluster with 128GB memory and 32 cores per node. To simplify the calculation of the FRQ model, we run the Terasort as an experimental application on a Hadoop MapReduce framework. We deployed Hadoop with SCache and without SCache in both environments.
 
 Table \ref{table1} shows the calculational results of the FRQ model in the in-house environment. The workload is from 16 GB to 64 GB. 
 \(D\) and \(N\) are set according to the application parameters. \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) are calculated based on experimental results. K is the empirical value, we set \(K\) to 0.5 and 0.6, which reflects that \(T_{P\_Shuffle}\) has less impact on the reduce phase in the case of SCache. 
