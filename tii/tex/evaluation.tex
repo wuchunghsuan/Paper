@@ -3,11 +3,11 @@ This section reveals the evaluation of SCache with comprehensive workloads and b
 First we run a job with single shuffle to analyze hardware utilization and see the impacts of different components from the scope of a task to a job. 
 Then we use a recognized shuffle intensive benchmark --- Terasort to evaluate SCache with different data partition schemes.
 
-% \begin{figure}
-% 	\includegraphics[width=.8\linewidth]{fig/scache_util}
-% 	\caption{CPU utilization and I/O throughput of a node during a Spark single shuffle application with SCache}
-% 	\label{fig:scache_util}
-% \end{figure}
+\begin{figure}
+	\includegraphics[width=.8\linewidth]{fig/scache_util}
+	\caption{CPU utilization and I/O throughput of a node during a Spark single shuffle application with SCache}
+	\label{fig:scache_util}
+\end{figure}
 
 In order to prove the performance gain of SCache with a real production workload, we also evaluate Spark TPC-DS\footnote{https://github.com/databricks/spark-sql-perf} and present the overall performance improvement.
 {\color{blue}

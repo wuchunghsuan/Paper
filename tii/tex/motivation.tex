@@ -59,20 +59,12 @@ As shown in Figure \ref{fig:util},
 the data transfer causes a high demand of network bandwidth, which may result in network congestion and further slow down the network transfer.
 It also happens in other frameworks that follow Bulk Synchronous Parallel (BSP) paradigm, such as Hadoop MapReduce, Dryad \cite{dryad}, etc.
 % The previous work \cite{coflow, managing} also proves that the network transfer can introduce significant overhead in DAG computing.
-\begin{figure*}
-	\centering
-	\begin{subfigure}[b]{0.47\linewidth}
-		\includegraphics[width=\linewidth]{fig/util}
-		\caption{Original Spark}
-		\label{fig:util}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.47\linewidth}
-		\includegraphics[width=\linewidth]{fig/scache_util}
-		\caption{Spark With SCache}
-		\label{fig:scache_util}
-	\end{subfigure}
+\begin{figure}
+	\includegraphics[width=\linewidth]{fig/util}
 	\caption{CPU utilization and I/O throughput of a node during a Spark single shuffle application}
-\end{figure*}
+	\label{fig:util}
+	\vspace{-1em}
+\end{figure}
 
 \subsubsection{Inefficient Persistent Storage Operation}
 At first, both shuffle write and read are tightly coupled with task execution, which results in a blocking I/O operation. 
