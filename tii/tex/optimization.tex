@@ -133,7 +133,7 @@ The $a$ and $b$ can be determined using the observed $inputSize_j$ and $BlockSiz
 	\end{subfigure}
 	\begin{subfigure}[b]{0.31\linewidth}
 		\includegraphics[width=\linewidth]{fig/range_pre_sample}
-		\caption{Linear Regression and Sampling Prediction of Range Partitioner2222}
+		\caption{Linear Regression and Sampling Prediction of Range Partitioner}
 		\label{fig:range_pre_sample}
 		\vspace{1em}
 	\end{subfigure}
@@ -184,7 +184,7 @@ The data locality skew results in a missing of other reduce tasks' data in the o
 		\State $M\left[0\right].reduces.append\left(R\left[idx\right]\right)$
 		\State $R\left[idx\right].assigned\_id \gets M \left[0\right].host\_id$
 		\State Sift down $M\left[0\right]$ by $size$
-		\State $idx\gets idx-1$
+		\State $idx\gets idx+1$
 		\EndWhile
 		\State $max\gets$ maximum size in $M$
 		% \State Convert $M$ to mapping $\left\{ host\_id \rightarrow \left( \left[ rid\_arr \right], size \right) \right\}$
@@ -271,7 +271,7 @@ Inside the $SWAP\_TASKS$, tasks will be selected and swapped without exceeding t
 % \ifrevision
 % \marginpar{E5}
 % \fi
-A reduce stage can have more than one shuffle dependencies in the current DAG computing frameworks. 
+A reduce stage can have more than one shuffle dependency in the current DAG computing frameworks. 
 The technique mentioned in Section \ref{shuffleprediction} can only handle an ongoing shuffle. 
 For those pending shuffles, it is impossible to predict their sizes. 
 This problem can be solved by having all map tasks of pending shuffles launched simultaneously. 

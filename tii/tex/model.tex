@@ -122,7 +122,7 @@ Figure \ref{fig:model_scache} shows the scheduling strategy for Hadoop MapReduce
     \item 
     \(V_{Map} \times R \ge V_{Shuffle}\) (Figure \ref{fig:model_scache1}): 
 	The meaning of the inequality is that the speed of generating shuffle data (\(V_{Map} \times R\)) is greater than or equal to the shuffle speed (\(V_{Shuffle}\)). 
-	In this situation, the shuffle phase is uninterrupted. The I/O resource will be fully utilized during the whole shuffle phase. As a result, the formula of \(T_{PShuffle}\) is as followed:
+	In this situation, the shuffle phase is uninterrupted. The I/O resource will be fully utilized during the whole shuffle phase. As a result, the formula of \(T_{P\_Shuffle}\) is as followed:
 	\begin{equation}
 		\label{equation_Tpshuffle1}
 		\begin{aligned}
@@ -131,7 +131,7 @@ Figure \ref{fig:model_scache} shows the scheduling strategy for Hadoop MapReduce
 	\end{equation}
 	
     \item \(V_{Map} \times R < V_{Shuffle}\) (Figure \ref{fig:model_scache2}): 
-	When the shuffle speed (\(V_{Shuffle}\)) is faster, SCache needs to wait for shuffle data to be generated. As Figure \ref{fig:model_scache2} shown, the shuffle phase will be interrupted in each round. In this case, the formula of \(T_{PShuffle}\) is as followed:
+	When the shuffle speed (\(V_{Shuffle}\)) is faster, SCache needs to wait for shuffle data to be generated. As Figure \ref{fig:model_scache2} shown, the shuffle phase will be interrupted in each round. In this case, the formula of \(T_{P\_Shuffle}\) is as followed:
 	\begin{equation}
 		\label{equation_Tpshuffle2}
 		\begin{aligned}

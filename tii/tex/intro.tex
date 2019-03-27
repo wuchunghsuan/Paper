@@ -55,8 +55,8 @@ This is because the early-start always introduces an extra early allocation of t
 % why disk, reason!!!, 不重视
 % common problems
 
-To make things worse, we note that the above deficiencies generally exist in most of the DAG computing frameworks. 
-As a result, even we can effectively resolve the above deficiencies by modifying one framework, updating one application at a time is impractical given the sheer number of computing frameworks available today.
+We note that the above deficiencies generally exist in most of the DAG computing frameworks. 
+As a result, even though we can effectively resolve the above deficiencies by modifying one framework, updating one application at a time is impractical given the sheer number of computing frameworks available today.
 
 % The main defect of current shuffle design is coarse granularity of resource allocation during the task scheduling.
 % Nearly all task scheduling algorithms in DAG frameworks use time slotted model. Specifically, when a task is launched, the framework offers it a bundle of resources (i.e. CPU and memory), which are dedicated to this task during the time in its "slot".
