@@ -1,0 +1,12 @@
+\section{Conclusion}
+In this paper, we present SCache, a cross-framework shuffle optimization for DAG computing frameworks. 
+SCache decouples the shuffle from computing tasks and leverages memory to store shuffle data. 
+By task pre-scheduling and shuffle data pre-fetching with application context, SCache significantly mitigates the shuffle overhead. 
+%  {\color{red}
+%  Our implementation with Spark and evaluations show that SCache can provide a promising speedup to the DAG framework. 
+%  }
+{\color{blue}
+Our evaluations on Spark and Hadoop MapReduce with SCache show that SCache can provide a promising speedup. 
+Furthermore, we propose \textit{Framework Resources Quantification} (FRQ) model to assist in analyzing shuffle process of DAG computing frameworks. At last, we evaluate the SCache shuffle optimization by this practical model.
+Therefore, with the shared defects of shuffle among different frameworks, we believe that the optimization of SCache is general and easy to adapt. 
+}
