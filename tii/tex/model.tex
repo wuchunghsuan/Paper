@@ -2,7 +2,7 @@
 \section{Framework Resources Quantification Model}\label{model}
 
 In this section, we introduce \textit{Framework Resources Quantification} (FRQ) model to describe the performance of DAG frameworks.
-The FRQ model quantifies computing and I/O resources and visualizes them in the time dimension. According to the FRQ model, we can calculate the execution time required by the application under any circumstances, including different DAG frameworks, hardware environments, and so on. Therefore the FRQ model is able to help us analyze the resources scheduling of DAG framework and evaluate their performance. We will first introduce the FRQ model in Subsection \ref{model_overview}. In the following Subsection \ref{model_analysis}, we will use the FRQ model to describe three different computation jobs and analyze their performance. In the last Subsection \ref{model_verification}, we will use the actual experimental results to verify the FRQ model.
+The FRQ model quantifies computing and I/O resources and visualizes them in the time dimension. According to the FRQ model, we can calculate the execution time required by the application under any circumstances, including different DAG frameworks, hardware environments, and so on. Therefore the FRQ model is able to help us analyze the resources scheduling of DAG framework and evaluate their performance. We will first introduce the FRQ model in Subsection \ref{model_overview}. In the following Subsection \ref{model_analysis}, we will use the FRQ model to describe three different computation jobs and analyze their performance. In the last Subsection \ref{model_evaluation}, we will use the actual experimental results to evaluate the FRQ model.
 
 \subsection{The FRQ Model}\label{model_overview}
 The current distributed computing frameworks mostly use DAGs to describe computation logic. 
@@ -228,8 +228,8 @@ Compared to the original Hadoop MapReduce resource scheduling strategy, Hadoop M
 \label{table2}
 \end{table*}
 
-\subsection{Model Verification}\label{model_verification}
-To verify the FRQ model, we run experiments on two environments: (a) 50 Amazon EC2 m4.xlarge nodes cluster as shown in Subsection \ref{stepup}. (b) 4 in-house nodes cluster with 128GB memory and 32 cores per node. To simplify the calculation of the FRQ model, we run the Terasort as an experimental application on a Hadoop MapReduce framework. We deployed Hadoop with SCache and without SCache in both environments.
+\subsection{Model evaluation}\label{model_evaluation}
+To evaluate the FRQ model, we run experiments on two environments: (a) 50 Amazon EC2 m4.xlarge nodes cluster as shown in Subsection \ref{stepup}. (b) 4 in-house nodes cluster with 128GB memory and 32 cores per node. To simplify the calculation of the FRQ model, we run the Terasort as an experimental application on a Hadoop MapReduce framework. We deployed Hadoop with SCache and without SCache in both environments.
 
 Table \ref{table1} shows the calculational results of the FRQ model in the in-house environment. The workload is from 16 GB to 64 GB. 
 \(D\) and \(N\) are set according to the application parameters. \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) are calculated based on experimental results. K is the empirical value, we set \(K\) to 0.5 and 0.6, which reflects that \(T_{P\_Shuffle}\) has less impact on the reduce phase in the case of SCache. 
@@ -264,7 +264,7 @@ Table \ref{table2} shows the calculational results of the FRQ model in Amazon EC
 	\label{fig:hadoop_net}
 \end{figure*}
 
-In order to verify the two cases as mentioned above when using SCache, we monitor the network utilization as Figure \ref{fig:hadoop_net}. Figure \ref{fig:hadoop_net1} shows that, in the in-house environment, the network utilization remains high until the shuffle phase is completed. On the other hand, Figure \ref{fig:hadoop_net2} shows that the network utilization has 5 regular peaks in Amazon EC2 environment. 
+In order to evaluate the two cases as mentioned above when using SCache, we monitor the network utilization as Figure \ref{fig:hadoop_net}. Figure \ref{fig:hadoop_net1} shows that, in the in-house environment, the network utilization remains high until the shuffle phase is completed. On the other hand, Figure \ref{fig:hadoop_net2} shows that the network utilization has 5 regular peaks in Amazon EC2 environment. 
 Both these two situations are consistent with the FRQ model in Figure \ref{fig:model_scache}. 
 % Therefore, we believe that the FRQ model is able to accurately describe the performance of a framework with SCache.
 
@@ -273,3 +273,9 @@ Regarding accuracy, the experimental values are all larger than the calculated v
 This overhead will be amplified when the input data is small or the total execution time is short. 
 Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, such errors are acceptable. Therefore, we believe that the FRQ model can accurately describe DAG frameworks.
 }
+
+\begin{figure}
+	\includegraphics[width=.8\linewidth]{fig/scache_util}
+	\caption{CPU utilization and I/O throughput of a node during a Spark single shuffle application with SCache}
+	\label{fig:scache_util}
+\end{figure}

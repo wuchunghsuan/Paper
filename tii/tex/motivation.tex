@@ -78,7 +78,7 @@ but most of the DAG frameworks still store shuffle data on disks (e.g., Spark \c
 We argue that the memory capacity is large enough to store the short-living shuffle data with cautious management.
 
 \subsubsection{Multi-round Tasks Execution}\label{multi}
-Both experience and DAG framework manuals(e.g., Hadoop\footnote{http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html} and Spark\footnote{http://spark.apache.org/docs/1.6.2/configuration.html}) recommend that multi-round execution of each stage will benefit the performance of applications.
+Both experience and DAG framework manuals (e.g., Hadoop\footnote{http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html} and Spark\footnote{http://spark.apache.org/docs/1.6.2/configuration.html}) recommend that multi-round execution of each stage will benefit the performance of applications.
 For a cluster with $n$ slots, the number of tasks should be $n \times k \; (k \geq 1)$. 
 % For example, Hadoop MapReduce Tutorial\footnote{http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html} suggests that \textit{10-100 maps} per-node and \textit{0.95 or 1.75 $\times$ number of nodes $\times$ number of maximum container reduces} per-node seem to be the right level of parallelism. 
 % Spark configuration also recommends $2\text{-}3$ tasks per CPU core\footnote{http://spark.apache.org/docs/1.6.2/configuration.html} (i.e., $k = 2\text{-}3$).
