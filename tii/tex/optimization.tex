@@ -44,7 +44,7 @@ With the precondition of shuffle data pre-fetching,
 the $getBlock$ leverages the memory copy to fetch the shuffle data from the local memory of SCache.
 % Instead, the original implementation of shuffle read will trigger an all-to-all network transfer that keeps CPU idle.
 %To this end, all I/O operations are managed outside of the DAG framework, and the slot is occupied only by the CPU intensive phases of task.
-\subsection{Pre-schedule with Application Context}
+\subsection{Pre-scheduling with Application Context}
 The pre-scheduling and pre-fetching are the most critical aspects of the optimization. 
 The task-node mapping is not determined until tasks are scheduled by the scheduler of DAG framework. 
 Once the tasks are scheduled, the slots will be occupied to launch them. 
@@ -228,7 +228,7 @@ In Figure \ref{fig:range_pre_sample}, when $s$ is set to $3$, the result of samp
 The variance of the normalization between sampling prediction and reduce distribution is because the standard deviation of the prediction results is relatively small compared to the average prediction size, which is $0.0015$ in this example. 
 Figure \ref{fig:prediction_relative_error} further proves that the sampling prediction can provide precise result even in the dimension of absolute input size of reduce task. 
 On the other hand, the result of linear regression comes out with a large relative error. 
-Though the weighted reservoir sampling is precise, it also introduced extra overhead. 
+Though the weighted reservoir sampling is precise, it also introduces extra overhead. 
 We will show the overhead evaluation of sampling in Section \ref{evaluation}.
 % {\color{blue}
 % Figure \ref{fig:prediction_relative_error} proves that the sampling prediction can provide much more accurate result than the linear regression. 
@@ -253,7 +253,7 @@ This parameter is used to achieve a better data locality while performing shuffl
 % \fi
 As long as the input sizes of reduce tasks are available, the pre-scheduling is a classic scheduling problem without considering the data locality. 
 But ignoring the data locality can introduce extra network transfer. 
-In order to balance load while minimizing the network traffic, we present the Heuristic MinHeap scheduling algorithm (Algorithm \ref{hminheap}).   
+In order to balance load while minimizing the network traffic, we present the Heuristic MinHeap Scheduling algorithm (Algorithm \ref{hminheap}).   
 
 For the pre-scheduling itself (i.e., the first $while$ in Algorithm \ref{hminheap}), the algorithm maintains a min-heap to simulate the load of each node 
 and applies the longest processing time rule (LPT) \cite{design} to achieve $4/3\text{-}approximation$ optimum. 

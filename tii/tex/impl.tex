@@ -19,7 +19,7 @@ The master node of SCache coordinates the shuffle blocks globally with applicati
 The coordination provides two guarantees: (a) data is stored in memory before tasks start and (b) data is scheduled on-off memory with all-or-nothing and context-aware constraints. 
 The daemon bridges the communication between %{\color{red}Spark}
 {\color{blue} DAG framework} and SCache. The co-scheduler is dedicated to pre-schedule reduce tasks with DAG information and enforce the scheduling results to %{\color{red}Spark scheduler}
- {\color{blue} original scheduler in framework}.
+ {\color{blue} the original scheduler in framework}.
 
 % SCache consists of three components: a distributed shuffle data management system, a DAG co-scheduler, and a {\color{blue} worker daemon}. As shown in Figure \ref{fig:arch}, SCache employs the legacy master-slaves architecture like GFS \cite{gfs} for shuffle data management system. 
 
@@ -102,7 +102,7 @@ SCache worker will filter the reduce tasks' IDs that are scheduled on itself and
 % }
 {\color{blue}
 In order to force the DAG framework to run according to the SCache pre-scheduled results, we insert some lines of codes in framework scheduler.
-After modification, DAG scheduler consults SCache co-scheduler to get the preferred location for each task.
+After modification, the DAG scheduler consults SCache co-scheduler to get the preferred location for each task.
 }
 % In the case of extreme skew scenario, such as Figure \ref{fig:range_pre_sample}, Heuristic MinHeap trades about 0.05\% percent of stage completion time for 99\% reduction of shuffle data transmission through network by heuristicly swapping tasks.
 % \begin{minipage}{\columnwidth}
@@ -141,7 +141,7 @@ After modification, DAG scheduler consults SCache co-scheduler to get the prefer
 If the submitted shuffle dependencies contained a RangePartitioner or a customized non-hash partitioner, {\color{blue}the SCache master will send a sampling request to the framework master}. 
 The sampling job uses a reservoir sampling algorithm \cite{reservoir} on each partition. 
 For the sample number, it can be tuned to balance the overhead and accuracy. 
-The sampling job randomly selects some items and performs a local shuffle with partitioner (see Figure \ref{fig:sample}). 
+The sampling job randomly selects some items and performs a local shuffle with the partitioner (see Figure \ref{fig:sample}). 
 At the same time, the items number is counted as the weight. 
 These sampling data will be aggregated by reduce task ID on SCache master to predict the reduce partition size. 
 After the prediction, SCache master will call Algorithm \ref{hminheap} or \ref{mhminheap} to do the pre-scheduling.
@@ -195,7 +195,7 @@ Unlike the traditional cache replacement schemes such as MIN \cite{min}, the cac
 SCache leverages application context to select victim storage units when the reserved memory is full.
 
 At first, SCache flushes blocks of the incomplete units to disk cluster-widely.
-If all the units are completed, SCache selects victims based on two factors-\textit{inter-shuffle} and \textit{intra-shuffle}.
+If all the units are completed, SCache selects victims based on two factors --- \textit{inter-shuffle} and \textit{intra-shuffle}.
 \begin{itemize}[noitemsep]
 	\item Inter-shuffle: SCache master follows the scheduling scheme of Spark to determine the inter-shuffle priority. 
 	For example, Spark FIFO scheduler schedules the tasks of different stages according to the submission order. 
@@ -221,7 +221,7 @@ To prove the cross-framework capability of SCache, we adapt SCache on Hadoop Map
 It only takes about 500 lines of code. Such hundreds of lines of code modification are very small compared to the hundreds of thousands of lines of code in DAG framework. We believe that the costs of enabling SCache on other DAG computing frameworks, such as Tez \cite{tez}, are also low.
 }
 
-\subsection{Fault tolerance}\label{fault}
+\subsection{Discussion of Fault Tolerance}\label{fault}
 Due to the characteristic of shuffle data (e.g., short-lived, write-once, read-once), we believe fault tolerance is not a crucial goal of SCache at present. 
 We plan to implement SCache master with Apache ZooKeeper \cite{zookeeper} to provide constantly service. 
 If a failure happens inside the SCache worker, SCache daemon can block the shuffle write/read operations until the worker process restarts without violating the correctness of the DAG computing.

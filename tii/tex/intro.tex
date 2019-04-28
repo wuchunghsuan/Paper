@@ -3,7 +3,7 @@
 {\color{blue}
 % \cite{ibmreport}.
 % These data come from a variety of industry, e.g., records in industrial production, digital pictures and videos in social networks, and sensors used for Internet of Things (IoT).
-These data come from a variety of industry, e.g., e-commerce, telecommunications, media, retail customers and social networks.
+These data come from a variety of industries, e.g., e-commerce, telecommunications, media, retail customers and social networks.
 % \cite{chen2012interactive}.
 % Whether the data is generated from industrial production or social networks, the analysis methods are almost MapReduce-related\cite{lv2017next}.
 % Nowadays, the real challenge of big data is not how to collect it, but how to manage it logically and efficiently\cite{lv2017next}.
@@ -51,7 +51,7 @@ To desynchronize the network communication, an intuitive way is to launch some t
 % However, such early-start is by no means a panacea. 
 % This is because the early-start always introduces an extra early allocation of the slot leading to a slow execution of the current stage.
 {\color{blue}
-However, such early-start has several deficiencise.
+However, such early-start has several deficiencies.
 First, the early-start always introduces an extra early allocation of the slot leading to a slow execution of the current stage.
 Second, the early-start can not fully overlap the shuffle phases and the descendent stage. Due to the shuffle phases are coupled with the reduce phases and the size of slots is limited, only parts of reduce tasks can be early-start. 
 Last but not least, it is hard to find the optimal time to begin the early-start. If too early, the descendent stages are not ready to output enough intermediate data for the shuffle. If too late, the idle network resource is wasted.

@@ -1,7 +1,7 @@
 \section{Related Work}
 
 {\color{blue}
-\textbf{Modeling}: Most representative DAG computing frameworks use similar \textit{Bulk Synchronize Parallel} (BSP)\cite{valiant1990bridging} model to control data synchronization in each computing phase, i.e., \textit{stage} in Spark, \textit{superstep} in Pregel\cite{malewicz2010pregel} and so on. 
+\textbf{Modeling} Most representative DAG computing frameworks use similar \textit{Bulk Synchronize Parallel} (BSP)\cite{valiant1990bridging} model to control data synchronization in each computing phase, i.e., \textit{stage} in Spark, \textit{superstep} in Pregel\cite{malewicz2010pregel} and so on. 
 % (Hadoop MapReduce can also be considered as a special case of only one superstep in BSP model). 
 % In the process of optimizing the shuffle phases between adjacent computing phases, we design a performance model to assist in analyzing computing process.
 % There are also lots of performance models for MapReduce have been proposed, such as \cite{verma2011aria, khan2016hadoop, herodotou2011hadoop, chen2014cresp, farhat2016stochastic}.
@@ -19,7 +19,7 @@ However, the above models are not able to accurately describe the overhead cause
 The FRQ model focuses on describing the overhead caused by the shuffle process in different scheduling strategies, which satisfies our demand.
 }
 
-\textbf{Pre-scheduling}: Slow-start from Apache Hadoop MapReduce is a classic approach to handle shuffle overhead. 
+\textbf{Pre-scheduling} Slow-start from Apache Hadoop MapReduce is a classic approach to handle shuffle overhead. 
 Starfish \cite{starfish} gets sampled data statics for self-tuning system parameters (e.g. slow-start, etc). 
 DynMR \cite{dynmr} dynamically starts reduce tasks in late map stage. 
 All of them have the explicit I/O time in occupied slots. 
@@ -31,12 +31,21 @@ But we have proved that randomly assign tasks may hurt the overall performance i
 Different from these works, SCache pre-schedules multiple shuffles without breaking load balancing. 
 
 %  by combining DAG information and heuristic algorithms.
-\textbf{Delay-scheduling}: Delay Scheduling \cite{delay} delays tasks assignment to get better data locality, which can reduce the network traffic. 
+\textbf{Delay-scheduling} Delay Scheduling \cite{delay} delays tasks assignment to get better data locality, which can reduce the network traffic. 
 ShuffleWatcher \cite{shufflewatcher} delays shuffle fetching when the network is saturated. 
 At the same time, it achieves better data locality. 
 Both Quincy \cite{quincy} and Fair Scheduling \cite{preemptive} can reduce shuffle data by optimizing data locality of map tasks. 
 But all of them cannot mitigate explicit I/O in both map and reduce tasks. 
 In addition, their optimizations fluctuate under different network performances and data distributions, whereas SCache can provide a stable performance gain by shuffle data pre-fetching and in-memory caching.
 
-\textbf{Network layer optimization}: Varys \cite{varys} and Aalo \cite{aalo} provide the network layer optimization for shuffle transfer. 
-Though the efforts are limited throughout whole shuffle process, they can be easily applied on SCache to further improve the performance.
+\textbf{Network layer optimization} 
+Varys \cite{varys} and Aalo \cite{aalo} also provide the network layer optimization for shuffle transfer. 
+{\color{blue}
+BASS\cite{qin2017bandwidth} combines SDN (Software-defined networking) with Hadoop and provides a bandwidth-aware task shceduling to optimize shuffle phases.
+Hybrid SDN \cite{huang2018survey} can also be seen as a solution to improve the performance.
+% We think that it can be applied on SCache to further improve the performace.
+% To increase the scalability, hybrid SDN\cite{huang2018survey} can 
+Though the efforts above are limited throughout whole shuffle process, they can be easily applied on SCache to further improve the performance.
+}
+% Varys \cite{varys} and Aalo \cite{aalo} also provide the network layer optimization for shuffle transfer. 
+% Though the efforts are limited throughout whole shuffle process, they can be easily applied on SCache to further improve the performance.

@@ -112,7 +112,7 @@ The in-memory cache of shuffle data further reduces the shuffle read time.
 As a result, the combination of these optimizations decreases ~$100\%$ overhead of the shuffle read in a reduce task (Figure \ref{fig:reducetask}). 
 In addition, the heuristic algorithm can achieve a balanced pre-scheduling result, thus providing ~$80\%$ improvement in reduce stage completion time (Figure \ref{fig:reducestage}).
 
-In overall, SCache can help Spark decrease by ~$89\%$ overhead of the whole shuffle process. 
+Overall, SCache can help Spark decrease by ~$89\%$ overhead of the whole shuffle process. 
 
 \subsubsection{Terasort}
 We also evaluate Terasort\cite{terasort} --- a recognized shuffle intensive benchmark for distributed system analysis. 
@@ -161,7 +161,7 @@ As shown in Figure \ref{fig:tpcds}, the horizontal axis is query name and the ve
 Note that we skip some queries due to the compatible issues. 
 Spark with SCache outperforms the original Spark in almost all tested queries. 
 Furthermore, in many queries, Spark with SCache outperforms original Spark by an order of magnitude. 
-It is because that those queries contain shuffle-heavy operations such as "groupby", "union", etc.
+It is because that those queries contain shuffle-heavy operations such as \textit{groupby}, \textit{union}, etc.
 The overall reduction portion of query time that SCache achieved is $40\%$ on average. 
 Since this evaluation presents the overall job completion time of queries, we believe that our shuffle optimization is promising.
 
@@ -190,7 +190,7 @@ Combined with the sampling overhead evaluation, we believe that SCache is scalab
     \begin{minipage}{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth]{fig/hadoop_terasort_time} % first figure itself
-        \caption{\color{blue}Hadoop MapReduce Terasort completion time}
+        \caption{\color{blue}Hadoop MapReduce Terasort Completion Time}
 		\label{fig:hadoop_terasort_time}
     \end{minipage}\hfill
     \begin{minipage}{0.4\textwidth}

@@ -2,7 +2,7 @@
 
 % In large-scale data-parallel analytics, shuffle, or the cross-network read and aggregation of partitioned data between tasks with data dependencies, usually brings in large overhead. 
 % {\color{blue}
-In industrial large-scale data-parallel analytics, shuffle, or the cross-network read and the aggregation of partitioned data between tasks with data dependencies usually bring in large overhead.
+In industrial large-scale data-parallel analytics, shuffle, or the cross-network read and the aggregation of partitioned data between tasks with data dependencies, usually bring in large overhead.
 Due to the dependency constraints, execution of those descendant tasks could be delayed by long shuffles.
 To reduce shuffle overhead, we present \textit{SCache}, an open source plug-in system that particularly focuses on shuffle optimization. 
 By extracting and analyzing shuffle dependencies prior to the actual task execution, SCache can adopt heuristic pre-scheduling combining with shuffle size prediction to pre-fetch shuffle data and balance load on each node. 
