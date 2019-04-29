@@ -1,11 +1,13 @@
 \section{Evaluation}\label{evaluation}
 {\color{blue}
-This section reveals the evaluation of SCache with comprehensive workloads and benchmarks. 
-To show the compatibility of SCache as a cross-framework plug-in, we implement and evaluate SCache on both Spark and  Hadoop MapReduce. 
+This section reveals the evaluation of SCache with comprehensive workloads and benchmarks which include common operations in the industrial big-data analysis. 
+% To show the compatibility of SCache as a cross-framework plug-in, we implement and evaluate SCache on both Spark and Hadoop MapReduce. 
+We implement and evaluate SCache on Spark and Hadoop MapReduce, since they are the two most distributed computing frameworks using in industrial big-data analysis.
 First, we evaluate the Spark with SCache in 3 different benchmarks.
 We run a Spark job with single shuffle to analyze hardware utilization and see the impacts of different components from the scope of a task to a job. 
 Then we use a recognized shuffle intensive benchmark --- Terasort to evaluate SCache with different data partition schemes.
-In order to prove the performance gain of SCache with a real production workload, we also evaluate Spark TPC-DS\footnote{https://github.com/databricks/spark-sql-perf} and present the overall performance improvement.
+To prove the performance gain of SCache with a industrial production workload, we also evaluate Spark TPC-DS\footnote{https://github.com/databricks/spark-sql-perf} and present the overall performance improvement.
+% In order to prove the performance gain of SCache with a real production workload, we also evaluate Spark TPC-DS\footnote{https://github.com/databricks/spark-sql-perf} and present the overall performance improvement.
 % To prove the compatibility of SCache as a cross-framework plug-in, we implemented SCache on both Hadoop MapReduce and Spark. 
 Second, due to the simple DAG computing in Hadoop MapReduce, we only use Terasort as a shuffle-heavy benchmark to evaluate the performance of Hadoop MapReduce with SCache.
 }
@@ -131,6 +133,27 @@ At the same time, Figure \ref{fig:terashuffle} reveals that SCache produces exac
 It implies that the heuristic locality swap of SCache can obtain the best locality while balancing the load. 
 \begin{figure*}
 	\centering
+	\includegraphics[width=.9\textwidth]{fig/tpcds}
+	\caption{TPC-DS Benchmark Evaluation}
+	\label{fig:tpcds}
+	\vspace{-1em}
+\end{figure*}
+
+\subsubsection{Industrial Production Workload}
+We also evaluate some queries from TPC-DS\footnote{http://www.tpc.org/tpcds/}. 
+TPC-DS benchmark is designed for modeling multiple users submitting varied queries (e.g. ad-hoc, interactive OLAP, data mining, etc.). 
+TPC-DS contains 99 queries and is considered as the standardized industry benchmark for testing big data systems. 
+% We evaluate the performance of Spark with SCache by picking some of the TPC-DS queries with shuffle intensive attribute. 
+As shown in Figure \ref{fig:tpcds}, the horizontal axis is query name and the vertical axis is query completion time. 
+Note that we skip some queries due to the compatible issues. 
+Spark with SCache outperforms the original Spark in almost all tested queries. 
+Furthermore, in many queries, Spark with SCache outperforms original Spark by an order of magnitude. 
+It is because that those queries contain shuffle-heavy operations such as \textit{groupby}, \textit{union}, etc.
+The overall reduction portion of query time that SCache achieved is $40\%$ on average. 
+Since this evaluation presents the overall job completion time of queries, we believe that our shuffle optimization is promising.
+
+\begin{figure*}
+	\centering
 	\begin{subfigure}{.47\linewidth}
 		\includegraphics[width=\linewidth]{fig/hadoop_terasort_scache}
 		\caption{\color{blue}Hadoop MapReduce with SCache}
@@ -144,26 +167,6 @@ It implies that the heuristic locality swap of SCache can obtain the best locali
 	\caption{\color{blue}CPU utilization and I/O throughput of a node during a Hadoop MapReduce Terasort job}
 	\label{fig:hadoop_terasort}
 \end{figure*}
-\begin{figure*}
-	\centering
-	\includegraphics[width=.9\textwidth]{fig/tpcds}
-	\caption{TPC-DS Benchmark Evaluation}
-	\label{fig:tpcds}
-	\vspace{-1em}
-\end{figure*}
-
-\subsubsection{Production Workload}
-We also evaluate some queries from TPC-DS\footnote{http://www.tpc.org/tpcds/}. 
-TPC-DS benchmark is designed for modeling multiple users submitting varied queries (e.g. ad-hoc, interactive OLAP, data mining, etc.). 
-TPC-DS contains 99 queries and is considered as the standardized industry benchmark for testing big data systems. 
-% We evaluate the performance of Spark with SCache by picking some of the TPC-DS queries with shuffle intensive attribute. 
-As shown in Figure \ref{fig:tpcds}, the horizontal axis is query name and the vertical axis is query completion time. 
-Note that we skip some queries due to the compatible issues. 
-Spark with SCache outperforms the original Spark in almost all tested queries. 
-Furthermore, in many queries, Spark with SCache outperforms original Spark by an order of magnitude. 
-It is because that those queries contain shuffle-heavy operations such as \textit{groupby}, \textit{union}, etc.
-The overall reduction portion of query time that SCache achieved is $40\%$ on average. 
-Since this evaluation presents the overall job completion time of queries, we believe that our shuffle optimization is promising.
 
 {\color{blue}
 \subsection{Hadoop MapReduce with SCache}
