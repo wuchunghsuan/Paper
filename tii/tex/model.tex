@@ -1,4 +1,4 @@
-{\color{blue}
+{\color{black}
 \section{Framework Resources Quantification Model}\label{model}
 
 In this section, we introduce \textit{Framework Resources Quantification} (FRQ) model to describe the performance of DAG frameworks.
@@ -22,7 +22,7 @@ Figure \ref{fig:model_basic} shows how the FRQ model describes a MapReduce task.
 \begin{figure*}
     \centering
 	\includegraphics[width=0.85\textwidth]{fig/model_basic}
-	\caption{\color{blue}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce}
+	\caption{\color{black}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce}
     \label{fig:model_basic}
     \vspace{-1em}
 \end{figure*}
@@ -73,15 +73,15 @@ By using the FRQ model to describe a MapReduce job, the users can analyze the re
 	\centering
 	\begin{subfigure}{0.47\linewidth}
 		\includegraphics[width=\linewidth]{fig/model_original}
-		\caption{\color{blue}Full Serial MapReduce}
+		\caption{\color{black}Full Serial MapReduce}
 		\label{fig:model_original}
 	\end{subfigure}
 	\begin{subfigure}{0.47\linewidth}
 		\includegraphics[width=\linewidth]{fig/model_hadoop}
-		\caption{\color{blue}Half Parallel MapReduce}
+		\caption{\color{black}Half Parallel MapReduce}
 		\label{fig:model_hadoop}
 	\end{subfigure}
-	\caption{\color{blue}Framework Resources Quantification (FRQ) Model with Different Scheduling Strategies}
+	\caption{\color{black}Framework Resources Quantification (FRQ) Model with Different Scheduling Strategies}
 	\label{fig:model_strategies}
 \end{figure*}
 
@@ -103,15 +103,15 @@ However, we also found that the I/O resource in the map phase is still idle. Thi
 	\centering
 	\begin{subfigure}{0.47\linewidth}
 		\includegraphics[width=\linewidth]{fig/model_scache1}
-		\caption{\color{blue}If \(V_{Map} \times R \ge V_{Shuffle}\)}
+		\caption{\color{black}If \(V_{Map} \times R \ge V_{Shuffle}\)}
 		\label{fig:model_scache1}
 	\end{subfigure}
 	\begin{subfigure}{0.47\linewidth}
 		\includegraphics[width=\linewidth]{fig/model_scache2}
-		\caption{\color{blue}If \(V_{Map} \times R < V_{Shuffle}\)}
+		\caption{\color{black}If \(V_{Map} \times R < V_{Shuffle}\)}
 		\label{fig:model_scache2}
 	\end{subfigure}
-	\caption{\color{blue}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce in Different Environments}
+	\caption{\color{black}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce in Different Environments}
 	\label{fig:model_scache}
 \end{figure*}
 
@@ -181,7 +181,7 @@ Compared to the original Hadoop MapReduce resource scheduling strategy, Hadoop M
 	\end{tabular}
 }
 \(D\): GB, \(V_{i}\): GB/s, \(T_{i}\): s
-\caption{\color{blue}Hadoop MapReduce on 4 nodes cluster in the FRQ model}
+\caption{\color{black}Hadoop MapReduce on 4 nodes cluster in the FRQ model}
 \label{table1}
 \end{table*}
 % \subsection{Performance Analysis}\label{model_performance_analysis}
@@ -225,7 +225,7 @@ Compared to the original Hadoop MapReduce resource scheduling strategy, Hadoop M
 	\end{tabular}
 }
 \(D\): GB, \(V_{i}\): GB/s, \(T_{i}\): s
-\caption{\color{blue}Hadoop MapReduce on 50 AWS m4.xlarge nodes cluster in the FRQ model}
+\caption{\color{black}Hadoop MapReduce on 50 AWS m4.xlarge nodes cluster in the FRQ model}
 \label{table2}
 \end{table*}
 
@@ -253,15 +253,15 @@ Table \ref{table2} shows the calculational results of the FRQ model in Amazon EC
 	\centering
 	\begin{subfigure}{.42\linewidth}
 		\includegraphics[width=\linewidth]{fig/hadoop_net1}
-		\caption{\color{blue}If \(V_{Map} \times R \ge V_{Shuffle}\)}
+		\caption{\color{black}If \(V_{Map} \times R \ge V_{Shuffle}\)}
 		\label{fig:hadoop_net1}
 	\end{subfigure}
 	\begin{subfigure}{.42\linewidth}
 		\includegraphics[width=\linewidth]{fig/hadoop_net2}
-		\caption{\color{blue}If \(V_{Map} \times R < V_{Shuffle}\)}
+		\caption{\color{black}If \(V_{Map} \times R < V_{Shuffle}\)}
 		\label{fig:hadoop_net2}
 	\end{subfigure}
-	\caption{\color{blue}Network utilization on Hadoop MapReduce with SCache}
+	\caption{\color{black}Network utilization on Hadoop MapReduce with SCache}
 	\label{fig:hadoop_net}
 \end{figure*}
 

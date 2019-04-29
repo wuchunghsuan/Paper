@@ -1,6 +1,6 @@
 \section{Related Work}
 
-{\color{blue}
+{\color{black}
 \textbf{Modeling} 
 Most representative DAG computing frameworks use similar \textit{Bulk Synchronize Parallel} (BSP)\cite{valiant1990bridging} model to control data synchronization in each computing phase, i.e., \textit{stage} in Spark, \textit{superstep} in Pregel\cite{malewicz2010pregel} and so on. 
 % (Hadoop MapReduce can also be considered as a special case of only one superstep in BSP model). 
@@ -50,7 +50,7 @@ In addition, their optimizations fluctuate under different network performances 
 
 \textbf{Network layer optimization} 
 Varys \cite{varys} and Aalo \cite{aalo} also provide the network layer optimization for shuffle transfer. 
-{\color{blue}
+{\color{black}
 BASS\cite{qin2017bandwidth} combines SDN (Software-defined networking) with Hadoop and provides a bandwidth-aware task scheduling to optimize shuffle phases.
 Hybrid SDN \cite{huang2018survey} can also be seen as a solution to improve the performance.
 % We think that it can be applied on SCache to further improve the performace.

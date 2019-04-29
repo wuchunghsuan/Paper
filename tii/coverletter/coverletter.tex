@@ -24,13 +24,13 @@
 
 \title{Summary of Difference}
 
-\author{Rui Ren}
-\author{Chunghsuan Wu}
-\author{Zhouwang Fu}
-\author{Tao Song}
-\author{Yanqiang Liu}
-\author{Zhengwei Qi}
-\author{Haibing Guan}
+% \author{Rui Ren}
+% \author{Chunghsuan Wu}
+% \author{Zhouwang Fu}
+% \author{Tao Song}
+% \author{Yanqiang Liu}
+% \author{Zhengwei Qi}
+% \author{Haibing Guan}
 
 
 \begin{document}
@@ -42,7 +42,12 @@
 
 
 This paper is the extension of our conference paper at PPoPP '18 \cite{fu2018efficient}. 
-In the manuscript we uploaded, we highlight the new content in blue.
+% In the manuscript we uploaded, we highlight the new content in blue.
+% We believe that shuffle-heavy jobs are also existed widely in industrial big-data analysis.
+% SCache can also provide considerable optimization in industrial big-data.
+In this paper, we combine the characteristic of the industrial big-data and DAG computing frameworks.
+We provide a new data processing solution for the industrial big-data based on our conference paper.
+Besides, we use the credible benchmark to demonstrate that our solution is effective in the industrial big-data analysis.
 This paper makes the following distinct contributions compared with the conference paper.
 
 \begin{enumerate}
@@ -50,13 +55,13 @@ This paper makes the following distinct contributions compared with the conferen
 We propose a new performance model called \textit{Framework Resources Quantification} (FRQ) model.
 The FRQ model quantifies computing and I/O resources by five input parameters. 
 Furthermore, the FRQ model visualizes the resources scheduling strategies of the DAG frameworks in the time dimension. 
-In this paper, we use the model to analyze the deficiencies of the resources scheduling strategies and then optimize them.
+In this paper, we use the model to evaluate the deficiencies of different resources scheduling strategies and then optimize them.
 \item 
 In the conference paper, we only implement SCache on Spark. 
-In this paper, we implement SCache on Hadoop MapReduce. 
-By using the FRQ model to analyze Hadoop MapReduce, we can figure out that SCache is feasible to optimize the shuffle phases. 
-Meanwhile, our experiments are also consistent with the analysis of the model.
-This result demonstrates the compatibility and adaptability of SCache as a cross-framework plug-in.
+In this paper, we also implement SCache on Hadoop MapReduce, since Spark and Hadoop MapReduce are the two most distributed computing frameworks using in industrial big-data analysis.
+% By using the FRQ model to analyze Hadoop MapReduce, we can figure out that SCache is feasible to optimize the shuffle phases. 
+% Meanwhile, our experiments are also consistent with the analysis of the model.
+This result also demonstrates the compatibility and adaptability of SCache as a cross-framework plug-in.
 % To demonstrate the compatibility and adaptability of SCache as a cross-framework plug-in, we also extended SCache on Hadoop MapReduce. 
 \item
 We append two parts to the evaluation section. 
@@ -65,9 +70,11 @@ Secondly, we evaluate the performance of Hadoop MapReduce with SCache. We use th
 According to the experiments, Hadoop MapReduce with SCache optimizes job completion time by up to $15\%$ and an average of $13\%$.
 \end{enumerate}
 
+
 % Besides the major contributions, we also revise the paper in many places, including writing and more related work. 
-In summary, we propose a new performance model to provide a theoretical basis for performance optimization and improve experiments by adding experiments on Hadoop MapReduce. 
-We believe that the added content makes a sufficient contribution to this journal submission.
+In summary, we propose a new performance model to provide a theoretical basis for performance optimization and improve evaluations by adding experiments on Hadoop MapReduce. 
+We believe that the added content makes a sufficient contribution to this special issue.
+% We believe that the added content makes a sufficient contribution to this journal submission.
 
 \bibliographystyle{IEEEtran}
 \bibliography{coverletter}

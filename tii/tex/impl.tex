@@ -4,7 +4,7 @@ This section presents an overview of the implementation of SCache.
 % Here we use Spark as an example of DAG framework to illustrate the work flow of shuffle optimization. 
 % We will first present the system overview in Subsection \ref{arch} while the following two subsections focus on the two constraints on memory management.
 % }
-{\color{blue}
+{\color{black}
 We first present the system overview and the detail of sampling in Subsection \ref{arch}. 
 The following \ref{memorymanage} subsection focuses on two constraints on memory management.
 In Subsection \ref{crossframework}, we evaluate the cross-framework capability of SCache. 
@@ -14,28 +14,28 @@ At last, we discuss the cost of adapting SCache and fault tolerance.
 
 \subsection{System Overview}\label{arch}
 SCache consists of three components: a distributed shuffle data management system, a DAG co-scheduler, and a %{\color{red}daemon inside Spark.}
-{\color{blue} worker daemon. As a plug-in system, SCache needs to rely on a DAG framework.} As shown in Figure \ref{fig:architecture}, SCache employs the legacy master-slaves architecture like GFS \cite{gfs} for the shuffle data management system. 
+{\color{black} worker daemon. As a plug-in system, SCache needs to rely on a DAG framework.} As shown in Figure \ref{fig:architecture}, SCache employs the legacy master-slaves architecture like GFS \cite{gfs} for the shuffle data management system. 
 The master node of SCache coordinates the shuffle blocks globally with application context. The worker node reserves memory to store blocks.
 The coordination provides two guarantees: (a) data is stored in memory before tasks start and (b) data is scheduled on-off memory with all-or-nothing and context-aware constraints. 
 The daemon bridges the communication between %{\color{red}Spark}
-{\color{blue} DAG framework} and SCache. The co-scheduler is dedicated to pre-schedule reduce tasks with DAG information and enforce the scheduling results to %{\color{red}Spark scheduler}
- {\color{blue} the original scheduler in framework}.
+{\color{black} DAG framework} and SCache. The co-scheduler is dedicated to pre-schedule reduce tasks with DAG information and enforce the scheduling results to %{\color{red}Spark scheduler}
+ {\color{black} the original scheduler in framework}.
 
-% SCache consists of three components: a distributed shuffle data management system, a DAG co-scheduler, and a {\color{blue} worker daemon}. As shown in Figure \ref{fig:arch}, SCache employs the legacy master-slaves architecture like GFS \cite{gfs} for shuffle data management system. 
+% SCache consists of three components: a distributed shuffle data management system, a DAG co-scheduler, and a {\color{black} worker daemon}. As shown in Figure \ref{fig:arch}, SCache employs the legacy master-slaves architecture like GFS \cite{gfs} for shuffle data management system. 
 
 % The master node of SCache coordinates the shuffle blocks globally with application context. The worker node reserves memory to store blocks.
 % The coordination provides two guarantees: (a)data is stored in memory before tasks start and (b)data is scheduled on-off memory with all-or-nothing and context-aware constraints. 
-% The daemon bridges the communication between {\color{blue}DAG framework} and SCache. The co-scheduler is dedicated to pre-schedule reduce tasks with DAG information and enforce the scheduling results to {\color{blue} original scheduler in framework master}.
+% The daemon bridges the communication between {\color{black}DAG framework} and SCache. The co-scheduler is dedicated to pre-schedule reduce tasks with DAG information and enforce the scheduling results to {\color{black} original scheduler in framework master}.
 
 % {\color{red}
 % When a Spark job starts, the DAG will be first generated. 
 % During the DAG generation, the shuffle dependencies among Resilient Distributed Datasets (RDDs) will then be submitted through the daemon process in Spark driver. 
 % }
-{\color{blue}
+{\color{black}
 When a DAG job is submitted, the DAG information is generated in framework task scheduler. 
 Before the computing tasks begin, the shuffle dependencies are determined based on DAG.
 }
-For each shuffle dependency, the shuffle ID, the type of partitioner, the number of map tasks, and the number of reduce tasks are included.  If there is a specialized partitioner, such as range partitioner, in the shuffle dependencies, the daemon will insert a sampling application before the {\color{blue}computing job}. We will elaborate the sampling procedure in the Section \ref{sampling}.
+For each shuffle dependency, the shuffle ID, the type of partitioner, the number of map tasks, and the number of reduce tasks are included.  If there is a specialized partitioner, such as range partitioner, in the shuffle dependencies, the daemon will insert a sampling application before the {\color{black}computing job}. We will elaborate the sampling procedure in the Section \ref{sampling}.
 % \begin{minipage}{\columnwidth}
 % \begin{algorithm}[H]
 % \caption{Heuristic MinHeap Scheduling for Single Shuffle}
@@ -90,7 +90,7 @@ For each shuffle dependency, the shuffle ID, the type of partitioner, the number
 % \end{algorithm}
 % \end{minipage}
 
-When a map task finishes computing, the shuffle write implementation of the DAG framework is modified to call the SCache API and move all the blocks out of {\color{blue}framework worker} through memory copy. 
+When a map task finishes computing, the shuffle write implementation of the DAG framework is modified to call the SCache API and move all the blocks out of {\color{black}framework worker} through memory copy. 
 After that, the slot will be released (without being blocked on disk operations).
 When a block of the map output (i.e., "map output" in Figure \ref{fig:shuffle}) is received, the SCache worker will send the block ID and the size to the master.
 If the collected map output data reach the observation threshold, the DAG co-scheduler will run the scheduling Algorithm \ref{hminheap} or \ref{mhminheap} to pre-schedule the reduce tasks and then broadcast the scheduling result to start pre-fetching on each worker.
@@ -100,7 +100,7 @@ SCache worker will filter the reduce tasks' IDs that are scheduled on itself and
 % To enforce SCache pre-scheduled tasks -- node mapping, we insert some lines of codes in Spark DAG Scheduler.
 % For RDDs with shuffle dependencies, Spark DAG scheduler will consult SCache master to get the preferred location for each partition and set \textit{NODE\_LOCAL} locality level on corresponding reduce tasks.
 % }
-{\color{blue}
+{\color{black}
 In order to force the DAG framework to run according to the SCache pre-scheduled results, we insert some lines of codes in framework scheduler.
 After modification, the DAG scheduler consults SCache co-scheduler to get the preferred location for each task.
 }
@@ -138,7 +138,7 @@ After modification, the DAG scheduler consults SCache co-scheduler to get the pr
 % \end{minipage}
 
 \subsubsection{Reservoir Sampling}\label{sampling}
-If the submitted shuffle dependencies contained a RangePartitioner or a customized non-hash partitioner, {\color{blue}the SCache master will send a sampling request to the framework master}. 
+If the submitted shuffle dependencies contained a RangePartitioner or a customized non-hash partitioner, {\color{black}the SCache master will send a sampling request to the framework master}. 
 The sampling job uses a reservoir sampling algorithm \cite{reservoir} on each partition. 
 For the sample number, it can be tuned to balance the overhead and accuracy. 
 The sampling job randomly selects some items and performs a local shuffle with the partitioner (see Figure \ref{fig:sample}). 
@@ -159,7 +159,7 @@ After the prediction, SCache master will call Algorithm \ref{hminheap} or \ref{m
 	\begin{minipage}{.4\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{fig/architecture}
-		\caption{\color{blue}SCache Architecture}
+		\caption{\color{black}SCache Architecture}
 		\label{fig:architecture}
 		% \vspace{-0.5em}
 	\end{minipage}\hfill
@@ -213,7 +213,7 @@ If all the units are completed, SCache selects victims based on two factors --- 
 % \subsection{Cost of adapting DAG frameworks}
 % SCache provides API through RPC, such as \textit{putBlock(blockId)}, \textit{getBlock(blockId)}, and \textit{getScheduleResult(shuffleId)}. The concise design makes it easy to adapt DAG frameworks to enable SCache optimization. For example, it only takes about 500 lines of code in Spark to integrate SCache. By a glance of Hadoop source code, we believe that the costs of enabling SCache on MapReduce \cite{hadoop} and YARN \cite{yarn} based DAG computing framework, such as Tez \cite{tez}, are also very low.
 % }
-{\color{blue}
+{\color{black}
 \subsection{Analysis of cross-framework capability}\label{crossframework}
 Shuffle optimization of SCache inevitably requires the modification on the DAG frameworks. SCache provides APIs through RPC, such as \textit{putBlock (blockId)}, \textit{getBlock (blockId)}, and \textit{getScheduleResult (shuffleId)}. In order to use SCache, we mainly need to modify two parts of the frameworks: (a) The DAG scheduler should provide the DAG information and follow the pre-scheduled result of SCache; (b) The shuffle data should be transferred to SCache Storage Management.
 

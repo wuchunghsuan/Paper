@@ -1,7 +1,7 @@
 \begin{abstract}
 
 % In large-scale data-parallel analytics, shuffle, or the cross-network read and aggregation of partitioned data between tasks with data dependencies, usually brings in large overhead. 
-% {\color{blue}
+% {\color{black}
 In industrial large-scale data-parallel analytics, shuffle, or the cross-network read and the aggregation of partitioned data between tasks with data dependencies, usually bring in large overhead.
 Due to the dependency constraints, execution of those descendant tasks could be delayed by long shuffles.
 To reduce shuffle overhead, we present \textit{SCache}, an open source plug-in system that particularly focuses on shuffle optimization. 
@@ -11,7 +11,7 @@ Meanwhile, SCache takes full advantage of the system memory to accelerate the sh
 % We have implemented SCache and customized Spark to use it as the external shuffle service and co-scheduler. The performance of SCache is evaluated with both simulations and testbed experiments on a 50-node Amazon EC2 cluster.
 % Those evaluations have demonstrated that, by incorporating SCache, the shuffle overhead of Spark can be reduced by nearly $89\%$, and the overall completion time of TPC-DS queries improves $40\%$ on average.
 % }
-{\color{blue}
+{\color{black}
 We also propose a new performance model called \textit{Framework Resources Quantification} (FRQ) model to analyze DAG frameworks and evaluate the SCache shuffle optimization. 
 The FRQ model quantifies the utilization of resources and predicts the execution time of each phase of computing jobs. 
 % We use the FRQ model to analyze DAG frameworks and evaluate the SCache shuffle optimization by mathematics.

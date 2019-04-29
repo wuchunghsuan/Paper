@@ -1,5 +1,5 @@
 \section{Evaluation}\label{evaluation}
-{\color{blue}
+{\color{black}
 This section reveals the evaluation of SCache with comprehensive workloads and benchmarks which include common operations in the industrial big-data analysis. 
 % To show the compatibility of SCache as a cross-framework plug-in, we implement and evaluate SCache on both Spark and Hadoop MapReduce. 
 We implement and evaluate SCache on Spark and Hadoop MapReduce, since they are the two most distributed computing frameworks using in industrial big-data analysis.
@@ -15,7 +15,7 @@ Finally, we measure the overhead of weighted reservoir sampling.
 
 In summary, SCache can decrease ~$89\%$ time of Spark shuffle without introducing extra network transfer.
 More impressively, the overall completion time of TPC-DS can be improved ~$40\%$ on average by applying the optimization from SCache.
-{\color{blue}Meanwhile, Hadoop MapReduce with SCache optimizes job completion time by up to $15\%$ and an average of $13\%$}
+{\color{black}Meanwhile, Hadoop MapReduce with SCache optimizes job completion time by up to $15\%$ and an average of $13\%$}
 
 % Because a complex Spark application consists of multiple stages. The completion time of each stage varies under different input data, configurations and different number of stages. This uncertainty leads to the dilemma that dramatic fluctuation occurs in overall performance comparison. To present a straightforward illustration, we limit the scope of most evaluations in a single stage.
 \begin{figure*}
@@ -156,19 +156,19 @@ Since this evaluation presents the overall job completion time of queries, we be
 	\centering
 	\begin{subfigure}{.47\linewidth}
 		\includegraphics[width=\linewidth]{fig/hadoop_terasort_scache}
-		\caption{\color{blue}Hadoop MapReduce with SCache}
+		\caption{\color{black}Hadoop MapReduce with SCache}
 		\label{fig:hadoop_terasort_scache}
 	\end{subfigure}
 	\begin{subfigure}{.47\linewidth}
 		\includegraphics[width=\linewidth]{fig/hadoop_terasort_origin}
-		\caption{\color{blue}Hadoop MapReduce without SCache}
+		\caption{\color{black}Hadoop MapReduce without SCache}
 		\label{fig:hadoop_terasort_origin}
 	\end{subfigure}
-	\caption{\color{blue}CPU utilization and I/O throughput of a node during a Hadoop MapReduce Terasort job}
+	\caption{\color{black}CPU utilization and I/O throughput of a node during a Hadoop MapReduce Terasort job}
 	\label{fig:hadoop_terasort}
 \end{figure*}
 
-{\color{blue}
+{\color{black}
 \subsection{Hadoop MapReduce with SCache}
 
 To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce. 
@@ -193,7 +193,7 @@ Combined with the sampling overhead evaluation, we believe that SCache is scalab
     \begin{minipage}{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth]{fig/hadoop_terasort_time} % first figure itself
-        \caption{\color{blue}Hadoop MapReduce Terasort Completion Time}
+        \caption{\color{black}Hadoop MapReduce Terasort Completion Time}
 		\label{fig:hadoop_terasort_time}
     \end{minipage}\hfill
     \begin{minipage}{0.4\textwidth}
