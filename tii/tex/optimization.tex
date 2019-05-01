@@ -224,15 +224,15 @@ The $BlockSize_{ji}$ can be calculated by:
 \end{aligned}
 \end{equation}
 % The classic reservoir sampling is designed for randomly choosing \textit{k} samples from \textit{n} items, where \textit{n} is either a very large or an unknown number \cite{reservoir}. 
-In Figure \ref{fig:range_pre_sample}, when $s$ is set to $3$, the result of sampling prediction is much better than linear regression. 
-The variance of the normalization between sampling prediction and reduce distribution is because the standard deviation of the prediction results is relatively small compared to the average prediction size, which is $0.0015$ in this example. 
-Figure \ref{fig:prediction_relative_error} further proves that the sampling prediction can provide precise result even in the dimension of absolute input size of reduce task. 
-On the other hand, the result of linear regression comes out with a large relative error. 
-Though the weighted reservoir sampling is precise, it also introduces extra overhead. 
-We will show the overhead evaluation of sampling in Section \ref{evaluation}.
+% In Figure \ref{fig:range_pre_sample}, when $s$ is set to $3$, the result of sampling prediction is much better than linear regression. 
+% The variance of the normalization between sampling prediction and reduce distribution is because the standard deviation of the prediction results is relatively small compared to the average prediction size, which is $0.0015$ in this example. 
+% Figure \ref{fig:prediction_relative_error} further proves that the sampling prediction can provide precise result even in the dimension of absolute input size of reduce task. 
+% On the other hand, the result of linear regression comes out with a large relative error. 
+% Though the weighted reservoir sampling is precise, it also introduces extra overhead. 
+% We will show the overhead evaluation of sampling in Section \ref{evaluation}.
 % {\color{black}
-% Figure \ref{fig:prediction_relative_error} proves that the sampling prediction can provide much more accurate result than the linear regression. 
-% We will show the overhead evaluation of sampling in Section \ref{evaluation}. 
+Figure \ref{fig:prediction_relative_error} proves that the sampling prediction can provide much more accurate result than the linear regression. 
+We will show the overhead evaluation of sampling in Section \ref{evaluation}. 
 % }
 
 During both of the predictions, the composition of each reduce partition is calculated as well. We define $prob_i$ as
