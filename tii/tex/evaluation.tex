@@ -117,7 +117,7 @@ In addition, the heuristic algorithm can achieve a balanced pre-scheduling resul
 Overall, SCache can help Spark decrease by ~$89\%$ overhead of the whole shuffle process. 
 
 \subsubsection{Terasort}
-We also evaluate Terasort\cite{terasort} --- a recognized shuffle intensive benchmark for distributed system analysis. 
+We also evaluate Terasort\footnote{http://sortbenchmark.org/YahooHadoop.pdf} --- a recognized shuffle intensive benchmark for distributed system analysis. 
 Terasort consists of two consecutive shuffles. 
 The first shuffle reads the input data and uses a hash partition function for re-partitioning. 
 As shown in Figure \ref{fig:terasort}, Spark with SCache runs 2 $\times$ faster during the reduce stage of the first shuffle, which is consistent with the results in Section \ref{simpledag}. 

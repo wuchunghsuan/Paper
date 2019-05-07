@@ -88,7 +88,7 @@ The average shuffle read time is $3.2\%$ of total reduce completion time.
 As shown in Figure \ref{fig:sim}, the baseline (i.e., red dotted line) is the stage completion time with Spark FIFO scheduling algorithm. 
 We then remove the shuffle read time of each task and run the simulation under three scheduling schemes: random mapping, Spark FIFO, and our heuristic MinHeap.
 Random mapping works well when there is only one round of tasks, but the performance drops as the round number grows. 
-This is because that data skew commonly exists in data-parallel computing \cite{skewtune, reining, gufler2012load}. 
+This is because that data skew commonly exists in data-parallel computing \cite{skewtune}. 
 Several heavy tasks may be assigned to the same node, thus slowing down the whole stage. 
 In addition, randomly assigned tasks also ignore the data locality between shuffle map output and reduce input, which may introduce extra network traffic in cluster.
 
@@ -114,7 +114,7 @@ So the pre-scheduling can be made if the "prediction" of size of shuffle block i
 % \fi
 
 For the most DAG applications with random large scale input, 
-the $BlockSize_{ji}$ in a particular shuffle can be predicted accurately by liner regression model (i.e., equation \ref{linearregresion}) based on observation that the ratio of map output size and input size are invariant given the same job configuration \cite{guo2017ishuffle, predict}: 
+the $BlockSize_{ji}$ in a particular shuffle can be predicted accurately by liner regression model (i.e., equation \ref{linearregresion}) based on observation that the ratio of map output size and input size are invariant given the same job configuration \cite{guo2017ishuffle}: 
 \begin{equation}
 \label{linearregresion}
 \begin{aligned}
@@ -256,7 +256,7 @@ But ignoring the data locality can introduce extra network transfer.
 In order to balance load while minimizing the network traffic, we present the Heuristic MinHeap Scheduling algorithm (Algorithm \ref{hminheap}).   
 
 For the pre-scheduling itself (i.e., the first $while$ in Algorithm \ref{hminheap}), the algorithm maintains a min-heap to simulate the load of each node 
-and applies the longest processing time rule (LPT) \cite{design} to achieve $4/3\text{-}approximation$ optimum. 
+and applies the longest processing time rule (LPT)\footnote{http://www.designofapproxalgs.com/} to achieve $4/3\text{-}approximation$ optimum. 
 Since the sizes of tasks are considered while scheduling, Heuristic MinHeap can achieve a shorter makespan than Spark FIFO which is a $2\text{-}approximation$ optimum. 
 Simulation of OpenCloud trace in Figure \ref{fig:sim} also shows that Heuristic MinHeap has a better improvement (average 5.7\%) than the Spark FIFO (average 2.7\%).
 % After the scheduling, the completion time of reduce stage is close to the optimal. \textcolor{red}{may need to add math prove between this and optimal}.

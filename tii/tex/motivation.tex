@@ -54,7 +54,7 @@ When a slot is assigned to a task, it will not be released until the task comple
 On the reduce side, the network transfer of shuffle data introduces an explicit I/O delay during shuffle read (i.e., the beginning of shuffle read and execution in Figure \ref{fig:util}). 
 Meanwhile, both shuffle write and shuffle read occupy the slot without significantly involving CPU as presented in Figure \ref{fig:util}. 
 The current coarse slot-task mapping results in an imbalance between task's resource demand and slot allocation thus decreasing the resource utilization. 
-Unfortunately this defect exists not only in Spark \cite{apachespark} but also Hadoop MapReduce and Apache Tez \cite{tez}. 
+Unfortunately this defect exists not only in Spark but also Hadoop MapReduce and Tez. 
 A finer granularity resource allocation scheme should be provided to reduce these delays. 
 
 \subsubsection{Synchronized Shuffle Read}
@@ -78,8 +78,8 @@ Besides, the legacy of storing shuffle data on disk is inefficient in modern clu
 Compared to input dataset, the size of shuffle data is relatively small. 
 For example, the shuffle size of Spark Terasort is less than $25\%$ of input data. 
 The data reported in \cite{makingsense} also show that the amount of data shuffled is less than the input data by as much as $10\%-20\%$. 
-On the other hand, memory based distributed storage systems have been proposed \cite{memcached, tachyon, ramcloud} to move data back to memory, 
-but most of the DAG frameworks still store shuffle data on disks (e.g., Spark \cite{apachespark}, Hadoop MapReduce, Dryad \cite{dryad}, etc).
+On the other hand, memory based distributed storage systems have been proposed \cite{tachyon, ramcloud} to move data back to memory, 
+but most of the DAG frameworks still store shuffle data on disks (e.g., Spark, Hadoop MapReduce, Dryad \cite{dryad}, etc).
 We argue that the memory capacity is large enough to store the short-living shuffle data with cautious management.
 
 \subsubsection{Multi-round Tasks Execution}\label{multi}
