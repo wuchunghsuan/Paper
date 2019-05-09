@@ -2,15 +2,16 @@
 \section{Framework Resources Quantification Model}\label{model}
 
 In this section, we introduce \textit{Framework Resources Quantification} (FRQ) model to describe the performance of DAG frameworks.
-The FRQ model quantifies computing and I/O resources and visualizes them in the time dimension. In the industrial production, the FRQ model is able to predict the execution time required by the application under any circumstances, including different DAG frameworks, hardware environments, etc. The FRQ model assist us in analyzing the resource scheduling of DAG framework and evaluate their performance. We will first introduce the FRQ model in Subsection \ref{model_overview}. In the following Subsection \ref{model_analysis}, we will use the FRQ model to describe three different computation jobs and analyze their performance. In the last Subsection \ref{model_evaluation}, we will use the actual experimental results to evaluate the FRQ model.
+The FRQ model quantifies computing and I/O resources and visualizes them in the time dimension. In the industrial production, the FRQ model is able to predict the execution time required by the application under any circumstances, including different DAG frameworks, hardware environments, etc. The FRQ model assist us in analyzing the resource scheduling of DAG framework and evaluate their performance. We first introduce the FRQ model in Subsection \ref{model_overview}. In the following Subsection \ref{model_analysis}, we use the FRQ model to describe three different computation jobs and analyze their performance. In the last Subsection \ref{model_evaluation}, we use the actual experimental results to evaluate the FRQ model.
 
 \subsection{The FRQ Model}\label{model_overview}
-The current distributed computing frameworks mostly use DAGs to describe the computation logic. 
-A shuffle phase is required between each adjacent DAG computation phases. To better analyze the relationship between the computation phase and the shuffle phase, we propose the FRQ model. After quantifying computing and I/O resources, the FRQ model can describe different resource scheduling strategies. For convenience, we introduce the FRQ model by taking a simple MapReduce job as an example in this section.
+% The current distributed computing frameworks mostly use DAGs to describe the computation logic. 
+% A shuffle phase is required between each adjacent DAG computation phases.
+To better analyze the relationship between the computation phase and the shuffle phase, we propose the FRQ model. After quantifying computing and I/O resources, the FRQ model can describe different resource scheduling strategies. For convenience, we introduce the FRQ model by taking a simple MapReduce job as an example in this section.
 
 Figure \ref{fig:model_basic} shows how the FRQ model describes a MapReduce task. The FRQ model has five input parameters:
 \begin{itemize}
-	\item Input Data Size \((D)\): The data size of the computation phase.
+	\item Input Data Size \((D)\): The  Input data size of the job.
 	\item Data Conversion Rate \((R)\): The conversion rate of the input data to the shuffle data during a computation phase. This rate depends on the algorithm used in the computation phase.
     \item Computation Round Number \((N)\): The number of rounds needed to complete the computation phase. These rounds depend on the current computation resources and the configuration of the framework. Take Hadoop MapReduce as an example. Suppose we have a cluster with 50 CPUs and enough memory, the map phase consists of 200 map tasks, and each map requires 1 CPU. Then we need 4 rounds of computation to complete the map phase.
     \item Computation Speed \((V_{i})\): 
@@ -19,14 +20,15 @@ Figure \ref{fig:model_basic} shows how the FRQ model describes a MapReduce task.
     Transmission speed in the shuffle phase. This speed depends on network and storage device bandwidth.
 \end{itemize}
 
-\begin{figure*}
+\begin{figure}
     \centering
-	\includegraphics[width=0.85\textwidth]{fig/model_basic}
+	\includegraphics[width=\linewidth]{fig/model_basic}
 	\caption{\color{black}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce}
     \label{fig:model_basic}
-    \vspace{-1em}
-\end{figure*}
+    % \vspace{-1em}
+\end{figure}
 The FRQ model calculates the execution time of each phase of the job with these five parameters. As shown in Figure \ref{fig:model_basic}, the total execution time of a job is the sum of the map phase time and reduce phase time:
+\(T_{Job}=T_{Map}+T_{Reduce}\).
 \begin{equation}
 \label{equation_Tjob}
 \begin{aligned}
@@ -35,6 +37,7 @@ The FRQ model calculates the execution time of each phase of the job with these 
 \end{equation}
 
 Map phase time depends on input data size and map computation speed:
+% \(T_{Map}={{\frac{D}{V_{Map}}}}\).
 \begin{equation}
 \label{equation_Tmap}
 \begin{aligned}
@@ -43,6 +46,7 @@ Map phase time depends on input data size and map computation speed:
 \end{equation}
 
 The reduce phase time formula is as follows:
+% \(T_{Reduce}=\frac{D \times R}{V_{Reduce}}+K\times T_{P\_Shuffle}\).
 \begin{equation}
 \label{equation_Treduce}
 \begin{aligned}
@@ -65,25 +69,25 @@ The shuffle phase time formula is as follows:
 \end{equation}
 
 According to Equation \ref{equation_Tjob}\&\ref{equation_Treduce}, we can optimize the job completion time by reducing \(T_{P\_Shuffle}\). Improving I/O speed is an effective way to reduce shuffle time. Another optimization method is to use the idle I/O resources in the map phase for pre-fetching (see Figure \ref{fig:model_basic}). Both of the above methods can effectively reduce \(T_{P\_Shuffle}\). 
-By using the FRQ model to describe a MapReduce job, the users can analyze the resource scheduling strategy of the computation framework.
+% By using the FRQ model to describe a MapReduce job, the users can analyze the resource scheduling strategy of the computation framework.
 
 \subsection{Model Analysis}\label{model_analysis}
 
-\begin{figure*}
+\begin{figure}
 	\centering
-	\begin{subfigure}{0.47\linewidth}
+	\begin{subfigure}{\linewidth}
 		\includegraphics[width=\linewidth]{fig/model_original}
 		\caption{\color{black}Full Serial MapReduce}
 		\label{fig:model_original}
-	\end{subfigure}
-	\begin{subfigure}{0.47\linewidth}
+	\end{subfigure}\hfill
+	\begin{subfigure}{\linewidth}
 		\includegraphics[width=\linewidth]{fig/model_hadoop}
 		\caption{\color{black}Half Parallel MapReduce}
 		\label{fig:model_hadoop}
 	\end{subfigure}
 	\caption{\color{black}Framework Resources Quantification (FRQ) Model with Different Scheduling Strategies}
 	\label{fig:model_strategies}
-\end{figure*}
+\end{figure}
 
 The FRQ model can describe a variety of resource scheduling strategies. First, we analyze a simple scheduling strategy which used by Apache Spark by default. 
 As shown in Figure \ref{fig:model_original}, the FRQ model describes a MapReduce job that is entirely serially executed. The overlap time between the shuffle phase and the reduce phase is \(0\), in which case \(T_{P\_Shuffle}\) is \(0\). Therefore, the overhead of the reduce phase is 0. The total execution time of a job is also different from the above:
@@ -99,24 +103,27 @@ Due to serialization, the I/O resource is idle during the reduce phase and map p
 Figure \ref{fig:model_hadoop} shows a more efficient scheduling strategy which is used by Hadoop MapReduce. In this scheduling strategy, shuffle phase and reduce phase start at the same time. In this case, \(T_{P\_Shuffle}\) is equal to \(T_{Shuffle}\). Due to the increase in \(T_{P\_Shuffle}\), the time of reduce phase increases (according to Equation \ref{equation_Treduce}). Because the shuffle phase and the computation phase are executed in parallel, the total execution time of a job is the sum of \(T_{Map}\) and \(T_{Reduce}\) (see Equation \ref{equation_Tjob}). The execution time of the shuffle phase is hidden in the reduce phase. 
 However, we also found that the I/O resource in the map phase is still idle. This scheduling strategy can still be optimized.
 
-\begin{figure*}
+\begin{figure}
 	\centering
-	\begin{subfigure}{0.47\linewidth}
+	\begin{subfigure}{\linewidth}
 		\includegraphics[width=\linewidth]{fig/model_scache1}
 		\caption{\color{black}If \(V_{Map} \times R \ge V_{Shuffle}\)}
 		\label{fig:model_scache1}
 	\end{subfigure}
-	\begin{subfigure}{0.47\linewidth}
+	\begin{subfigure}{\linewidth}
 		\includegraphics[width=\linewidth]{fig/model_scache2}
 		\caption{\color{black}If \(V_{Map} \times R < V_{Shuffle}\)}
 		\label{fig:model_scache2}
 	\end{subfigure}
 	\caption{\color{black}Framework Resources Quantification (FRQ) Model with Full Parallel MapReduce in Different Environments}
 	\label{fig:model_scache}
-\end{figure*}
+\end{figure}
 
-Hadoop MapReduce overlaps shuffle phase with reduce phase and utilizes idle resources. We intuitively think that we can also overlap the shuffle phase and the map phases. We implemented this idea with SCache.
-Figure \ref{fig:model_scache} shows the scheduling strategy for Hadoop MapReduce with SCache (Suppose N is 4). SCache starts pre-fetching and pre-scheduling in the map phase. This scheduling strategy can make better use of resources and avoid the I/O resource being idle in the map phase. According to the design of SCache pre-fetching, we found that using the FRQ model to describe the scheduling strategy of SCache needs to distinguish two situations:
+% Hadoop MapReduce overlaps shuffle phase with reduce phase and utilizes idle resources. We intuitively think that we can also overlap the shuffle phase and the map phases. We implemented this idea with SCache.
+Figure \ref{fig:model_scache} shows the scheduling strategy for Hadoop MapReduce with SCache (Suppose N is 4).
+SCache also overlap the shuffle phase and the map phases by starting pre-fetching and pre-scheduling in the map phase.
+This scheduling strategy avoid the I/O resource being idle in the map phase.
+According to the design of SCache pre-fetching, we found that using the FRQ model to describe the scheduling strategy of SCache needs to distinguish two situations:
 
 \begin{enumerate}
     \item \(V_{Map} \times R \ge V_{Shuffle}\) (Figure \ref{fig:model_scache1})
@@ -230,7 +237,9 @@ Compared to the original Hadoop MapReduce resource scheduling strategy, Hadoop M
 \end{table*}
 
 \subsection{Model evaluation}\label{model_evaluation}
-To evaluate the FRQ model, we run experiments on two environments: (a) 50 Amazon EC2 m4.xlarge nodes cluster as shown in Subsection \ref{stepup}; (b) 4 in-house nodes cluster with 128GB memory and 32 cores per node. To simplify the calculation of the FRQ model, we run the Terasort as an experimental application on a Hadoop MapReduce framework. We deployed Hadoop with SCache and without SCache in both environments.
+To evaluate the FRQ model, we run experiments on two environments: (a) 50 Amazon EC2 m4.xlarge nodes cluster as shown in Subsection \ref{stepup}; (b) 4 in-house nodes cluster with 128GB memory and 32 cores per node.
+To simplify the calculation of the FRQ model, we run the Terasort as an experimental application on a Hadoop MapReduce framework.
+We deployed Hadoop with SCache and without SCache in both environments.
 
 Table \ref{table1} shows the calculational results of the FRQ model in the in-house environment. The workload is from 16 GB to 64 GB. 
 \(D\) and \(N\) are set according to the application parameters. \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) are calculated based on experimental results. K is the empirical value, we set \(K\) to 0.5 and 0.6, which reflects that \(T_{P\_Shuffle}\) has less impact on the reduce phase in the case of SCache. 
@@ -249,27 +258,27 @@ In the original Hadoop, since pre-fetching is not used, \(T_{P\_Shuffle}\) is eq
 Table \ref{table2} shows the calculational results of the FRQ model in Amazon EC2 environment. \;\(V_{Map}, V_{Shuffle},\) and \(V_{Reduce}\) are modified because of the different hardware devices. We also set K to the same empirical value. The formulas in the table are all the same except \(T_{P\_Shuffle}\). In this environment, Terasort on Hadoop MapReduce satisfies the situation in Figure \ref{fig:model_scache2} (\(V_{Map} \times R < V_{Shuffle}\)), thus the formula of \(T_{P\_Shuffle}\) is Equation \ref{equation_Tpshuffle2}. 
 % In the previous case, \(T_{P\_Shuffle}\) is still equal to \(T_{Shuffle}\).
 
-\begin{figure*}
-	\centering
-	\begin{subfigure}{.42\linewidth}
-		\includegraphics[width=\linewidth]{fig/hadoop_net1}
-		\caption{\color{black}If \(V_{Map} \times R \ge V_{Shuffle}\)}
-		\label{fig:hadoop_net1}
-	\end{subfigure}
-	\begin{subfigure}{.42\linewidth}
-		\includegraphics[width=\linewidth]{fig/hadoop_net2}
-		\caption{\color{black}If \(V_{Map} \times R < V_{Shuffle}\)}
-		\label{fig:hadoop_net2}
-	\end{subfigure}
-	\caption{\color{black}Network utilization on Hadoop MapReduce with SCache}
-	\label{fig:hadoop_net}
-\end{figure*}
+% \begin{figure}
+% 	\centering
+% 	\begin{subfigure}{0.49\linewidth}
+% 		\includegraphics[width=\linewidth]{fig/hadoop_net1}
+% 		\caption{\color{black}If \(V_{Map} \times R \ge V_{Shuffle}\)}
+% 		\label{fig:hadoop_net1}
+% 	\end{subfigure}
+% 	\begin{subfigure}{0.49\linewidth}
+% 		\includegraphics[width=\linewidth]{fig/hadoop_net2}
+% 		\caption{\color{black}If \(V_{Map} \times R < V_{Shuffle}\)}
+% 		\label{fig:hadoop_net2}
+% 	\end{subfigure}
+% 	\caption{\color{black}Network utilization on Hadoop MapReduce with SCache}
+% 	\label{fig:hadoop_net}
+% \end{figure}
 
-In order to evaluate the two cases as mentioned above when using SCache, we monitor the network utilization as Figure \ref{fig:hadoop_net}. Figure \ref{fig:hadoop_net1} shows that, in the in-house environment, the network utilization remains high until the shuffle phase is completed. On the other hand, Figure \ref{fig:hadoop_net2} shows that the network utilization has 5 regular peaks in Amazon EC2 environment. 
-Both these two situations are consistent with the FRQ model in Figure \ref{fig:model_scache}. 
+% In order to evaluate the two cases as mentioned above when using SCache, we monitor the network utilization as Figure \ref{fig:hadoop_net}. Figure \ref{fig:hadoop_net1} shows that, in the in-house environment, the network utilization remains high until the shuffle phase is completed. On the other hand, Figure \ref{fig:hadoop_net2} shows that the network utilization has 5 regular peaks in Amazon EC2 environment. 
+% Both these two situations are consistent with the FRQ model in Figure \ref{fig:model_scache}. 
 % Therefore, we believe that the FRQ model is able to accurately describe the performance of a framework with SCache.
 
-Regarding accuracy, the experimental values are all larger than the calculated values. This is because the application has some extra overhead at runtime, such as network warm-up, the overhead of allocating slots, and so on. 
+Regarding accuracy, the experimental values are all larger than the calculated values. This is because the application has some extra overhead at runtime, such as network warm-up, the overhead of allocating slots, etc. 
 % In the case where the input data is small and the total time is short, the error caused by the overhead is amplified. 
 This overhead will be amplified when the input data is small or the total execution time is short. 
 Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, such errors are acceptable. Therefore, we believe that the FRQ model can accurately describe DAG frameworks.
