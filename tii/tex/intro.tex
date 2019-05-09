@@ -27,7 +27,7 @@ Despite the differences among data-intensive frameworks, the shuffle phase is al
 \begin{figure}
 	\centering
 	\includegraphics
-		[width=1\linewidth]
+		[width=.85\linewidth]
 		{fig/workflow}
 	\caption{Workflow Comparison between Legacy DAG Computing Frameworks and Frameworks with SCache}
 	\label{fig:workflow}
@@ -66,8 +66,7 @@ Specifically, SCache takes over the whole shuffle phase from the underlying fram
 SCache's effectiveness lies in the following two key ideas.
 First, SCache decouples the shuffle write and read from both map and reduce tasks.
 Such decoupling effectively enables more flexible resource management and better multiplexing between the computational and I/O resources.
-In addition, SCache pre-schedules the reduce tasks without launching them and pre-fetches the shuffle data. 
-% for the reduce tasks.
+Second, SCache pre-schedules the reduce tasks without launching them and pre-fetches the shuffle data. 
 Such pre-scheduling and pre-fetching effectively overlap the network transfer time, desynchronize the network communication, 
 and avoid the extra early allocation of slots.
 
