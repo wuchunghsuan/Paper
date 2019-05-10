@@ -12,32 +12,35 @@ The following \ref{memorymanage} subsection focuses on two constraints on memory
 SCache consists of three components: a distributed shuffle data management system, a DAG co-scheduler, and a worker daemon. As a plug-in system, SCache needs to rely on a DAG framework.
 As shown in Figure \ref{fig:architecture}, SCache employs the legacy master-slaves architecture for the shuffle data management system. 
 The master node of SCache coordinates the shuffle blocks globally with application context. The worker node reserves memory to store blocks.
-The coordination provides two guarantees: (a) data is stored in memory before tasks start and (b) data is scheduled on-off memory with all-or-nothing and context-aware constraints. 
+% The coordination provides two guarantees: (a) data is stored in memory before tasks start and (b) data is scheduled on-off memory with all-or-nothing and context-aware constraints. 
 The daemon bridges the communication between DAG framework and SCache. The co-scheduler is dedicated to pre-schedule reduce tasks with DAG information and enforce the scheduling results to the original scheduler in framework.
 When a DAG job is submitted, the DAG information is generated in framework task scheduler. 
 Before the computing tasks begin, the shuffle dependencies are determined based on DAG.
-For each shuffle dependency, the shuffle ID, the type of partitioner, the number of map tasks, and the number of reduce tasks are included.  If there is a specialized partitioner, such as range partitioner, in the shuffle dependencies, the daemon will insert a sampling application before the {\color{black}computing job}. We will elaborate the sampling procedure in the Section \ref{sampling}.
+For each shuffle dependency, the shuffle ID, the type of partitioner, the number of map tasks, and the number of reduce tasks are included. If there is a specialized partitioner, such as range partitioner, in the shuffle dependencies, the daemon will insert a sampling job before the computing job.
+The sampling job uses a reservoir sampling algorithm \cite{reservoir} on each partition.
+The result will be aggregated on SCache master to predict the reduce partition size.
+% We will elaborate the sampling procedure in the Section \ref{sampling}.
 
-{\color{blue}
-When a map task finishes computing, the shuffle write implementation of the DAG framework is modified to call the SCache API and move all the blocks out of {\color{black}framework worker} through memory copy. 
-After that, the slot will be released (without being blocked on disk operations).
+{\color{black}
+When a map task finishes computing, the shuffle write implementation of the DAG framework is modified to call the SCache API to move all the blocks out of framework worker through memory copy and release the slot immediately.
+% After that, the slot will be released (without being blocked on disk operations).
 When a block of the map output is received, the SCache worker will send the block ID and the size to the master.
 If the collected map output data reach the observation threshold, the DAG co-scheduler will run the scheduling Algorithm \ref{hminheap} or \ref{mhminheap} to pre-schedule the reduce tasks and then broadcast the scheduling result to start pre-fetching on each worker.
 To enforce the DAG framework to run according to the SCache pre-scheduled results, we also insert some lines of codes in framework scheduler.
 % After modification, the DAG scheduler consults SCache co-scheduler to get the preferred location for each task.
 }
 
-\subsubsection{Reservoir Sampling}\label{sampling}
-{\color{blue}
-If the submitted shuffle dependencies contained a RangePartitioner or a customized non-hash partitioner, the SCache master will send a sampling request to the framework master. 
-The sampling job uses a reservoir sampling algorithm \cite{reservoir} on each partition. 
-% For the sample number, it can be tuned to balance the overhead and accuracy. 
-% The sampling job randomly selects some items and performs a local shuffle with the partitioner. 
-% At the same time, the items number is counted as the weight. 
-% These sampling data will be aggregated by reduce task ID on SCache master to predict the reduce partition size. 
-The result will be aggregated on SCache master to predict the reduce partition size.
-After the prediction, SCache master will call Algorithm \ref{hminheap} or \ref{mhminheap} to do the pre-scheduling.
-}
+% \subsubsection{Reservoir Sampling}\label{sampling}
+% {\color{black}
+% If the submitted shuffle dependencies contained a RangePartitioner or a customized non-hash partitioner, the SCache master will send a sampling request to the framework master. 
+% The sampling job uses a reservoir sampling algorithm \cite{reservoir} on each partition. 
+% % For the sample number, it can be tuned to balance the overhead and accuracy. 
+% % The sampling job randomly selects some items and performs a local shuffle with the partitioner. 
+% % At the same time, the items number is counted as the weight. 
+% % These sampling data will be aggregated by reduce task ID on SCache master to predict the reduce partition size. 
+% The result will be aggregated on SCache master to predict the reduce partition size.
+% After the prediction, SCache master will call Algorithm \ref{hminheap} or \ref{mhminheap} to do the pre-scheduling.
+% }
 
 \begin{figure}
 	\centering
@@ -53,8 +56,9 @@ To achieve the maximum overall improvement, SCache leverages two constraints to 
 
 \subsubsection{All-or-Nothing Constraint}
 % This acceleration of in-memory cache of a single task is necessary but insufficient for a shorter stage completion time. 
-{\color{blue}
-Based on the observation in Section \ref{multi}, in most cases one single stage contains multi-rounds of tasks.
+{\color{black}
+% Based on the observation in Section \ref{multi}, in most cases one single stage contains multi-rounds of tasks.
+Both experience and DAG framework manuals (e.g., Hadoop and Spark) recommend that multi-round execution of each stage will benefit the performance of applications.
 If one task missed a memory cache and exceeded the original bottleneck of this round, that task might become the new bottleneck and then slow down the whole stage. 
 % PACMan \cite{pacman} has also proved that for multi-round stage/job, the completion time improves in steps when $n\times number\ of\ tasks\ in\ one\ round$ of tasks have data cached simultaneously. 
 % Therefore, the cached shuffle blocks need to match the demand of all tasks in one running round at least.
@@ -66,7 +70,7 @@ We refer to this as the all-or-nothing constraint.
 
 \subsubsection{Context-Aware-Priority Constraint}
 % Unlike the traditional cache replacement schemes such as MIN \cite{min}, the cached shuffle data will only be used once, but the legacy cache managements are designed to improve the hit rate.
-{\color{blue}
+{\color{black}
 SCache leverages application context to select victim storage units when the reserved memory is full.
 At first, SCache flushes blocks of the incomplete units to disk cluster-widely.
 If all the units are completed, SCache selects victims based on two factors: 

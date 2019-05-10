@@ -1,21 +1,38 @@
 \section{Evaluation}\label{evaluation}
+
 This section reveals the evaluation of SCache with comprehensive workloads and benchmarks which include common operations in the industrial big-data analysis. 
 % To show the compatibility of SCache as a cross-framework plug-in, we implement and evaluate SCache on both Spark and Hadoop MapReduce. 
 We implement and evaluate SCache on Spark and Hadoop MapReduce, since they are the two most distributed computing frameworks using in industrial big-data analysis.
-First, we evaluate the Spark with SCache in 2 different benchmarks.
+% First, we evaluate the Spark with SCache in two different benchmarks.
 % We run a Spark job with single shuffle to analyze hardware utilization and see the impacts of different components from the scope of a task to a job. 
 % Then we use a recognized shuffle intensive benchmark --- Terasort to evaluate SCache with different data partition schemes.
 % To prove the performance gain of SCache with a industrial production workload, we also evaluate Spark TPC-DS\footnote{https://github.com/databricks/spark-sql-perf} and present the overall performance improvement.
 % In order to prove the performance gain of SCache with a real production workload, we also evaluate Spark TPC-DS\footnote{https://github.com/databricks/spark-sql-perf} and present the overall performance improvement.
 % To prove the compatibility of SCache as a cross-framework plug-in, we implemented SCache on both Hadoop MapReduce and Spark. 
-Second, due to the simple DAG computing in Hadoop MapReduce, we only use Terasort as a shuffle-heavy benchmark to evaluate the performance of Hadoop MapReduce with SCache.
+% Second, due to the simple DAG computing in Hadoop MapReduce, we only use Terasort as a shuffle-heavy benchmark to evaluate the performance of Hadoop MapReduce with SCache.
 % Finally, we measure the overhead of weighted reservoir sampling. 
-
-In summary, SCache can decrease ~$89\%$ time of Spark shuffle without introducing extra network transfer.
+In summary, SCache decrease ~$89\%$ time of Spark shuffle without introducing extra network transfer.
 More impressively, the overall completion time of TPC-DS can be improved ~$40\%$ on average by applying the optimization from SCache.
 {\color{black}Meanwhile, Hadoop MapReduce with SCache optimizes job completion time by up to $15\%$ and an average of $13\%$.}
 
 % Because a complex Spark application consists of multiple stages. The completion time of each stage varies under different input data, configurations and different number of stages. This uncertainty leads to the dilemma that dramatic fluctuation occurs in overall performance comparison. To present a straightforward illustration, we limit the scope of most evaluations in a single stage.
+
+\begin{figure}
+	\begin{subfigure}{\linewidth}
+		\includegraphics[width=\linewidth]{fig/util}
+		\caption{Spark without SCache}
+		\label{fig:util}
+	\end{subfigure}
+	% \vspace{-1em}
+	\begin{subfigure}{\linewidth}
+		\includegraphics[width=\linewidth]{fig/scache_util}
+		\caption{Spark with SCache}
+		\label{fig:scache_util}
+	\end{subfigure}
+	\caption{CPU Utilization and I/O Throughput of a Node During a Spark Single Shuffle Application}
+	\label{fig:simple_spark}
+\end{figure}
+
 \begin{figure*}
 	\centering
 	\begin{minipage}[t]{.5\textwidth}
@@ -50,21 +67,26 @@ More impressively, the overall completion time of TPC-DS can be improved ~$40\%$
 \end{figure*}
 
 \subsection{Setup}\label{stepup}
-We modified Spark to enable shuffle optimization of SCache as a representative.
+% We modified Spark to enable shuffle optimization of SCache as a representative.
 The shuffle configuration of Spark is set to the default\footnote{http://spark.apache.org/docs/1.6.2/configuration.html}. 
 We run the experiments on a 50-node m4.xlarge cluster on Amazon EC2\footnote{http://aws.amazon.com/ec2/}. 
 Each node has 16GB memory and 4 CPUs. The network bandwidth provided by Amazon is insufficient. 
-Our evaluations reveal the bandwidth is only about 300 Mbps (see Figure \ref{fig:util}).
+Our evaluations reveal the bandwidth is only about 300 Mbps.
+%  (see Figure \ref{fig:util}).
 
 \subsection{Spark with SCache}\label{sparkscache}
 
 \subsubsection{Simple DAG Analysis}\label{simpledag}
-As shown in Figure \ref{fig:scache_util}, we first run the same single shuffle test shown in Figure \ref{fig:util}. 
+% As shown in Figure \ref{fig:scache_util}, we first run the same single shuffle test shown in Figure \ref{fig:util}. 
+We first run Spark's \textit{GroupByTest} on Amazon EC2.
+This job has 2 rounds of tasks for each node.
 % We first run the same single shuffle test shown in Figure \ref{fig:util}. 
 % For each stage, we run 5 rounds of tasks with different input size. 
-% As shown in Figure \ref{fig:scache_util}, the hardware utilization is captured from one node during the job.  
-Note that since the completion time of whole job is about $50\%$ less than Spark without SCache, the duration of Figure \ref{fig:scache_util} is cut in half as well. 
-An overlap among CPU, disk, and network can be easily observed in Figure \ref{fig:scache_util}. 
+As shown in Figure \ref{fig:simple_spark}, the hardware utilization is captured from one node during the job. 
+Note that since the completion time of the job with SCache is about $50\%$ less than Spark without SCache, the duration of Figure \ref{fig:scache_util} is only half of Figure \ref{fig:util}.
+As shown in \ref{fig:util}, the network transfer of shuffle data introduces an explicit I/O delay during \textit{shuffle read}.
+And the several bursts of network traffic in \textit{shuffle read} result in network congestion.
+As shown in Figure \ref{fig:scache_util}, an overlap among CPU, disk, and network can be easily observed. 
 It is because the decoupling of shuffle prevents the computing resource from being blocked by I/O operations. 
 On the one hand, the decoupling of shuffle write helps free the slot earlier, so that it can be re-scheduled to a new map task.
 On the other hand, with the help of shuffle pre-fetching, the decoupling of shuffle read significantly decreases the CPU idle time at the beginning of a reduce task.
@@ -73,13 +95,13 @@ As a result, the utilization and multiplexing of hardware resource are increased
 
 % The performance evaluation in Figure \ref{fig:singleshuffletask} shows the consistent results with our observation of hardware utilization. 
 % For each stage, we pick the task that has median completion time. 
-In the map task, the disk operations are replaced by the memory copies to decouple the shuffle write. 
+In the map stage, the disk operations are replaced by the memory copies to decouple the shuffle write. 
 It helps eliminate $40\%$ of shuffle write time (Figure \ref{fig:maptask}), which leads to a $10\%$ improvement of map stage completion time in Figure \ref{fig:mapstage}. 
-Note that the shuffle write time can be observed even with the optimization of SCache. 
-The reason is that before moving data out of Spark's JVM, the serialization is inevitable and CPU intensive \cite{makingsense}. 
-
-In the reduce task, most of the shuffle overhead is introduced by network transfer delay. 
-By doing shuffle data pre-fetching based on the pre-scheduling results, the explicit network transfer is perfectly overlapped in the map stage. 
+% Note that the shuffle write time can be observed even with the optimization of SCache. 
+% The reason is that before moving data out of Spark's JVM, the serialization is inevitable and CPU intensive \cite{makingsense}. 
+In the reduce stage, most of the shuffle overhead is introduced by network transfer delay. 
+By doing shuffle data pre-fetching, the explicit network transfer is perfectly overlapped in the map stage. 
+% By doing shuffle data pre-fetching based on the pre-scheduling results, the explicit network transfer is perfectly overlapped in the map stage. 
 % With the help of the co-scheduling scheme, SCache guarantees that each reduce task has the benefit of shuffle pre-fetching. 
 % The in-memory cache of shuffle data further reduces the shuffle read time. 
 As a result, the combination of these optimizations decreases ~$100\%$ overhead of the shuffle read in a reduce task (Figure \ref{fig:reducetask}). 
@@ -104,22 +126,23 @@ Overall, SCache can help Spark decrease by ~$89\%$ overhead of the whole shuffle
 % It implies that the heuristic locality swap of SCache can obtain the best locality while balancing the load. 
 \begin{figure*}
 	\centering
-	\includegraphics[width=.9\textwidth]{fig/tpcds}
+	\includegraphics[width=.8\textwidth]{fig/tpcds}
 	\caption{TPC-DS Benchmark Evaluation}
 	\label{fig:tpcds}
 	\vspace{-1em}
 \end{figure*}
 
 \subsubsection{Industrial Production Workload}
-We also evaluate some queries from TPC-DS\footnote{http://www.tpc.org/tpcds/}. 
-TPC-DS benchmark is designed for modeling multiple users submitting varied queries (e.g. ad-hoc, interactive OLAP, data mining, etc.). 
-TPC-DS contains 99 queries and is considered as the standardized industry benchmark for testing big data systems. 
+% We also evaluate some queries from TPC-DS\footnote{http://www.tpc.org/tpcds/}. 
+% TPC-DS benchmark is designed for modeling multiple users submitting varied queries (e.g. ad-hoc, interactive OLAP, data mining, etc.). 
+% TPC-DS contains 99 queries and is considered as the standardized industry benchmark for testing big data systems. 
+TPC-DS\footnote{http://www.tpc.org/tpcds/} contains 99 queries and is considered as a standardized industry benchmark for testing big data systems. 
 % We evaluate the performance of Spark with SCache by picking some of the TPC-DS queries with shuffle intensive attribute. 
 As shown in Figure \ref{fig:tpcds}, the horizontal axis is query name and the vertical axis is query completion time. 
 Note that we skip some queries due to the compatible issues. 
 Spark with SCache outperforms the original Spark in almost all tested queries. 
-Furthermore, in many queries, Spark with SCache outperforms original Spark by an order of magnitude. 
-It is because that those queries contain shuffle-heavy operations such as \textit{groupby}, \textit{union}, etc.
+Furthermore, in some shuffle-heavy queries, Spark with SCache outperforms original Spark by an order of magnitude. 
+% It is because that those queries contain shuffle-heavy operations such as \textit{groupby}, \textit{union}, etc.
 The overall reduction portion of query time that SCache achieved is $40\%$ on average. 
 Since this evaluation presents the overall job completion time of queries, we believe that our shuffle optimization is promising.
 
@@ -146,9 +169,9 @@ To prove SCache compatibility as a cross-framework plug-in, we also implemented 
 Although the simple DAG computing alleviates the effect of \textit{pre-scheduling}, the shuffle-heavy jobs can still be optimized by the SCache shuffle data management.
 
 % Figure \ref{fig:hadoop_terasort} shows the hardware resource utilization of Hadoop MapReduce running Terasort. Both figures have the same proportion of time. 
-As Figure \ref{fig:hadoop_terasort} shows, Hadoop MapReduce with SCache brings $15\%$ of total time optimization with 384GB input data size. 
-As shown in Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache writes intermediate data locally in the map phase. The shuffle phase and the reduce phase start simultaneously. Because a large amount of shuffle data reaches the network bottleneck, the beginning part of reduce phase needs to wait for network transfer. This causes the CPU resources to be idle. 
-On the other hand, in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce with SCache starts pre-fetching in the map phase. This avoids the reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilizes the idle I/O throughput in the map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after better fine-grained utilization of hardware resources, Hadoop MapReduce with SCache optimizes Terasort overall completion time by up to $15\%$ and an average of $13\%$ with input data sizes from 128GB to 512GB.
+% As Figure \ref{fig:hadoop_terasort} shows, Hadoop MapReduce with SCache brings $15\%$ of total time optimization with 384GB input data size. 
+As shown in Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache writes intermediate data locally in the map phase and the shuffle phase and the reduce phase start simultaneously. The beginning part of reduce phase needs to wait for network transfer because a large amount of shuffle data reaches the network bottleneck. This causes the CPU resources to be idle. 
+On the other hand, in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce with SCache starts pre-fetching in the map phase. This avoids the reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilizes the idle I/O throughput in the map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after decoupling shuffle, Hadoop MapReduce with SCache optimizes Terasort overall completion time by up to $15\%$ and an average of $13\%$ with input data sizes from 128GB to 512GB.
 }
 
 % \subsection{Overhead of Sampling}
