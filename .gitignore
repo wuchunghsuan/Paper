@@ -1,6 +1,9 @@
 SCache.*
 !SCache.tex
 !SCache.pdf
+ops.*
+!ops.tex
+!ops.pdf
 coverletter.*
 !coverletter.tex
 !coverletter.pdf
