@@ -1,0 +1,17 @@
+\section{Introduction}
+In recent years, multiple computing frameworks, such as Hadoop MapReduce \cite{}, Spark \cite{} and Dryad \cite{}, are widely used to analyze big data.
+Many existing studies are focused on improving the performance of the frameworks.
+For example, \dots
+
+Most of the computing frameworks use the directed acyclic graphs (DAGs) to define the execution logic of jobs.
+The communication between stages of the most computing frameworks follows the bulk-synchronous parallel (BSP) model, such as the shuffle phases in the Hadoop MapReduce and Spark.
+According to the BSP model, the shuffle phases are burdens between the adjacent computing phases.
+Since the communication relies on plenty of disk and network I/O, the shuffle phases usually have a heavily affect on the end-to-end application performance.
+In the production workload \cite{}, the shuffle phases occupy 33\% of the job completion time on average., and up to 70\% in shuffle-heavy jobs. 
+
+Several efforts are made to optimize the shuffle phases.
+
+However, such early-start has several deficiencies.
+First, the early-start always introduces an extra early allocation of the slot leading to a slow execution of the current stage.
+Second, the early-start can not fully overlap the shuffle phases and the descendent stage. Due to the shuffle phases are coupled with the reduce phases and the size of slots is limited, only parts of reduce tasks can be early-start. 
+Last but not least, it is hard to find the optimal time to begin the early-start. If too early, the descendent stages are not ready to output enough intermediate data for the shuffle. If too late, the idle network resource is wasted.
