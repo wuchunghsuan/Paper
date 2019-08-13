@@ -142,9 +142,9 @@ However, we also found that the I/O resource in the map phase is still idle. Thi
 \end{figure}
 
 % Hadoop MapReduce overlaps shuffle phase with reduce phase and utilizes idle resources. We intuitively think that we can also overlap the shuffle phase and the map phases. We implemented this idea with SCache.
-Figure \ref{fig:model_basic} and Figure \ref{fig:model_scache2} shows the scheduling strategy for Hadoop MapReduce with SCache (Suppose N is 4).
+Figure \ref{fig:model_basic} and Figure \ref{fig:model_scache2} show the scheduling strategy for Hadoop MapReduce with SCache (Suppose N is 4).
 SCache also overlap the shuffle phase and the map phases by starting pre-fetching and pre-scheduling in the map phase.
-This scheduling strategy avoid the I/O resource being idle in the map phase.
+This scheduling strategy avoids the I/O resource being idle in the map phase.
 According to the design of SCache pre-fetching, we found that using the FRQ model to describe the scheduling strategy of SCache needs to distinguish two situations:
 
 \begin{enumerate}

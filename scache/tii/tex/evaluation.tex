@@ -11,7 +11,7 @@ We implement and evaluate SCache on Spark and Hadoop MapReduce, since they are t
 % To prove the compatibility of SCache as a cross-framework plug-in, we implemented SCache on both Hadoop MapReduce and Spark. 
 % Second, due to the simple DAG computing in Hadoop MapReduce, we only use Terasort as a shuffle-heavy benchmark to evaluate the performance of Hadoop MapReduce with SCache.
 % Finally, we measure the overhead of weighted reservoir sampling. 
-In summary, SCache decrease ~$89\%$ time of Spark shuffle without introducing extra network transfer.
+In summary, SCache decreases ~$89\%$ time of Spark shuffle without introducing extra network transfer.
 More impressively, the overall completion time of TPC-DS can be improved ~$40\%$ on average by applying the optimization from SCache.
 {\color{black}Meanwhile, Hadoop MapReduce with SCache optimizes job completion time by up to $15\%$ and an average of $13\%$.}
 

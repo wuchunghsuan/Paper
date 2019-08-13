@@ -74,7 +74,7 @@ We refer to this as the all-or-nothing constraint.
 SCache leverages application context to select victim storage units when the reserved memory is full.
 At first, SCache flushes blocks of the incomplete units to disk cluster-widely.
 If all the units are completed, SCache selects victims based on two factors: 
-(a) For the tasks in the different stages, SCache sets the higher priority to storage units with a earlier submission time;
+(a) For the tasks in the different stages, SCache sets the higher priority to storage units with an earlier submission time;
 (b) For the tasks in the same stage, SCache sets the higher priority to storage units with a smaller task ID.
 }
 % If all the units are completed, SCache selects victims based on two factors --- \textit{inter-shuffle} and \textit{intra-shuffle}.

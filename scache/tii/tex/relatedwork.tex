@@ -14,7 +14,7 @@ Khan et al. \cite{khan2016hadoop} proposed the HP model which extends the ARIA m
 % The set of performance models describe each above-mentioned phases and combine into an overall MapReduce job model. 
 Chen et al. \cite{chen2014cresp} proposed the CRESP model which is a cost model that estimates the performance of a job then 
 % provisions the resources for the job.
-Farshid Farhat et al.\cite{farhat2016stochastic} proposed a closed-form queuing model which focus on stragglers and try to optimize them. 
+Farshid Farhat et al.\cite{farhat2016stochastic} proposed a closed-form queuing model which focuses on stragglers and try to optimize them. 
 % The proposed model is parameterized by the task inter-arrival times to the mappers, the delayed tailed service times, and the number of mappers, which is used to optimize the stragglers. 
 % \cite{khan2016hadoop, farhat2016stochastic, chen2014cresp} have proposed several methods to model the DAG computing process.
 However, the above models are not able to accurately describe the overhead caused by the shuffle process under different scheduling strategies. 
@@ -40,7 +40,7 @@ iShuffle \cite{guo2017ishuffle} decouples shuffle from reducers and designs a ce
 % But it can neither handle multiple shuffles nor schedule multiple rounds of reduce tasks. 
 iHadoop \cite{ihadoop} aggressively pre-schedules tasks in multiple successive stages to start fetching shuffle. 
 % Besides \textit{slow-start} from Hadoop MapReduce, \cite{starfish, ihadoop, guo2017ishuffle, dynmr} have also proposed several methods to improve the DAG frameworks.
-However, we have proved that randomly assign tasks may hurt the overall performance in Section \ref{randomassign}. 
+However, we have proved that randomly assigned tasks may hurt the overall performance in Section \ref{randomassign}. 
 Different from these works, SCache pre-schedules multiple shuffles without breaking load balancing. 
 
 %  by combining DAG information and heuristic algorithms.
