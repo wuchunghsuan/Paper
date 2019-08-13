@@ -9,7 +9,9 @@ According to the BSP model, the shuffle phases are burdens between the adjacent 
 Since the communication relies on plenty of disk and network I/O, the shuffle phases usually have a heavily affect on the end-to-end application performance.
 In the production workload \cite{}, the shuffle phases occupy 33\% of the job completion time on average., and up to 70\% in shuffle-heavy jobs. 
 
-Several efforts are made to optimize the shuffle phases.
+Several efforts are made to optimize the shuffle phases, both on the application-level \cite{} and the network-level \cite{}.
+
+In this paper, 
 
 However, such early-start has several deficiencies.
 First, the early-start always introduces an extra early allocation of the slot leading to a slow execution of the current stage.
