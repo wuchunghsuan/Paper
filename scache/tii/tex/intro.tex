@@ -82,10 +82,14 @@ We evaluate SCache on a 50-node Amazon EC2 cluster on both Spark and Hadoop MapR
 In a nutshell, SCache can eliminate explicit shuffle time by at most $89\%$ in varied applications. More impressively, SCache reduces $~40\%$ of overall completion time of TPC-DS\footnote{http://www.tpc.org/tpcds/}, a standardized industry benchmark, on average on Apache Spark.
 
 The rest of the paper is organized as follows:
+{\color{blue}
 % We discuss the opportunities to optimize shuffle in Section \ref{motivation}.
-Section \ref{opt} presents the detail of methodologies which using by SCache to gain shuffle optimization, including two heuristic algorithms and a co-scheduler.
-We present the implementation of SCache in Section \ref{impl} and do comprehensive evaluations in Section \ref{evaluation}.
-We discuss some related work in Section \ref{related} and conclude in Section \ref{conclusion}.
+We present the methodologies of optimization which using by SCache in Section \ref{opt} and detail the implementation of SCache in Section \ref{impl}.
+We introduce the FRQ performance model in Section \ref{model}.
+In Section \ref{evaluation}, we present comprehensive evaluations about SCache and the FRQ model.
+% We present the implementation of SCache in Section \ref{impl} and do comprehensive evaluations in Section \ref{evaluation}.
+We also discuss the related work in Section \ref{related} and conclude in Section \ref{conclusion}.
+}
 }
 
 % The workflow of a DAG framework with SCache is presented in Figure \ref{fig:workflow}. 
