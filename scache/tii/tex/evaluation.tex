@@ -49,12 +49,12 @@
 
 \section{Evaluation}\label{evaluation}
 
-% This section reveals the evaluation of SCache with comprehensive workloads and benchmarks which include common operations in the industrial big-data analysis. 
+% This section reveals the evaluation of SCache with comprehensive workloads and benchmarks which include common operations in the industrial big data analysis. 
 {\color{blue}
 This section reveals a representative evaluation of SCache performance on both Spark and Hadoop MapReduce.
 % To show the compatibility of SCache as a cross-framework plug-in, we implement and evaluate SCache on both Spark and Hadoop MapReduce. 
-% We implement and evaluate SCache on Spark and Hadoop MapReduce, since they are the two most distributed computing frameworks using in industrial big-data analysis.
-In industrial big-data, SQL-based big-data technologies are widely used in these systems, such as data mining, predictive analytics, text analytics, and statistical analysis \cite{poess2017analysis}.
+% We implement and evaluate SCache on Spark and Hadoop MapReduce, since they are the two most distributed computing frameworks using in industrial big data analysis.
+In industrial big data, SQL-based big data technologies are widely used in these systems, such as data mining, predictive analytics, text analytics, and statistical analysis \cite{poess2017analysis}.
 % SQL-Based Big Data Systems are widely used on industrial application.
 % Because of the limited time and resource, 
 To prove the performance gain of SCache in industry, 
@@ -87,8 +87,10 @@ Meanwhile, Hadoop MapReduce with SCache optimizes job completion time by up to $
 We use Spark version 1.6.2 and Hadoop MapReduce version 2.8.5.
 The shuffle configuration of Spark is set to the default\footnote{http://spark.apache.org/docs/1.6.2/configuration.html}. 
 We run the experiments on a 50-node m4.xlarge cluster on Amazon EC2\footnote{http://aws.amazon.com/ec2/}. 
-Each node has 16GB memory and 4 CPUs. The network bandwidth provided by Amazon is insufficient. 
-Our evaluations reveal the bandwidth is only about 300 Mbps.
+Each node has 16GB memory and 4 CPUs.
+The network bandwidth each node is about 300 Mbps.
+% The network bandwidth provided by Amazon is insufficient. 
+% Our evaluations reveal the bandwidth is only about 300 Mbps.
 %  (see Figure \ref{fig:util}).
 
 \subsection{Spark with SCache}\label{sparkscache}
@@ -186,7 +188,7 @@ Since this evaluation presents the overall job completion time of queries, we be
 % To prove SCache compatibility as a cross-framework plug-in, we also implemented SCache on Hadoop MapReduce. 
 % Although the simple DAG computing alleviates the effect of \textit{pre-scheduling}, the shuffle-heavy jobs can still be optimized by the SCache shuffle data management.
 Unlike Spark, Hadoop MapReduce has only one Map and one Reduce phase.
-Such a simple workflow alleviates the defect of the naive scheduling schemes and reduce the benefits of \textit{pre-scheduling}.
+Such a simple workflow alleviates the defect of the naive scheduling schemes and reduces the benefits of \textit{pre-scheduling}.
 However, SCache can still provide considerable optimization on shuffle-heavy workloads.
 We use Terasort benchmark to evaluate the performance gain of SCache and also prove the cross-framework ability of SCache.
 % Although the simple workflow alleviates the benefits of \textit{pre-scheduling}, SCache can still .
@@ -225,16 +227,20 @@ On the other hand, in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce 
 
 \subsection{The FRQ Model Evaluation}\label{model_evaluation}
 % To evaluate the FRQ model, we run experiments on two environments: (a) 50 Amazon EC2 m4.xlarge nodes cluster; (b) 4 in-house nodes cluster with 128GB memory and 32 cores per node.
-We run the Terasort as an experimental application on a Hadoop MapReduce framework.
+% We run the Terasort as an experimental application on a Hadoop MapReduce framework.
 % We deployed Hadoop with SCache and without SCache in both environments.
-
-Table \ref{table1} shows the results of the FRQ model in the in-house environment.
+To evaluate the FRQ model, we run Terasort with Hadoop MapReduce with two different environments and use the FRQ to model the jobs.
 % The workload is from 16 GB to 64 GB. 
-\(D\) and \(N\) are set according to the application parameters. We calculate \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) according to the environment. We set \(K\) to 0.5 and 0.6, which reflects that \(T_{P\_Shuffle}\) has less impact on the reduce phase when enabling SCache. 
+% \(D\) and \(N\) are set according to the application parameters. We set \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) according to the environment.
+The parameters \(D\), \(N\), \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) are set according to the application and the environment.
+We set \(K\) to 0.5 and 0.6 since SCache alleviates the defect on the reduce phase
+Table \ref{table1} shows the results in the in-house environment.
 % The formulas of \(T_{Job}, T_{Map}, T_{Reduce}\) and \(T_{Shuffle}\) are according to Equation \ref{equation_Tjob}, Equation \ref{equation_Tmap}, Equation \ref{equation_Treduce} and Equation \ref{equation_Tshuffle}, respectively. 
-In the Hadoop with SCache, Terasort satisfies the situation in Figure \ref{fig:model_basic} (\(V_{Map} \times R \ge V_{Shuffle}\)). 
+While enabling SCache, Terasort satisfies the situation in Figure \ref{fig:model_basic} (\(V_{Map} \times R \ge V_{Shuffle}\)). 
 % thus the formula of \(T_{P\_Shuffle}\) is Equation \ref{equation_Tpshuffle1}.
-In the original Hadoop, \(T_{P\_Shuffle}\) is equal to \(T_{Shuffle}\)(see Equation \ref{equation_Tmap}). \(ExpT_{Job}\) represents the actual experiment data, we calculate \(Error\) according to \(T_{Job}\) and \(ExpT_{Job}\). 
+While without SCache, \(T_{P\_Shuffle}\) is equal to \(T_{Shuffle}\)(see Equation \ref{equation_Tmap}).
+\(ExpT_{Job}\) represents the actual experiment job times and
+\(Error\) represents the error between \(T_{Job}\) and \(ExpT_{Job}\). 
 % The formula of \(Error\) is:
 % \begin{equation}
 % 	\label{equation_error}
@@ -242,10 +248,9 @@ In the original Hadoop, \(T_{P\_Shuffle}\) is equal to \(T_{Shuffle}\)(see Equat
 % 		Error &= \frac{ExpT_{Job} - T_{Job}}{T_{Job}}
 % 	\end{aligned}
 % \end{equation}
-
 Table \ref{table2} shows the results in Amazon EC2 environment.
 % \;\(V_{Map}, V_{Shuffle},\) and \(V_{Reduce}\) are modified because of the different hardware devices.
-We set K to the same empirical value.
+% We set K to the same value.
 % The formulas in the table are all the same except \(T_{P\_Shuffle}\).
 In this environment, Terasort on Hadoop MapReduce satisfies the situation in Figure \ref{fig:model_scache2} (\(V_{Map} \times R < V_{Shuffle}\)), thus the formula of \(T_{P\_Shuffle}\) is Equation \ref{equation_Tpshuffle2}. 
 % In the previous case, \(T_{P\_Shuffle}\) is still equal to \(T_{Shuffle}\).
@@ -270,10 +275,11 @@ In this environment, Terasort on Hadoop MapReduce satisfies the situation in Fig
 % Both these two situations are consistent with the FRQ model in Figure \ref{fig:model_scache}. 
 % Therefore, we believe that the FRQ model is able to accurately describe the performance of a framework with SCache.
 
-Regarding accuracy, the experimental values are all larger than the calculated values. This is because the application has some extra overhead at runtime, such as network warm-up, the overhead of allocating slots, etc. 
+As shown in Table \ref{table1}\&\ref{table2}, the experimental values are all larger than the calculated values. This is because the application has some extra overhead at runtime, such as network warm-up, the overhead of allocating slots, etc. 
 % In the case where the input data is small and the total time is short, the error caused by the overhead is amplified. 
 This overhead will be amplified when the input data is small or the total execution time is short. 
-Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, such errors are acceptable. Therefore, we believe that the FRQ model can accurately describe DAG frameworks.
+Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, such errors are acceptable. 
+% We believe that the FRQ model can accurately describe DAG frameworks.
 }
 
 \begin{table*}
@@ -298,13 +304,13 @@ Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, 
 	\(Error\)\\
 
 	\hline
-	& 16	& 1	& 2 &	0.65 &	1 &	0.47 &	0.5 &	24.62 &		34.04	 &	21.73 &	26.87 &	51.48	& 55  &		6.39\% \\
+	% & 16	& 1	& 2 &	0.65 &	1 &	0.47 &	0.5 &	24.62 &		34.04	 &	21.73 &	26.87 &	51.48	& 55  &		6.39\% \\
 	SCache
 	& 32	& 1	& 4 &	0.65 &	1 &	0.47 &	0.5 &	49.23 &		68.09	 &	31.16 &	47.58 &	96.81	& 104 & 	6.91\% \\
 	& 48	& 1	& 6 &	0.65 &	1 &	0.47 &	0.5 &	73.85 &		102.13 &	40.59 &	68.29 &	142.14	& 151 & 	5.87\% \\
 	& 64	& 1	& 8 &	0.65 &	1 &	0.47 &	0.5 &	98.46 &		136.17 &	50.02 &	89.01 &	187.47	& 193 & 	2.87\% \\
 	\hline
-	& 16	& 1 & 2 &	0.65 &	1 &	0.47 &	0.6 &	24.62 &		34.04	&	34.04	&	36.43	&	61.04	&	73	&	16.38\%	\\
+	% & 16	& 1 & 2 &	0.65 &	1 &	0.47 &	0.6 &	24.62 &		34.04	&	34.04	&	36.43	&	61.04	&	73	&	16.38\%	\\
 	Legacy
 	& 32	& 1 & 4 &	0.65 &	1 &	0.47 &	0.6 &	49.23 &		68.09	&	68.09	&	72.85	&	122.08	&	135	&	9.57\%	\\
 	& 48	& 1 & 6 &	0.65 &	1 &	0.47 &	0.6 &	73.85 &		102.13	&	102.13	&	109.28	&	183.12	&	188	&	2.59\%	\\
@@ -316,9 +322,11 @@ Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, 
 \caption{\color{black}Hadoop MapReduce on 4 nodes cluster in the FRQ model}
 \label{table1}
 \end{table*}
+
 % \subsection{Performance Analysis}\label{model_performance_analysis}
 
 % \begin{table*}[!t]
+
 \begin{table*}
 \centering
 \scalebox{0.95}{

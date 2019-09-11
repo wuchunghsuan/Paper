@@ -22,12 +22,12 @@ After quantifying computing and I/O resources, the FRQ model can evaluate differ
 Figure \ref{fig:model_basic} shows how the FRQ model describes a MapReduce job. 
 As Figure \ref{fig:model_basic} shows, the FRQ model divides the job into three phases: map, shuffle, and reduce.
 The horizontal axis represents time and the overlaps between phases represent they execute in parallel.
-The FRQ model use these overlaps to describe different scheduling strategies.
+The FRQ model uses these overlaps to describe different scheduling strategies.
 For example, as shown in Figure \ref{fig:model_hadoop}, this strategy starts the shuffle phase and the reduce phase at the same time.
 And Figure \ref{fig:model_basic} shows the pre-fetching strategy used by SCache. In the pre-fetching strategy, the shuffle phase starts as soon as it can in the map phase.
 
 % As shown in Figure \ref{fig:model_basic}, the FRQ model introduce five parameters:
-Firstly, we introduces five input parameters of the FRQ model:
+Firstly, we introduce five input parameters of the FRQ model:
 }
 \begin{itemize}
 	\item Input Data Size \((D)\): The  Input data size of the job.
@@ -166,7 +166,7 @@ Figure \ref{fig:model_hadoop} shows a scheduling strategy which is used by Hadoo
 
 % Hadoop MapReduce overlaps shuffle phase with reduce phase and utilizes idle resources. We intuitively think that we can also overlap the shuffle phase and the map phases. We implemented this idea with SCache.
 Figure \ref{fig:model_basic} and Figure \ref{fig:model_scache2} show the scheduling strategy for Hadoop MapReduce with SCache (Suppose N is 4).
-SCache also overlap the shuffle phase and the map phases by starting pre-fetching and pre-scheduling in the map phase.
+SCache also overlaps the shuffle phase and the map phases by starting pre-fetching and pre-scheduling in the map phase.
 This scheduling strategy avoids the I/O resource being idle in the map phase.
 According to the design of SCache pre-fetching, we found that using the FRQ model to describe the scheduling strategy of SCache needs to distinguish two situations:
 

@@ -1,10 +1,10 @@
 \section{Shuffle Optimization}
 \label{opt}
-This section presents the detailed methodologies to achieve shuffle optimization. 
+This section presents detailed methodologies to achieve shuffle optimization. 
 {\color{blue}
 Firstly, we discuss the reason causes shuffle overhead in the DAG frameworks.
 In the following subsection, we propose a shuffle data management system to decouple shuffle from execution. 
-And we propose the pre-scheduling and pre-fetching to hide shuffle overhead into multi-round map tasks.
+And we propose the pre-scheduling and pre-fetching to hide shuffle overhead in multi-round map tasks.
 Furthermore, two heuristic algorithms (Algorithm \ref{hminheap}, \ref{mhminheap}) are used to improve the accuracy of prediction in the pre-scheduling.
 }
 
@@ -46,7 +46,7 @@ Furthermore, two heuristic algorithms (Algorithm \ref{hminheap}, \ref{mhminheap}
 % DAG - shuffle - couple \& dependency - overhead in job - formula - how to optimize? - decouple \& pre-fetch - memory
 
 In distributed computing, we use shuffle to do all-to-all data transfer among the nodes.
-For a clear illustration, we divide a computing job into three phases: map, shuffle, and reduce phase.
+For a clear illustration, we divide a computing job into three phases: map, shuffle, and reduce.
 In most of the DAG frameworks, including Spark, Hadoop MapReduce, and Tez, shuffle phase is couple with reduce phase which means that shuffle data transfer and reduce computing start simultaneously.
 On the reduce side, the shuffle data transfer introduces an explicit overhead during shuffle read.
 Because the reduce computing depends on the shuffle results, the waiting for the shuffle data causes the overhead.
@@ -73,7 +73,7 @@ SCache gets the shuffle data as soon as the end of a map task's execution and st
 % SCache leverages the property of multi-round tasks to 
 On the reduce side, due to the shuffle data pre-fetching of SCache, the reduce task use $getBlock$ to get the shuffle data from the local memory of SCache.
 
-SCache takes over all shuffle data and keep them on the memory instead of storing on disk liked the DAG frameworks.
+SCache takes over all shuffle data and keeps them on the memory instead of storing on disk liked the DAG frameworks.
 In this aspect, SCache optimizes the time of shuffle read and shuffle write since memory gets better I/O performance.
 }
 % To achieve the decoupling of map tasks and reduce tasks, the original shuffle write and read implementation in the current frameworks should be modified to apply the API of SCache.
@@ -106,16 +106,16 @@ The DAG frameworks follow the co-scheduler to starts reduce tasks.
 % We propose a co-scheduling scheme with two heuristic algorithms (Algorithm \ref{hminheap}, \ref{mhminheap}). 
 % That is, the task-node mapping is established a priori, and then it is enforced by the co-scheduler when the DAG framework starts task scheduling. 
 
-\subsubsection{Problem of Random Mapping}\label{randomassign}
+\subsubsection{Random Mapping Problem}\label{randomassign}
 {\color{blue}
 % Mapping tasks to nodes randomly and evenly is the simplest pre-scheduling way.
 To evaluate the performance of scheduling strategies, we use traces from OpenCloud\footnote{\label{fn:trace}http://ftp.pdl.cmu.edu/pub/datasets/hla/dataset.html} for the simulation.
 As shown in Figure \ref{fig:sim}, the baseline (i.e., red dotted line) is the stage completion time with Spark FIFO scheduling algorithm. 
 We run the simulation under three scheduling schemes: random mapping, Spark FIFO, and our heuristic MinHeap.
 The performance of random mapping drops as the round number grows. 
-This is because that data skew commonly exists in data-parallel computing \cite{skewtune}. 
+This is because the data skew commonly exists in data-parallel computing \cite{skewtune}. 
 Several heavy tasks may be assigned to the same node, thus slowing down the whole stage. 
-In addition, randomly mapping also ignore the data locality between shuffle map output and reduce input, which may introduce extra network traffic in cluster.
+In addition, randomly mapping also ignores the data locality between shuffle map output and reduce input, which may introduce extra network traffic in the cluster.
 }
 % The simplest way of pre-scheduling is mapping tasks to nodes randomly and evenly. 
 % We use traces from OpenCloud\footnote{\label{fn:trace}http://ftp.pdl.cmu.edu/pub/datasets/hla/dataset.html} for the simulation.
@@ -154,8 +154,8 @@ However, the linear regression model can fail in some scenarios.
 For example, some customized partitions may cause large inconsistency between observed map output distribution and the final reduce input distribution. 
 To illustrate the case, we present a particular spark job which using the Spark RangePartitioner in Figure \ref{fig:range_pre_sample}. 
 The observed map outputs are picked randomly. 
-The job uses the Spark RangePartitioner and introduce an extreme high data skew.
-Due to the extreme high data skew introducing by the partition, linear regression model cannot fit the result well.
+The job uses the Spark RangePartitioner and introduces an extremely high data skew.
+Due to the extremely high data skew introducing by the partition, the linear regression model cannot fit the result well.
 % The data partitioned by Spark RangePartitioner in Figure \ref{fig:range_pre_sample} results in a deviation from the linear regression model, because the RangePartitioner might introduce an extreme high data locality skew. 
 % We present two particular examples with 20 tasks respectively in Figure \ref{fig:hash_pre} and Figure \ref{fig:range_pre_sample}. 
 % The data in are normalized to $0-1$ because the prediction of SCache only produces the data distribution instead of the real size. 
@@ -288,7 +288,7 @@ To cope with multiple shuffle dependencies, we present the \textit{Accumulated H
 % To avoid violating the optimization from framework, we present the \textit{Accumulated Heuristic Scheduling} algorithm to cope with multiple shuffle dependencies.
 As illustrated in Algorithm \ref{mhminheap}, the sizes of previous \textit{shuffles} scheduled by \textit{Heuristic MinHeap Scheduling} are counted. 
 When a new shuffle starts, the predicted $size$, $prob$, and $host\_id$ in $p\_reduces$ are accumulated with previous \textit{shuffles}. 
-After scheduling, if the new $assigned\_id$ of a reduce task did not equal the original one, a re-shuffle will be triggered to transfer data to the new host. 
+After scheduling, if the newly $assigned\_id$ of a reduce task did not equal the original one, a re-shuffle will be triggered to transfer data to the new host. 
 This re-shuffle is rare since the previous shuffle data contributes a huge composition (i.e., high $prob$) after the accumulation, 
 which leads to a higher probability of tasks swap in $SWAP\_TASKS$. 
 
