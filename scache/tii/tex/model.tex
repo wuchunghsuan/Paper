@@ -1,11 +1,11 @@
 {\color{black}
 \section{Framework Resources Quantification Model}\label{model}
 
-In this section, we introduce \textit{Framework Resources Quantification} (FRQ) model to describe the performance of DAG frameworks.
+In this section, we introduce \textit{Framework Resources Quantification} (FRQ) model to evaluate the performance of DAG frameworks.
 % The FRQ model quantifies computing and I/O resources and visualizes them in the time dimension.
-In the industrial production, the FRQ model is able to predict the execution time required by the application under any circumstances, including different DAG frameworks, hardware environments, etc.
+The FRQ model is able to predict the execution time required by the application under any circumstances, including different DAG frameworks, hardware environments, etc.
 % The FRQ model assist us in analyzing the resource scheduling of DAG framework and evaluate their performance.
-We first introduce the FRQ model in Subsection \ref{model_overview}. In the following Subsection \ref{model_analysis}, we use the FRQ model to describe different computation jobs and discuss their performance.
+We first introduce the FRQ model in Subsection \ref{model_overview}. In Subsection \ref{model_analysis}, we use the FRQ model to describe different computation jobs and discuss their performance.
 % In the last Subsection \ref{model_evaluation}, we use the actual experimental results to evaluate the FRQ model.
 
 \subsection{The FRQ Model}\label{model_overview}
@@ -13,19 +13,16 @@ We first introduce the FRQ model in Subsection \ref{model_overview}. In the foll
 % A shuffle phase is required between each adjacent DAG computation phases.
 {\color{blue}
 We propose the FRQ model to better analyze the relationship between the computation phase and the shuffle phase in the DAG computing.
-The FRQ model focuses on describing the overhead caused by the shuffle process.
-This overhead does not only depends on the input data size, computation speed, complexity of algorithms, and other parameters but also on which scheduling strategy the job takes.
+% The FRQ model focuses on describing the overhead caused by the shuffle process.
+The FRQ model focuses on describing the shuffle overhead which significantly effected by the scheduling strategy.
+% This overhead does not only depends on the input data size, computation speed, complexity of algorithms, and other parameters but also on which scheduling strategy the job takes.
 % By using the FRQ model, we can analyze the advantages of each strategy in various situations.
-After quantifying computing and I/O resources, the FRQ model can evaluate different resource scheduling strategies by using different formulas.
+After quantifying computing and I/O resources, we use the FRQ model to evaluate different resource scheduling strategies.
 % For convenience, we introduce the FRQ model by taking a simple MapReduce job as an example in this section.
 
-Figure \ref{fig:model_basic} shows how the FRQ model describes a MapReduce job. 
+% Figure \ref{fig:model_basic} shows how the FRQ model describes a MapReduce job. 
 As Figure \ref{fig:model_basic} shows, the FRQ model divides the job into three phases: map, shuffle, and reduce.
-The horizontal axis represents time and the overlaps between phases represent they execute in parallel.
-The FRQ model uses these overlaps to describe different scheduling strategies.
-For example, as shown in Figure \ref{fig:model_hadoop}, this strategy starts the shuffle phase and the reduce phase at the same time.
-And Figure \ref{fig:model_basic} shows the pre-fetching strategy used by SCache. In the pre-fetching strategy, the shuffle phase starts as soon as it can in the map phase.
-
+The horizontal axis represents time and the vertical axis represents different phases.
 % As shown in Figure \ref{fig:model_basic}, the FRQ model introduce five parameters:
 Firstly, we introduce five input parameters of the FRQ model:
 }
@@ -52,9 +49,17 @@ Firstly, we introduce five input parameters of the FRQ model:
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{fig/model_hadoop}
-	\caption{\color{black}The FRQ Model with Half Parallel MapReduce}
+	\caption{\color{black}Framework Resources Quantification Model with Half Parallel MapReduce}
 	\label{fig:model_hadoop}
 \end{figure}
+
+% The FRQ model uses these overlaps to describe different scheduling strategies.
+{\color{blue}
+Besides, the FRQ model also needs to input the scheduling strategies the framework takes.
+The FRQ model needs to know the start time of each phases.
+For example, as shown in Figure \ref{fig:model_hadoop}, this strategy starts the shuffle phase and the reduce phase at the same time.
+And Figure \ref{fig:model_basic} shows the pre-fetching strategy used by SCache. In the pre-fetching strategy, the shuffle phase starts as soon as it can in the map phase.
+}
 
 The FRQ model calculates the execution time of each phase of the job with these five parameters.
 % As shown in Figure \ref{fig:model_basic}
@@ -110,7 +115,7 @@ In the next subsection, we show the formulas and discuss the performance of diff
 % By using the FRQ model to describe a MapReduce job, the users can analyze the resource scheduling strategy of the computation framework.
 }	
 
-\subsection{Model Analysis}\label{model_analysis}
+\subsection{Different Scheduling Strategies on the FRQ Model}\label{model_analysis}
 
 % \begin{figure}
 % 	\centering

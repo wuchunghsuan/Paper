@@ -86,7 +86,8 @@ Meanwhile, Hadoop MapReduce with SCache optimizes job completion time by up to $
 % We modified Spark to enable shuffle optimization of SCache as a representative.
 We use Spark version 1.6.2 and Hadoop MapReduce version 2.8.5.
 The shuffle configuration of Spark is set to the default\footnote{http://spark.apache.org/docs/1.6.2/configuration.html}. 
-We run the experiments on a 50-node m4.xlarge cluster on Amazon EC2\footnote{http://aws.amazon.com/ec2/}. 
+We run the experiments on a 50-node m4.xlarge cluster on Amazon EC2.
+% \footnote{http://aws.amazon.com/ec2/}. 
 Each node has 16GB memory and 4 CPUs.
 The network bandwidth each node is about 300 Mbps.
 % The network bandwidth provided by Amazon is insufficient. 
@@ -197,8 +198,14 @@ We use Terasort benchmark to evaluate the performance gain of SCache and also pr
 % As Figure \ref{fig:hadoop_terasort} shows, Hadoop MapReduce with SCache brings $15\%$ of total time optimization with 384GB input data size. 
 }
 
-As shown in Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache writes intermediate data locally in the map phase and the shuffle phase and the reduce phase start simultaneously. The beginning part of reduce phase needs to wait for network transfer because a large amount of shuffle data reaches the network bottleneck. This causes the CPU resources to be idle. 
-On the other hand, in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce with SCache starts pre-fetching in the map phase. This avoids the reduce phase waiting for the shuffle data. Furthermore, pre-fetching utilizes the idle I/O throughput in the map phase. As shown in Figure \ref{fig:hadoop_terasort_time}, after decoupling shuffle, Hadoop MapReduce with SCache optimizes Terasort overall completion time by up to $15\%$ and an average of $13\%$ with input data sizes from 128GB to 512GB.
+As shown in Figure \ref{fig:hadoop_terasort_origin}, Hadoop MapReduce without SCache starts shuffle and reduce simultaneously.
+% writes intermediate data locally in the map phase and the shuffle phase and the reduce phase start simultaneously.
+The beginning part of reduce phase needs to wait for network transfer because a large amount of shuffle data reaches the network bottleneck.
+This causes the CPU resources to be idle. 
+On the other hand, in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce with SCache decouples shuffle from reduce and starts pre-fetching in the map phase.
+% This avoids the reduce phase waiting for the shuffle data.
+SCache utilizes the idle I/O throughput in the map phase.
+As shown in Figure \ref{fig:hadoop_terasort_time}, after decoupling, Hadoop MapReduce with SCache optimizes Terasort overall completion time by up to $15\%$ and an average of $13\%$ with input data sizes from 128GB to 512GB.
 }
 
 % \subsection{Overhead of Sampling}
@@ -209,27 +216,12 @@ On the other hand, in Figure \ref{fig:hadoop_terasort_scache}, Hadoop MapReduce 
 % So the cost of pre-scheduling algorithm and memory management are unlikely to make the master become the bottleneck of the scalability.
 % Combined with the sampling overhead evaluation, we believe that SCache is scalable.
 
-\begin{figure}
-    \centering
-    \begin{minipage}{0.4\textwidth}
-        \centering
-        \includegraphics[width=.8\linewidth]{fig/hadoop_terasort_time} % first figure itself
-        \caption{\color{black}Hadoop MapReduce Terasort Completion Time}
-		\label{fig:hadoop_terasort_time}
-    \end{minipage}\hfill
-    % \begin{minipage}{0.4\textwidth}
-    %     \centering
-    %     \includegraphics[width=.8\linewidth]{fig/sampling} % second figure itself
-    %     \caption{Sampling Overhead}
-	% 	\label{fig:sampling}
-    % \end{minipage}
-\end{figure}
-
 \subsection{The FRQ Model Evaluation}\label{model_evaluation}
 % To evaluate the FRQ model, we run experiments on two environments: (a) 50 Amazon EC2 m4.xlarge nodes cluster; (b) 4 in-house nodes cluster with 128GB memory and 32 cores per node.
 % We run the Terasort as an experimental application on a Hadoop MapReduce framework.
 % We deployed Hadoop with SCache and without SCache in both environments.
-To evaluate the FRQ model, we run Terasort with Hadoop MapReduce with two different environments and use the FRQ to model the jobs.
+To evaluate the FRQ model, we run Terasort with Hadoop MapReduce with two different environments.
+%  and use the FRQ to model the jobs.
 % The workload is from 16 GB to 64 GB. 
 % \(D\) and \(N\) are set according to the application parameters. We set \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) according to the environment.
 The parameters \(D\), \(N\), \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) are set according to the application and the environment.
@@ -248,7 +240,7 @@ While without SCache, \(T_{P\_Shuffle}\) is equal to \(T_{Shuffle}\)(see Equatio
 % 		Error &= \frac{ExpT_{Job} - T_{Job}}{T_{Job}}
 % 	\end{aligned}
 % \end{equation}
-Table \ref{table2} shows the results in Amazon EC2 environment.
+Table \ref{table2} shows the results in Amazon EC2.
 % \;\(V_{Map}, V_{Shuffle},\) and \(V_{Reduce}\) are modified because of the different hardware devices.
 % We set K to the same value.
 % The formulas in the table are all the same except \(T_{P\_Shuffle}\).
@@ -282,9 +274,26 @@ Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, 
 % We believe that the FRQ model can accurately describe DAG frameworks.
 }
 
+
+\begin{figure}
+    \centering
+    \begin{minipage}{0.4\textwidth}
+        \centering
+        \includegraphics[width=.8\linewidth]{fig/hadoop_terasort_time} % first figure itself
+        \caption{\color{black}Hadoop MapReduce Terasort Completion Time}
+		\label{fig:hadoop_terasort_time}
+    \end{minipage}\hfill
+    % \begin{minipage}{0.4\textwidth}
+    %     \centering
+    %     \includegraphics[width=.8\linewidth]{fig/sampling} % second figure itself
+    %     \caption{Sampling Overhead}
+	% 	\label{fig:sampling}
+    % \end{minipage}
+\end{figure}
+
 \begin{table*}
 \centering
-\scalebox{0.95}{
+\scalebox{0.85}{
 	\begin{tabular}{|c||c|c|c|c|c|c|c||c|c|c|c|c|c|c|}
 	\hline
 	&
@@ -306,19 +315,19 @@ Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, 
 	\hline
 	% & 16	& 1	& 2 &	0.65 &	1 &	0.47 &	0.5 &	24.62 &		34.04	 &	21.73 &	26.87 &	51.48	& 55  &		6.39\% \\
 	SCache
-	& 32	& 1	& 4 &	0.65 &	1 &	0.47 &	0.5 &	49.23 &		68.09	 &	31.16 &	47.58 &	96.81	& 104 & 	6.91\% \\
-	& 48	& 1	& 6 &	0.65 &	1 &	0.47 &	0.5 &	73.85 &		102.13 &	40.59 &	68.29 &	142.14	& 151 & 	5.87\% \\
-	& 64	& 1	& 8 &	0.65 &	1 &	0.47 &	0.5 &	98.46 &		136.17 &	50.02 &	89.01 &	187.47	& 193 & 	2.87\% \\
+	& 32 GB & 1	& 4 &	0.65 GB/s &	1 GB/s  &	0.47 GB/s &	0.5 &	49.23 &		68.09  s &	31.16 s &	47.58 s &	96.81	s & 104 s & 	6.91\% \\
+	& 48 GB	& 1	& 6 &	0.65 GB/s &	1 GB/s  &	0.47 GB/s &	0.5 &	73.85 &		102.13 s &	40.59 s &	68.29 s &	142.14	s & 151 s & 	5.87\% \\
+	& 64 GB	& 1	& 8 &	0.65 GB/s &	1 GB/s  &	0.47 GB/s &	0.5 &	98.46 &		136.17 s &	50.02 s &	89.01 s &	187.47	s & 193 s & 	2.87\% \\
 	\hline
-	% & 16	& 1 & 2 &	0.65 &	1 &	0.47 &	0.6 &	24.62 &		34.04	&	34.04	&	36.43	&	61.04	&	73	&	16.38\%	\\
+	% & 16	& 1 & 2 &	0.65 GB/s &	1 &	0.47 &	0.6 &	24.62 &		34.04	&	34.04	&	36.43	&	61.04	&	73	&	16.38\%	\\
 	Legacy
-	& 32	& 1 & 4 &	0.65 &	1 &	0.47 &	0.6 &	49.23 &		68.09	&	68.09	&	72.85	&	122.08	&	135	&	9.57\%	\\
-	& 48	& 1 & 6 &	0.65 &	1 &	0.47 &	0.6 &	73.85 &		102.13	&	102.13	&	109.28	&	183.12	&	188	&	2.59\%	\\
-	& 64	& 1 & 8 &	0.65 &	1 &	0.47 &	0.6 &	98.46 &		136.17	&	136.17	&	145.70	&	244.16	&	249	&	1.94\%	\\
+	& 32 GB	& 1 & 4 &	0.65 GB/s &	1 GB/s &	0.47 GB/s &	0.6 &	49.23 s &		68.09 s &	68.09 s		&	72.85	s &	122.08 s	&	135 s	&	9.57\%	\\
+	& 48 GB	& 1 & 6 &	0.65 GB/s &	1 GB/s &	0.47 GB/s &	0.6 &	73.85 s &		102.13 s &	102.13 s	&	109.28	s &	183.12 s	&	188 s	&	2.59\%	\\
+	& 64 GB	& 1 & 8 &	0.65 GB/s &	1 GB/s &	0.47 GB/s &	0.6 &	98.46 s &		136.17 s &	136.17 s	&	145.70	s &	244.16 s	&	249 s	&	1.94\%	\\
 	\hline
 	\end{tabular}
 }
-\(D\): GB, \(V_{i}\): GB/s, \(T_{i}\): s
+% \(D\): GB, \(V_{i}\): GB/s, \(T_{i}\): s
 \caption{\color{black}Hadoop MapReduce on 4 nodes cluster in the FRQ model}
 \label{table1}
 \end{table*}
@@ -329,7 +338,7 @@ Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, 
 
 \begin{table*}
 \centering
-\scalebox{0.95}{
+\scalebox{0.85}{
 	\begin{tabular}{|c||c|c|c|c|c|c|c||c|c|c|c|c|c|c|}
 	\hline
 	&
@@ -349,22 +358,22 @@ Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, 
 	\(Error\)\\
 
 	\hline
-	& 128	& 1 & 5 &	1.15 &	1.46	&	1.4 &	0.5 &	111.30 &	91.43	&	18.29	&	96.81	&	208.12	&	232	&	10.29\%	\\
 	SCache
-	& 256	& 1 & 5 &	1.15 &	1.46	&	1.4 &	0.5 &	222.61 &	182.86	&	36.57	&	193.63	&	416.24	&	432	&	3.65\%	\\
-	& 384	& 1 & 5 &	1.15 &	1.46	&	1.4 &	0.5 &	333.91 &	274.29	&	54.86	&	290.44	&	624.36	&	685 &	8.85\%	\\
-	% & 512	& 1 & 5 &	1.15 &	1.46	&	1.4 &	0.5 &	445.22 &	365.71	&	91.43	&			&	841.62	&	1135 &	25.85\%	\\
+	& 128 GB	& 1 & 5 &	1.15 GB/s &	1.46 GB/s	&	1.4 GB/s &	0.5 &	111.30 &	91.43	&	18.29	&	96.81	&	208.12	&	232	&	10.29\%	\\
+	& 256 GB	& 1 & 5 &	1.15 GB/s &	1.46 GB/s	&	1.4 GB/s &	0.5 &	222.61 &	182.86	&	36.57	&	193.63	&	416.24	&	432	&	3.65\%	\\
+	& 384 GB	& 1 & 5 &	1.15 GB/s &	1.46 GB/s	&	1.4 GB/s &	0.5 &	333.91 &	274.29	&	54.86	&	290.44	&	624.36	&	685 &	8.85\%	\\
+	% & 512	& 1 & 5 &	1.15 GB/s &	1.46 GB/s	&	1.4 GB/s &	0.5 &	445.22 &	365.71	&	91.43	&			&	841.62	&	1135 &	25.85\%	\\
 	\hline
-	& 128	& 1 & 5 &	1.15 &	1.46	&	1.4 &	0.6 &	111.30 &	91.43	&	91.43	&	142.53	&	253.83	&	266 &	4.57\%	\\
 	Legacy
-	& 256	& 1 & 5 &	1.15 &	1.46	&	1.4 &	0.6 &	222.61 &	182.86	&	182.86	&	285.06	&	507.67	&	524 &	3.12\%	\\
-	& 384	& 1 & 5 &	1.15 &	1.46	&	1.4 &	0.6 &	333.91 &	274.29	&	274.29	&	427.59	&	761.50	&	776 &	1.87\%	\\
+	& 128 GB	& 1 & 5 &	1.15 GB/s &	1.46 GB/s	&	1.4 GB/s &	0.6 &	111.30 s &	91.43	s &	91.43	s &	142.53	s &	253.83	s &	266 s &	4.57\%	\\
+	& 256 GB	& 1 & 5 &	1.15 GB/s &	1.46 GB/s	&	1.4 GB/s &	0.6 &	222.61 s &	182.86	s &	182.86	s &	285.06	s &	507.67	s &	524 s &	3.12\%	\\
+	& 384 GB	& 1 & 5 &	1.15 GB/s &	1.46 GB/s	&	1.4 GB/s &	0.6 &	333.91 s &	274.29	s &	274.29	s &	427.59	s &	761.50	s &	776 s &	1.87\%	\\
 	% & 512	& 1 & 5 &	1.15 &	1.46	&	1.4 &	0.6 &	445.22 &	365.71	&	365.71	&	588.40	&	1033.62	&	1312 &	21.22\%	\\
 
 	\hline
 	\end{tabular}
 }
-\(D\): GB, \(V_{i}\): GB/s, \(T_{i}\): s
+% \(D\): GB, \(V_{i}\): GB/s, \(T_{i}\): s
 \caption{\color{black}Hadoop MapReduce on 50 AWS m4.xlarge nodes cluster in the FRQ model}
 \label{table2}
 \end{table*}
