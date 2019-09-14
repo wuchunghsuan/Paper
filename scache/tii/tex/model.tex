@@ -11,7 +11,7 @@ We first introduce the FRQ model in Subsection \ref{model_overview}. In Subsecti
 \subsection{The FRQ Model}\label{model_overview}
 % The current distributed computing frameworks mostly use DAGs to describe the computation logic. 
 % A shuffle phase is required between each adjacent DAG computation phases.
-{\color{blue}
+{\color{black}
 We propose the FRQ model to better analyze the relationship between the computation phase and the shuffle phase in the DAG computing.
 % The FRQ model focuses on describing the overhead caused by the shuffle process.
 The FRQ model focuses on describing the shuffle overhead which significantly effected by the scheduling strategy.
@@ -54,7 +54,7 @@ Firstly, we introduce five input parameters of the FRQ model:
 \end{figure}
 
 % The FRQ model uses these overlaps to describe different scheduling strategies.
-{\color{blue}
+{\color{black}
 Besides, the FRQ model also needs to input the scheduling strategies the framework takes.
 The FRQ model needs to know the start time of each phases.
 For example, as shown in Figure \ref{fig:model_hadoop}, this strategy starts the shuffle phase and the reduce phase at the same time.
@@ -101,7 +101,7 @@ The reduce phase time formula is as follows:
 % \end{aligned}
 % \end{equation}
 
-{\color{blue}
+{\color{black}
 \(\frac{D \times R}{V_{Reduce}}\) represents the ideal computation time of a reduce phase, and (\(K \times T_{P\_Shuffle}\)) represents the computing overhead.
 \(T_{P\_Shuffle}\) represents the overlap time between the shuffle phase and the reduce phase as shown in Figure \ref{fig:model_basic}. \(T_{Shuffle}\) represents the total time of the shuffle phase. 
 % The relationship between \(T_{P\_Shuffle}\) and \(T_{Shuffle}\) is determined by the resources scheduling strategy of DAG frameworks. This relationship will be shown in the following Subsection \ref{model_analysis}.  

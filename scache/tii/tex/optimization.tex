@@ -1,7 +1,7 @@
 \section{Shuffle Optimization}
 \label{opt}
 This section presents detailed methodologies to achieve shuffle optimization. 
-{\color{blue}
+{\color{black}
 Firstly, we discuss the reason causes shuffle overhead in the DAG frameworks.
 In the following subsection, we propose a shuffle data management system to decouple shuffle from execution. 
 And we propose the pre-scheduling and pre-fetching to hide shuffle overhead in multi-round map tasks.
@@ -41,7 +41,7 @@ Furthermore, two heuristic algorithms (Algorithm \ref{hminheap}, \ref{mhminheap}
 	\label{fig:sim}
 \end{figure}
 
-{\color{blue}
+{\color{black}
 \subsection{Observations}\label{observation}
 % DAG - shuffle - couple \& dependency - overhead in job - formula - how to optimize? - decouple \& pre-fetch - memory
 
@@ -65,7 +65,7 @@ To mitigate the shuffle overhead, we propose an optimization to overlap the shuf
 }
 
 \subsection{Decouple Shuffle from Execution}
-{\color{blue}
+{\color{black}
 To decouple the shuffle from reduce tasks, we propose a shuffle data management system called SCache to take over all shuffle data from the DAG frameworks.
 SCache provides two APIs named $putBlock$ and $getBlock$ to manage the shuffle data.
 On the map side, after shuffle data blocks are produced, the map task uses $putBlock$ to transfer the data blocks to SCache.
@@ -91,7 +91,7 @@ In this aspect, SCache optimizes the time of shuffle read and shuffle write sinc
 % the $getBlock$ leverages the memory copy to fetch the shuffle data from the local memory of SCache.
 
 % \subsection{Pre-scheduling with Application Context}
-{\color{blue}
+{\color{black}
 \subsection{Pre-scheduling and Pre-fetching Shuffle Data}
 % multi-round -> how to optimize? -> pre-schedule -> pre-fetch -> formula
 The pre-scheduling and pre-fetching are the most critical aspects of the optimization.
@@ -111,7 +111,7 @@ The DAG frameworks follow the co-scheduler to starts reduce tasks.
 % That is, the task-node mapping is established a priori, and then it is enforced by the co-scheduler when the DAG framework starts task scheduling. 
 
 % \subsubsection{Random Mapping Problem}\label{randomassign}
-% {\color{blue}
+% {\color{black}
 % % Mapping tasks to nodes randomly and evenly is the simplest pre-scheduling way.
 % To evaluate the performance of scheduling strategies, we use traces from OpenCloud\footnote{\label{fn:trace}http://ftp.pdl.cmu.edu/pub/datasets/hla/dataset.html} for the simulation.
 % As shown in Figure \ref{fig:sim}, the baseline (i.e., red dotted line) is the stage completion time with Spark FIFO scheduling algorithm. 
@@ -134,7 +134,7 @@ The DAG frameworks follow the co-scheduler to starts reduce tasks.
 % In addition, randomly assigned tasks also ignore the data locality between shuffle map output and reduce input, which may introduce extra network traffic in cluster.
 	
 \subsubsection{Shuffle Output Prediction}\label{shuffleprediction}
-{\color{blue}
+{\color{black}
 % The problem of random mapping is obviously caused by application context (e.g., shuffle data size) ignorance. 
 The simplest way of pre-scheduling is mapping tasks to nodes randomly and evenly.
 But without considering job context, the random mapping scheduling shows poor performance due to data skew and ignoring data locality.
@@ -227,7 +227,7 @@ We use $prob_i$ to achieve a better data locality while performing shuffle pre-s
 % But ignoring the data locality can introduce extra network transfer. 
 % In order to balance load while minimizing the network traffic, we present the Heuristic MinHeap Scheduling algorithm (Algorithm \ref{hminheap}).
 To balance load while minimizing the network traffic, we present the \textit{Heuristic MinHeap Scheduling} algorithm (Algorithm \ref{hminheap}).
-{\color{blue}
+{\color{black}
 % For the pre-scheduling itself (i.e., the first $while$ in Algorithm \ref{hminheap}), the algorithm maintains a min-heap to simulate the load of each node and applies the longest processing time rule (LPT)\footnote{http://www.designofapproxalgs.com/} to achieve $4/3\text{-}approximation$ optimum. 
 To keep the pre-scheduling load balance, we maintain a min-heap in the first $while$ loop (i.e., line 6-11).
 We use the min-heap to simulate the load of each node and applies the longest processing time rule (LPT)\footnote{http://www.designofapproxalgs.com/} to achieve $4/3\text{-}approximation$ optimum.
@@ -241,7 +241,7 @@ Based on the $prob$, the normalized probability $norm$ is calculated as a bound 
 Inside the $SWAP\_TASKS$, tasks will be selected and swapped without exceeding the $upper\_bound$.
 Since the algorithm only maintains a min-heap and traverses $reduce$ for swapping, the algorithm needs $O(n)$ operations. 
 
-{\color{blue}
+{\color{black}
 To evaluate \textit{Heuristic MinHeap Scheduling} algorithm, we use traces from OpenCloud\footnote{\label{fn:trace}http://ftp.pdl.cmu.edu/pub/datasets/hla/dataset.html} for the simulation.
 % As shown in Figure \ref{fig:sim}, the baseline (i.e., red dotted line) is the stage completion time with Spark FIFO scheduling algorithm. 
 As shown in Figure \ref{fig:sim}, we run the simulation under three scheduling schemes: Random Mapping, Spark FIFO, and heuristic MinHeap.

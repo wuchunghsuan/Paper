@@ -4,13 +4,13 @@ We first present the system overview and the detail of sampling in Subsection \r
 The following \ref{memorymanage} subsection focuses on two constraints on memory management.
 % In Subsection \ref{crossframework}, we evaluate the cross-framework capability of SCache. 
 % At last, we discuss the cost of adapting SCache and fault tolerance. 
-{\color{blue}
+{\color{black}
 In Subsection \ref{fault}, we discuss the fault tolerance of the system.
 }
 
 
 \subsection{System Overview}\label{arch}
-{\color{blue}
+{\color{black}
 As shown in Figure \ref{fig:architecture}, SCache consists of three components: a distributed shuffle data management system, a DAG co-scheduler, and a worker daemon.
 As a plug-in system, SCache needs to rely on a DAG framework. 
 The master node of SCache includes a DAG co-scheduler and a storage manager.
@@ -60,7 +60,7 @@ To enforce the DAG framework to assign tasks according to the SCache pre-schedul
 
 \subsection{Memory Management}\label{memorymanage}
 % As mentioned in Section \ref{observation}, though the shuffle size is relatively small, memory management should still be cautious enough to limit the effect of performance of DAG framework.
-{\color{blue}
+{\color{black}
 SCache uses bellowed memory management to ensure performance.
 If the reserved memory is running out, SCache will flush some of the blocks into the disk temporarily and then re-fetch them if needed.
 SCache leverages two constraints to manage the shuffle blocks: \textit{all-or-nothing} and \textit{context-aware-priority}.
@@ -70,7 +70,7 @@ SCache leverages two constraints to manage the shuffle blocks: \textit{all-or-no
 
 \subsubsection{All-or-Nothing Constraint}
 % This acceleration of in-memory cache of a single task is necessary but insufficient for a shorter stage completion time. 
-{\color{blue}
+{\color{black}
 % Based on the observation in Section \ref{multi}, in most cases one single stage contains multi-rounds of tasks.
 % Both experience and DAG framework manuals (e.g., Hadoop and Spark) recommend that multi-round execution of each stage will benefit the performance of applications.
 As discussed in the observation in Subsection \ref{observation}, it is common to have multi-round execution of each stage. 
@@ -120,7 +120,7 @@ If all the units are completed, SCache selects victims based on two factors:
 % It only takes about 500 lines of code. Such hundreds of lines of code modification are very small compared to the hundreds of thousands of lines of code in DAG framework. We believe that the costs of enabling SCache on other DAG computing frameworks, such as Tez, are also low.
 % }
 
-{\color{blue}
+{\color{black}
 \subsection{Discussion of Fault Tolerance}\label{fault}
 % how to handle faults? -> maybe replication -> tradeoff
 For now, SCache only restarts failed workers without recovering their data.
