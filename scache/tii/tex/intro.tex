@@ -67,7 +67,7 @@ Such synchronized network communication causes a burst demand for network I/O, w
 To optimize the data shuffling without significantly changing DAG frameworks, we propose S(huffle)Cache, an open source\footnote{https://github.com/frankfzw/SCache} plug-in system for different DAG computing frameworks.
 Specifically, SCache takes over the whole shuffle phase from the underlying framework.
 The workflow of a DAG framework with SCache is presented in Figure \ref{fig:workflow}. 
-SCache replaces the disk operations of shuffle write by the memory copy in map tasks and pre-fetch the shuffle data.
+SCache replaces the disk operations of shuffle write by the memory copy in map tasks and pre-fetches the shuffle data.
 % Can we efficiently optimize the data shuffling without significantly changing DAG frameworks?
 % In this paper, we answer this question in the affirmative with S(huffle)Cache, an open source\footnote{https://github.com/frankfzw/SCache} plug-in system which provides a shuffle-specific optimization for different DAG computing frameworks.
 % Specifically, SCache takes over the whole shuffle phase from the underlying framework by providing a cross-framework API for both shuffle write and read.

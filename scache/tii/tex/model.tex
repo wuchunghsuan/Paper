@@ -3,7 +3,7 @@
 
 In this section, we introduce \textit{Framework Resources Quantification} (FRQ) model to evaluate the performance of DAG frameworks.
 % The FRQ model quantifies computing and I/O resources and visualizes them in the time dimension.
-The FRQ model is able to predict the execution time required by the application under any circumstances, including different DAG frameworks, hardware environments, etc.
+The FRQ model is able to predict the execution time required by the application under most circumstances, including different DAG frameworks, hardware environments, etc.
 % The FRQ model assist us in analyzing the resource scheduling of DAG framework and evaluate their performance.
 We first introduce the FRQ model in Subsection \ref{model_overview}. In Subsection \ref{model_analysis}, we use the FRQ model to describe different computation jobs and discuss their performance.
 % In the last Subsection \ref{model_evaluation}, we use the actual experimental results to evaluate the FRQ model.
@@ -14,7 +14,7 @@ We first introduce the FRQ model in Subsection \ref{model_overview}. In Subsecti
 {\color{black}
 We propose the FRQ model to better analyze the relationship between the computation phase and the shuffle phase in the DAG computing.
 % The FRQ model focuses on describing the overhead caused by the shuffle process.
-The FRQ model focuses on describing the shuffle overhead which significantly effected by the scheduling strategy.
+The FRQ model focuses on describing the shuffle overhead which is significantly affected by the scheduling strategy.
 % This overhead does not only depends on the input data size, computation speed, complexity of algorithms, and other parameters but also on which scheduling strategy the job takes.
 % By using the FRQ model, we can analyze the advantages of each strategy in various situations.
 After quantifying computing and I/O resources, we use the FRQ model to evaluate different resource scheduling strategies.
@@ -72,7 +72,7 @@ The total execution time of a job is the sum of the map phase time and reduce ph
 \end{aligned}
 \end{equation}
 
-The formulas of map phase time and shuffle phase time are as follow:
+The formulas of map phase time and shuffle phase time are as follows:
 % \(T_{Map}={{\frac{D}{V_{Map}}}}\).
 \begin{equation}
 \label{equation_Tmap}

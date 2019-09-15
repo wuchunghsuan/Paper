@@ -59,7 +59,7 @@ In industrial big data, SQL-based big data technologies are widely used in these
 % Because of the limited time and resource, 
 To prove the performance gain of SCache in industry, 
 we evaluate SCache with TPC-DS\footnote{http://www.tpc.org/tpcds/}.
-TPC-DS is a standard benchmark which focus on modeling industrial workload.
+TPC-DS is a standard benchmark which focuses on modeling industrial workload.
 % TPC-DS, TPCx-BB, HiBench, BigDataBenchmark, and so on are popular standard big data benchmarks which evaluate big data systems.
 % TPC-DS models queries and data maintenance of a retail product supplier and provides a representative evaluation of performance.
 % We believe using TPC-DS is able to evaluate the performance of SCache in industry. 
@@ -89,7 +89,7 @@ The shuffle configuration of Spark is set to the default\footnote{http://spark.a
 We run the experiments on a 50-node m4.xlarge cluster on Amazon EC2.
 % \footnote{http://aws.amazon.com/ec2/}. 
 Each node has 16GB memory and 4 CPUs.
-The network bandwidth each node is about 300 Mbps.
+The network bandwidth of each node is about 300 Mbps.
 % The network bandwidth provided by Amazon is insufficient. 
 % Our evaluations reveal the bandwidth is only about 300 Mbps.
 %  (see Figure \ref{fig:util}).
@@ -224,8 +224,8 @@ To evaluate the FRQ model, we run Terasort with Hadoop MapReduce with two differ
 %  and use the FRQ to model the jobs.
 % The workload is from 16 GB to 64 GB. 
 % \(D\) and \(N\) are set according to the application parameters. We set \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) according to the environment.
-The parameters \(D\), \(N\), \(R, V_{Map}, V_{Shuffle},\)and \(V_{Reduce}\) are set according to the application and the environment.
-We set \(K\) to 0.5 and 0.6 since SCache alleviates the defect on the reduce phase
+The parameters \(D\), \(N\), \(R\), \(V_{Map}\), \(V_{Shuffle}\), and \(V_{Reduce}\) are set according to the application and the environment.
+We set \(K\) to 0.5 and 0.6 since SCache alleviates the defect on the reduce phase.
 Table \ref{table1} shows the results in the in-house environment.
 % The formulas of \(T_{Job}, T_{Map}, T_{Reduce}\) and \(T_{Shuffle}\) are according to Equation \ref{equation_Tjob}, Equation \ref{equation_Tmap}, Equation \ref{equation_Treduce} and Equation \ref{equation_Tshuffle}, respectively. 
 While enabling SCache, Terasort satisfies the situation in Figure \ref{fig:model_basic} (\(V_{Map} \times R \ge V_{Shuffle}\)). 

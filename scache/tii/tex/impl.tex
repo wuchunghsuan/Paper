@@ -28,7 +28,7 @@ The sampling job uses a reservoir sampling algorithm \cite{reservoir} on each pa
 SCache master predicts the reduce partition size based on the data and then call Algorithm \ref{hminheap} or \ref{mhminheap} to do the pre-scheduling.
 
 % After a map task finishes computing, the shuffle write implementation of the DAG framework is modified to call the SCache API to move all the blocks out of framework worker through memory copy and release the slot immediately.
-After a map task finishes computing, the shuffle writes in the map task is modified to use SCache API to memory copy all shuffle blocks to the SCache worker reserved memory.
+After a map task finishes computing, the shuffle writes in the map task are modified to use SCache API to memory copy all shuffle blocks to the SCache worker reserved memory.
 % After that, the slot will be released (without being blocked on disk operations).
 The SCache records the block ID and the size and sends them to the master.
 % When a block of the map output is received, the SCache worker will send the block ID and the size to the master.
