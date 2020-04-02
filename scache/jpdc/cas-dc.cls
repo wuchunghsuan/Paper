@@ -1,8 +1,8 @@
 %%
-%% This is file `cas-sc.cls',
+%% This is file `cas-sc.cls'.
 %%
-%% This file is part of the 'Elsarticle Bundle'.
-%% ..........................................-
+%% This file is part of the 'CAS Bundle'.
+%% ......................................
 %% 
 %% It may be distributed under the conditions of the LaTeX Project Public
 %% License, either version 1.2 of this license or (at your option) any
@@ -11,17 +11,15 @@
 %% and version 1.2 or later is part of all distributions of LaTeX
 %% version 1999/12/01 or later.
 %% 
-%% The list of all files belonging to the 'Stm Bundle' is
+%% The list of all files belonging to the 'CAS Bundle' is
 %% given in the file `manifest.txt'.
 %% 
-%%
-%% 
-%% $Id: cas-dc.cls,v 1.3 2018/09/24 07:18:46 cvr Exp cvr $
-%% $Author: cvr $
-%%
+
+%% $Id: cas-dc.cls 49 2020-03-14 09:05:10Z rishi $
+
  \def\RCSfile{cas-dc}%
- \def\RCSversion{1.0}%
- \def\RCSdate{2018/09/22}%
+ \def\RCSversion{2.1}%
+ \def\RCSdate{2020/03/14}%
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
 \ProvidesClass{\RCSfile}[\RCSdate, \RCSversion: Formatting class
    for CAS double column articles]
@@ -33,6 +31,8 @@
 \newif\iflongmktitle    \longmktitlefalse
 \newif\ifdc             \global\dctrue
 \newif\ifsc             \global\scfalse
+\newif\ifcasreviewlayout  \global\casreviewlayoutfalse
+\newif\ifcasfinallayout   \global\casfinallayoutfalse
 
 \newcounter{blind}
 \setcounter{blind}{0}
@@ -45,8 +45,10 @@
 \DeclareOption{singleblind}{\setcounter{blind}{1}}
 \DeclareOption{doubleblind}{\setcounter{blind}{2}}
 \DeclareOption{longmktitle}{\global\longmktitletrue}
+\DeclareOption{final}{\global\casfinallayouttrue}
+\DeclareOption{review}{\global\casreviewlayouttrue}
 
-\ExecuteOptions{a4paper,10pt,oneside,fleqn}
+\ExecuteOptions{a4paper,10pt,oneside,fleqn,review}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions
 \LoadClass{article}
@@ -93,7 +95,21 @@
 
 \RenewDocumentCommand \maketitle { }
 {
-  \thispagestyle{first}
+  \ifbool { usecasgrabsbox }
+    { 
+      \setcounter{page}{0}
+      \thispagestyle{empty}
+      \unvbox\casgrabsbox  
+    } { }  
+  \pagebreak  
+  \ifbool { usecashlsbox }
+    { 
+      \setcounter{page}{0}
+      \thispagestyle{empty}
+      \unvbox\casauhlbox
+    } { }    
+  \pagebreak
+  \thispagestyle{first}    
   \ifbool{longmktitle}
   {
     \LongMaketitleBox

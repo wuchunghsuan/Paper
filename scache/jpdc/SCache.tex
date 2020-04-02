@@ -1,12 +1,9 @@
 %\documentclass[a4paper,fleqn,longmktitle]{cas-dc}
 \documentclass[a4paper,fleqn]{cas-dc}
-%\usepackage{l3regex}
 
-\usepackage{lipsum}
-
-%\usepackage[authoryear,longnamesfirst]{natbib}
 \usepackage[numbers]{natbib}
-\usepackage{subcaption} % For subfigures
+\usepackage{lipsum}
+\usepackage{subcaption}
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \usepackage{enumitem}
@@ -19,7 +16,7 @@
 \usepackage{multicol}
 \usepackage{varwidth}
 
-\xspaceaddexceptions{]}
+% \xspaceaddexceptions{]}
 \def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
 \tsc{WGM}
 \tsc{QE}
@@ -27,7 +24,6 @@
 \tsc{PMS}
 \tsc{BEC}
 \tsc{DE}
-
 
 \begin{document}
 \let\WriteBookmarks\relax
@@ -37,7 +33,7 @@
 \shortauthors{R. Rui et al.}
 %\begin{frontmatter}
 
-\title [mode = title]{Efficient Shuffle Management for DAG Computing Frameworks Based on the FRQ Model}                      
+\title [mode = title]{Efficient Shuffle Management for DAG Computing Frameworks Based on the FRQ Model}
 % \tnotemark[1,2]
 
 %%  \tnoteref{tn1,tn2}
@@ -48,8 +44,6 @@
 % \tnotetext[2]{The second title footnote which is a longer text matter
 %    to fill through the whole text width and overflow into
 %    another line in the footnotes area of the first page.}
-
-
 
 \author{Rui Ren}[type=editor,
                         bioid=1,
@@ -74,26 +68,7 @@
   Distributed DAG frameworks \sep Shuffle \sep Optimization \sep Performance model
 \end{keywords}
 
-
 \maketitle
-
-\makeatletter
-\renewcommand\section{\@startsection{section}{1}{\z@}%
-    {15pt \@plus 3\p@ \@minus 3\p@}%
-    {4\p@}%
-    {%\let\@hangfrom\relax
-     \sectionfont\raggedright\hst[13pt]}}
-\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
-    {10pt \@plus 3\p@ \@minus 2\p@}%
-    {.1\p@}%
-    {%\let\@hangfrom\relax
-     \ssectionfont\raggedright }}
-\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
-    {10pt \@plus 1\p@ \@minus .3\p@}%
-    {.1\p@}%
-    {%\let\@hangfrom\relax
-     \sssectionfont\raggedright}}
-\makeatother
 
 \input{./tex/intro.tex}
 % \input{./tex/motivation}
@@ -107,12 +82,11 @@
 
 % \printcredits
 
-\footnotesize
+% \footnotesize
 
-\vskip12pt
+% \vskip12pt
 
-% \bibliographystyle{ACM-Reference-Format}
-\bibliographystyle{IEEEtran}
+\bibliographystyle{model1-num-names}
 \bibliography{biblio}
 
 % \bio{./fig/author/Rui_Ren}
@@ -149,11 +123,11 @@
 % \textbf{Haibing Guan} received the PhD degree from Tongji University, in 1999. He is a professor of School of Electronic, Information and Electronic Engineering, Shanghai Jiao Tong University, and the director of the Shanghai Key Laboratory of Scalable Computing and Systems. His research interests include distributed computing, network security, network storage, green IT, and cloud computing.
 % \endbio
 
-\makeatletter
+% \makeatletter
 
-\def\pct{\expandafter\@gobble\string\%}
+% \def\pct{\expandafter\@gobble\string\%}
 
-\immediate\write\@auxout{\pct\space This is a test line.\pct }
+% \immediate\write\@auxout{\pct\space This is a test line.\pct }
 
 \end{document}
 
