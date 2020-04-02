@@ -25,7 +25,7 @@ When a DAG job is submitted, the DAG information is generated in the framework t
 % For each shuffle dependency, the shuffle ID, the type of partitioner, the number of map tasks, and the number of reduce tasks are included.
 If the RangePartitioner or a customized non-hash partitioner is used, SCache will insert an extra sampling job before the job starts.
 The sampling job uses a reservoir sampling algorithm \cite{reservoir} on each partition to gather the sample data.
-SCache master predicts the reduce partition size based on the data and then call Algorithm \ref{hminheap} or \ref{mhminheap} to do the pre-scheduling.
+SCache master predicts the reduce partition size based on the data and then \edited{calls} Algorithm \ref{hminheap} or \ref{mhminheap} to do the pre-scheduling.
 
 % After a map task finishes computing, the shuffle write implementation of the DAG framework is modified to call the SCache API to move all the blocks out of framework worker through memory copy and release the slot immediately.
 After a map task finishes computing, the shuffle writes in the map task are modified to use SCache API to memory copy all shuffle blocks to the SCache worker reserved memory.
@@ -61,7 +61,7 @@ To enforce the DAG framework to assign tasks according to the SCache pre-schedul
 \subsection{Memory Management}\label{memorymanage}
 % As mentioned in Section \ref{observation}, though the shuffle size is relatively small, memory management should still be cautious enough to limit the effect of performance of DAG framework.
 {\color{black}
-SCache uses bellowed memory management to ensure performance.
+SCache uses \edited{memory management described below} to ensure performance.
 If the reserved memory is running out, SCache will flush some of the blocks into the disk temporarily and then re-fetch them if needed.
 SCache leverages two constraints to manage the shuffle blocks: \textit{all-or-nothing} and \textit{context-aware-priority}.
 % When the size of cached blocks reaches the limit of reserved memory, SCache flushes some of them to the disk temporarily, and re-fetches them when some cached shuffle blocks are consumed or pre-fetched. 

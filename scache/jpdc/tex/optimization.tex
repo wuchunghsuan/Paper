@@ -76,7 +76,7 @@ After getting the shuffle data, SCache starts to shuffling data immediately.
 % SCache leverages the property of multi-round tasks to 
 On the reduce side, due to the shuffle data pre-fetching of SCache, the reduce task use $getBlock$ to get the shuffle data from SCache.
 
-SCache caches the shuffle data on the memory instead of storing on disk liked Spark or Hadoop MapReduce.
+SCache caches the shuffle data on the memory instead of storing on disk \edited{like} Spark or Hadoop MapReduce.
 In this aspect, SCache optimizes the time of shuffle read and shuffle write since memory gets better I/O performance.
 }
 % To achieve the decoupling of map tasks and reduce tasks, the original shuffle write and read implementation in the current frameworks should be modified to apply the API of SCache.

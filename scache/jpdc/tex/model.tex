@@ -56,7 +56,7 @@ Firstly, we introduce five input parameters of the FRQ model:
 % The FRQ model uses these overlaps to describe different scheduling strategies.
 {\color{black}
 Besides, the FRQ model also needs to input the scheduling strategies the framework takes.
-The FRQ model needs to know the start time of each phases.
+The FRQ model needs to know the start time of each \edited{phase}.
 For example, as shown in Figure \ref{fig:model_hadoop}, this strategy starts the shuffle phase and the reduce phase at the same time.
 And Figure \ref{fig:model_basic} shows the pre-fetching strategy used by SCache. In the pre-fetching strategy, the shuffle phase starts as soon as it can in the map phase.
 }
@@ -189,7 +189,7 @@ According to the design of SCache pre-fetching, we found that using the FRQ mode
 	
     \item \(V_{Map} \times R < V_{Shuffle}\) (Figure \ref{fig:model_scache2})
  
-	When the shuffle speed (\(V_{Shuffle}\)) is faster, SCache needs to wait for shuffle data to be generated. As Figure \ref{fig:model_scache2} shown, the shuffle phase will be interrupted in each round. In this case, the formula of \(T_{P\_Shuffle}\) is as followed:
+	When the shuffle speed (\(V_{Shuffle}\)) is faster, SCache needs to wait for shuffle data to be generated. As Figure \ref{fig:model_scache2} \edited{shows}, the shuffle phase will be interrupted in each round. In this case, the formula of \(T_{P\_Shuffle}\) is as followed:
 	\begin{equation}
 		\label{equation_Tpshuffle2}
 		\begin{aligned}

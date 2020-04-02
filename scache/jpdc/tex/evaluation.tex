@@ -159,7 +159,7 @@ Overall, SCache can help Spark decrease by ~$89\%$ overhead of the whole shuffle
 TPC-DS\footnote{http://www.tpc.org/tpcds/} contains 99 queries and is considered as a standardized industry benchmark for testing big data systems. 
 % We evaluate the performance of Spark with SCache by picking some of the TPC-DS queries with shuffle intensive attribute. 
 As shown in Figure \ref{fig:tpcds}, the horizontal axis is query name and the vertical axis is query completion time. 
-Note that we skip some queries due to the compatible issues. 
+Note that we skip some queries due to \edited{compatible issues}. 
 Spark with SCache outperforms the original Spark in almost all tested queries. 
 Furthermore, in some shuffle-heavy queries, Spark with SCache outperforms original Spark by an order of magnitude. 
 % It is because that those queries contain shuffle-heavy operations such as \textit{groupby}, \textit{union}, etc.
