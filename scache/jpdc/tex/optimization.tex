@@ -230,7 +230,7 @@ We use $prob_i$ to achieve a better data locality while performing shuffle pre-s
 	\small
 	\Procedure{schedule}{$m, host\_ids, p\_reduces$}
 		\State $m\gets$ partition number of map tasks
-		\State $R\gets$ sort $p\_reduces$ by size in non-increasing order
+		\State $R\gets$ sort $p\_reduces$ by size in \edited{decreasing} order
 		\State $M\gets$ min-heap $\left\{ host\_id \rightarrow \left( \left[ reduces \right], size \right) \right\}$
 		\State $idx\gets 0$
 		\While{$idx <$ len$R$}

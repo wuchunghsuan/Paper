@@ -68,7 +68,7 @@ The total execution time of a job is the sum of the map phase time and reduce ph
 \begin{equation}
 \label{equation_Tjob}
 \begin{aligned}
-    T_{Job} &= T_{Map} + T_{Reduce}
+    T_{Job} &= T_{Map} + T_{Reduce} + \edited{T_{Penalty}}
 \end{aligned}
 \end{equation}
 
@@ -106,7 +106,7 @@ The reduce phase time formula is as follows:
 \(T_{P\_Shuffle}\) represents the overlap time between the shuffle phase and the reduce phase as shown in Figure \ref{fig:model_basic}. \(T_{Shuffle}\) represents the total time of the shuffle phase. 
 % The relationship between \(T_{P\_Shuffle}\) and \(T_{Shuffle}\) is determined by the resources scheduling strategy of DAG frameworks. This relationship will be shown in the following Subsection \ref{model_analysis}.  
 \(K\) is an empirical value which represents the overhead caused by shuffle waiting. 
-Because the computation of the reduce phase relies on the data transfer results of the shuffle phase, a portion of the computation needs to wait for the transfer results. This waiting causes the overhead.
+Because the computation of the reduce phase relies on the \edited{results of data transferring} of the shuffle phase, a portion of the computation needs to wait for the \edited{results of transferring}. This waiting causes the overhead.
 
 According to Equation \ref{equation_Tjob}\&\ref{equation_Treduce}, we can optimize the job completion time by reducing \(T_{P\_Shuffle}\).
 By using different resource scheduling strategies, the formulas of \(T_{P\_Shuffle}\) are different.
