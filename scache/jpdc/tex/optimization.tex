@@ -41,28 +41,28 @@ Furthermore, two heuristic algorithms (Algorithm \ref{hminheap}, \ref{mhminheap}
 	\label{fig:sim}
 \end{figure}
 
-{\color{black}
-\subsection{Observations}\label{observation}
-% DAG - shuffle - couple \& dependency - overhead in job - formula - how to optimize? - decouple \& pre-fetch - memory
+% {\color{black}
+% \subsection{Observations}\label{observation}
+% % DAG - shuffle - couple \& dependency - overhead in job - formula - how to optimize? - decouple \& pre-fetch - memory
 
-In distributed computing, we use shuffle to do all-to-all data transfer among the nodes.
-For a clear illustration, we divide a computing job into three phases: map, shuffle, and reduce.
-In most of the DAG frameworks, including Spark, Hadoop MapReduce, and Tez, shuffle phase is coupled with reduce phase which means that shuffle data transfer and reduce computing start simultaneously.
-On the reduce side, shuffle introduces an explicit overhead during shuffle read.
-% Because the reduce computing depends on the shuffle results, the waiting for the shuffle data causes the overhead.
-% because all reduce tasks start shuffle read simultaneously, 
-Furthermore, the synchronized shuffle read causes a burst of network traffic and further enlarges the overhead.
+% In distributed computing, we use shuffle to do all-to-all data transfer among the nodes.
+% For a clear illustration, we divide a computing job into three phases: map, shuffle, and reduce.
+% In most of the DAG frameworks, including Spark, Hadoop MapReduce, and Tez, shuffle phase is coupled with reduce phase which means that shuffle data transfer and reduce computing start simultaneously.
+% On the reduce side, shuffle introduces an explicit overhead during shuffle read.
+% % Because the reduce computing depends on the shuffle results, the waiting for the shuffle data causes the overhead.
+% % because all reduce tasks start shuffle read simultaneously, 
+% Furthermore, the synchronized shuffle read causes a burst of network traffic and further enlarges the overhead.
 
-% To better illustrate the shuffle optimization, we use this formula to represent the job completion time: \(T_{Job}=T_{Map}+T_{Reduce}+T_{overhead}\). \(T_{Map}\) represents the completion time of map phase and \(T_{Reduce}\) represents the reduce phase time without being affected by the coupled shuffle phase. 
-% We use \(T_{overhead}\) to represent the above-mentioned overhead caused by shuffle.
-% In the following subsections, we introduce how we decouple the shuffle and use pre-fetching and memory cache to mitigate the overhead.
-To mitigate the shuffle overhead, we propose an optimization to overlap the shuffle data transfer in multi-round map tasks, and use memory to cache the shuffle data. To achieve this optimization:
-\begin{itemize}
-	\item Shuffle phase should be decoupled from reduce phase to achieve a better scheduling scheme.
-	\item Reduce tasks should be pre-scheduled in map phase to achieve shuffle data pre-fetching.
-\end{itemize}
-% In Section \ref{model}, we also propose a performance model called the FRQ to model the optimization.
-}
+% % To better illustrate the shuffle optimization, we use this formula to represent the job completion time: \(T_{Job}=T_{Map}+T_{Reduce}+T_{overhead}\). \(T_{Map}\) represents the completion time of map phase and \(T_{Reduce}\) represents the reduce phase time without being affected by the coupled shuffle phase. 
+% % We use \(T_{overhead}\) to represent the above-mentioned overhead caused by shuffle.
+% % In the following subsections, we introduce how we decouple the shuffle and use pre-fetching and memory cache to mitigate the overhead.
+% To mitigate the shuffle overhead, we propose an optimization to overlap the shuffle data transfer in multi-round map tasks, and use memory to cache the shuffle data. To achieve this optimization:
+% \begin{itemize}
+% 	\item Shuffle phase should be decoupled from reduce phase to achieve a better scheduling scheme.
+% 	\item Reduce tasks should be pre-scheduled in map phase to achieve shuffle data pre-fetching.
+% \end{itemize}
+% % In Section \ref{model}, we also propose a performance model called the FRQ to model the optimization.
+% }
 
 \subsection{Decouple Shuffle from Execution}
 {\color{black}
