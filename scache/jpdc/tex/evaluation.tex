@@ -353,7 +353,7 @@ In this environment, Terasort on Hadoop MapReduce satisfies the situation in Fig
 % Both these two situations are consistent with the FRQ model in Figure \ref{fig:model_scache}. 
 % Therefore, we believe that the FRQ model is able to accurately describe the performance of a framework with SCache.
 
-As shown in Table \ref{table1}\&\ref{table2}, the experimental values are all larger than the calculated values. This is because the application has some extra overhead at runtime, such as network warm-up, the overhead of allocating slots, etc. 
+As shown in Table \ref{table1} \edited{and} \ref{table2}, the experimental values are all larger than the calculated values. This is because the application has some extra overhead at runtime, such as network warm-up, the overhead of allocating slots, etc. 
 % In the case where the input data is small and the total time is short, the error caused by the overhead is amplified. 
 This overhead will be amplified when the input data is small or the total execution time is short. 
 Overall, the error between \(T_{Job}\) and \(ExpT_{Job}\) is mainly below 10\%, such errors are acceptable. 
