@@ -222,49 +222,6 @@ The $reduceSize_i$ represents the size of a reduce task, which is represented by
 We use $prob_i$ to achieve a better data locality while performing shuffle pre-scheduling. 
 % This parameter is used to achieve a better data locality while performing shuffle pre-scheduling. 
 
-\begin{minipage}{0.95\columnwidth}
-\begin{algorithm}[H]
-\caption{Heuristic MinHeap Scheduling for Single Shuffle}
-\label{hminheap}
-	\begin{algorithmic}[1]
-	\small
-	\Procedure{schedule}{$m, host\_ids, p\_reduces$}
-		\State $m\gets$ partition number of map tasks
-		\State $R\gets$ sort $p\_reduces$ by size in \edited{decreasing} order
-		\State $M\gets$ min-heap $\left\{ host\_id \rightarrow \left( \left[ reduces \right], size \right) \right\}$
-		\State $idx\gets 0$
-		\While{$idx <$ len$R$}
-		% \Comment{Schedule reduces by MinHeap}
-		\State $M\left[0\right].size \mathrel{+}= R\left[idx\right].size$
-		\State $M\left[0\right].reduces.append\left(R\left[idx\right]\right)$
-		\State $R\left[idx\right].assigned\_id \gets M \left[0\right].host\_id$
-		\State Sift down $M\left[0\right]$ by $size$
-		\State $idx\gets idx+1$
-		\EndWhile
-		\State $max\gets$ maximum size in $M$
-		% \State Convert $M$ to mapping $\left\{ host\_id \rightarrow \left( \left[ rid\_arr \right], size \right) \right\}$
-		\ForAll{$reduce$ in $R$}
-		\Comment{Heuristic locality swap}
-			\If{$reduce.assigned\_id \neq reduce.host\_id$}
-				\State $p\gets reduce.prob$
-				\State $norm\gets \left(p-1/m\right)/\left(1-1/m\right)/10$
-				\State $upper\_bound \gets \left(1 + norm\right) \times max$
-				\State SWAP\_TASKS$\left(M, reduce, upper\_bound\right)$
-			\EndIf
-		\EndFor\newline
-		\Return $M$
-	\EndProcedure
-	\Procedure{swap\_tasks}{$M, reduce, upper\_bound$}
-		\State Swap tasks between node $host\_id$ and node $assigned\_id$
-		\State of $reduce$ without exceeding the $upper\_bound$
-		\State of both nodes.\newline
-		% \State Return if it is impossible.
-		\Return
-	\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
-\end{minipage}
-
 \subsubsection{Heuristic MinHeap Scheduling}\label{h-minheap}
 % As long as the input sizes of reduce tasks are available, the pre-scheduling is a classic scheduling problem without considering the data locality. 
 % But ignoring the data locality can introduce extra network transfer. 
@@ -291,6 +248,68 @@ As shown in Figure \ref{fig:sim}, we run the simulation under three scheduling s
 After balancing load based on the job context (e.g. shuffle size, data locality), \textit{Heuristic MinHeap Scheduling} has a better improvement (average 5.7\%) than Spark (average 2.7\%) and Random Mapping.
 %  (becomes negative after the round one).
 }
+
+\begin{minipage}{0.95\columnwidth}
+	\begin{algorithm}[H]
+	\caption{Heuristic MinHeap Scheduling for Single Shuffle}
+	\label{hminheap}
+		\begin{algorithmic}[1]
+		\small
+		\Procedure{schedule}{$m, host\_ids, p\_reduces$}
+			\State $m\gets$ partition number of map tasks
+			\State $R\gets$ sort $p\_reduces$ by size in \edited{decreasing} order
+			\State $M\gets$ min-heap $\left\{ host\_id \rightarrow \left( \left[ reduces \right], size \right) \right\}$
+			\State $idx\gets 0$
+			\While{$idx <$ len$R$}
+			% \Comment{Schedule reduces by MinHeap}
+			\State $M\left[0\right].size \mathrel{+}= R\left[idx\right].size$
+			\State $M\left[0\right].reduces.append\left(R\left[idx\right]\right)$
+			\State $R\left[idx\right].assigned\_id \gets M \left[0\right].host\_id$
+			\State Sift down $M\left[0\right]$ by $size$
+			\State $idx\gets idx+1$
+			\EndWhile
+			\State $max\gets$ maximum size in $M$
+			% \State Convert $M$ to mapping $\left\{ host\_id \rightarrow \left( \left[ rid\_arr \right], size \right) \right\}$
+			\ForAll{$reduce$ in $R$}
+			\Comment{Heuristic locality swap}
+				\If{$reduce.assigned\_id \neq reduce.host\_id$}
+					\State $p\gets reduce.prob$
+					\State $norm\gets \left(p-1/m\right)/\left(1-1/m\right)/10$
+					\State $upper\_bound \gets \left(1 + norm\right) \times max$
+					\State SWAP\_TASKS$\left(M, reduce, upper\_bound\right)$
+				\EndIf
+			\EndFor\newline
+			\Return $M$
+		\EndProcedure
+		\Procedure{swap\_tasks}{$M, reduce, upper\_bound$}
+			\State Swap tasks between node $host\_id$ and node $assigned\_id$
+			\State of $reduce$ without exceeding the $upper\_bound$
+			\State of both nodes.\newline
+			% \State Return if it is impossible.
+			\Return
+		\EndProcedure
+		\end{algorithmic}
+	\end{algorithm}
+	\end{minipage}
+
+\subsubsection{Cope with Multiple Shuffle Dependencies}
+{\color{black}
+A reduce stage can have more than one shuffle dependency in the current DAG computing frameworks.
+To cope with multiple shuffle dependencies, we present the \textit{Accumulated Heuristic Scheduling} algorithm.
+}
+
+% The technique mentioned in Section \ref{shuffleprediction} can only handle an ongoing shuffle. 
+% For those pending shuffles, it is impossible to predict their sizes. 
+% This problem can be solved by having all map tasks of pending shuffles launched simultaneously. 
+% But doing this introduces large overhead such as extra task serialization. 
+% To avoid violating the optimization from framework, we present the \textit{Accumulated Heuristic Scheduling} algorithm to cope with multiple shuffle dependencies.
+As illustrated in Algorithm \ref{mhminheap}, the sizes of previous \textit{shuffles} scheduled by \textit{Heuristic MinHeap Scheduling} are counted. 
+When a new shuffle starts, the predicted $size$, $prob$, and $host\_id$ in $p\_reduces$ are accumulated with previous \textit{shuffles}. 
+After scheduling, if the new $assigned\_id$ of a reduce task is not equal the original one, a re-shuffle will be triggered to transfer data to the new host. 
+This re-shuffle is rare since the previous shuffle data contributes a huge composition (i.e., high $prob$) after the accumulation, 
+which leads to a higher probability of tasks swap in $SWAP\_TASKS$. 
+
+To traverse $reduce$ for accumulating previous $shuffle$ and re-shuffling data, the algorithm needs $O(n)$ operations.
 
 \begin{minipage}{0.95\columnwidth}
 	\begin{algorithm}[H]
@@ -324,21 +343,3 @@ After balancing load based on the job context (e.g. shuffle size, data locality)
 		\end{algorithmic}
 	\end{algorithm}
 \end{minipage}
-
-\subsubsection{Cope with Multiple Shuffle Dependencies}
-{\color{black}
-A reduce stage can have more than one shuffle dependency in the current DAG computing frameworks.
-To cope with multiple shuffle dependencies, we present the \textit{Accumulated Heuristic Scheduling} algorithm.
-}
-% The technique mentioned in Section \ref{shuffleprediction} can only handle an ongoing shuffle. 
-% For those pending shuffles, it is impossible to predict their sizes. 
-% This problem can be solved by having all map tasks of pending shuffles launched simultaneously. 
-% But doing this introduces large overhead such as extra task serialization. 
-% To avoid violating the optimization from framework, we present the \textit{Accumulated Heuristic Scheduling} algorithm to cope with multiple shuffle dependencies.
-As illustrated in Algorithm \ref{mhminheap}, the sizes of previous \textit{shuffles} scheduled by \textit{Heuristic MinHeap Scheduling} are counted. 
-When a new shuffle starts, the predicted $size$, $prob$, and $host\_id$ in $p\_reduces$ are accumulated with previous \textit{shuffles}. 
-After scheduling, if the new $assigned\_id$ of a reduce task is not equal the original one, a re-shuffle will be triggered to transfer data to the new host. 
-This re-shuffle is rare since the previous shuffle data contributes a huge composition (i.e., high $prob$) after the accumulation, 
-which leads to a higher probability of tasks swap in $SWAP\_TASKS$. 
-
-To traverse $reduce$ for accumulating previous $shuffle$ and re-shuffling data, the algorithm needs $O(n)$ operations.

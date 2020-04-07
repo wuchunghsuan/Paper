@@ -34,7 +34,8 @@ For instance, a MapReduce trace analysis from Facebook shows that shuffle accoun
 % Can we mitigate or even remove the overhead of shuffle? 
 % To find the answers, 
 We ran some typical Spark applications on a 5-node \texttt{m4.xlarge} EC2 cluster and analyzed the design and implementation of shuffle in some DAG frameworks.
-Here we present the hardware utilization trace of one node running Spark's \textit{GroupByTest} in Figure \ref{fig:util} as an example. 
+Here we present the hardware utilization trace of one node running Spark's \texttt{GroupByTest}.
+% in Figure \ref{fig:util} as an example. 
 This job has 2 rounds of tasks for each node.
 The \textit{Map Execution} is marked from the launch time of the first map task to the execution end time of the last one. 
 The \textit{Shuffle Write} is marked from the beginning of the first shuffle write in the map stage. 
@@ -46,9 +47,12 @@ The \textit{Shuffle Read and Reduce Execution} is marked from the launch time of
 % 	\label{fig:util}
 % \end{figure*}
 \subsubsection{Coarse Granularity Resource Allocation}
-When a slot is assigned to a task, it will not be released until the task completes (i.e., the end of shuffle write in Figure \ref{fig:util}). 
-On the reduce side, the network transfer of shuffle data introduces an explicit I/O delay during shuffle read (i.e., the beginning of shuffle read and execution in Figure \ref{fig:util}). 
-Meanwhile, both shuffle write and shuffle read occupy the slot without significantly involving CPU as presented in Figure \ref{fig:util}. 
+When a slot is assigned to a task, it will not be released until the task completes.
+% (i.e., the end of shuffle write in Figure \ref{fig:util}). 
+On the reduce side, the network transfer of shuffle data introduces an explicit I/O delay during shuffle read.
+% (i.e., the beginning of shuffle read and execution in Figure \ref{fig:util}). 
+Meanwhile, both shuffle write and shuffle read occupy the slot without significantly involving CPU.
+% as presented in Figure \ref{fig:util}. 
 The current coarse slot-task mapping results in an imbalance between task's resource demand and slot allocation thus decreasing the resource utilization. 
 Unfortunately this defect exists not only in Spark \cite{apachespark} but also Hadoop MapReduce and Apache Tez \cite{tez}. 
 A finer granularity resource allocation scheme should be provided to reduce these delays. 
@@ -56,8 +60,8 @@ A finer granularity resource allocation scheme should be provided to reduce thes
 \subsubsection{Synchronized Shuffle Read}
 Almost all reduce tasks start shuffle read simultaneously. 
 The synchronized shuffle read requests cause a burst of network traffic. 
-As shown in Figure \ref{fig:util}, 
-the data transfer causes a high demand of network bandwidth, which may result in network congestion and further slow down the network transfer.
+% As shown in Figure \ref{fig:util}, 
+The data transfer causes a high demand of network bandwidth, which may result in network congestion and further slow down the network transfer.
 It also happens in other frameworks that follow Bulk Synchronous Parallel (BSP) paradigm, such as Hadoop MapReduce, Dryad \cite{dryad}, etc.
 % The previous work \cite{coflow, managing} also proves that the network transfer can introduce significant overhead in DAG computing.
 % \begin{figure*}

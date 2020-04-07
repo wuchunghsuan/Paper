@@ -85,6 +85,7 @@ TPC-DS is a standard benchmark which focuses on modeling industrial workload.
 %  applying the optimization from SCache.
 In summary, SCache decreases ~$89\%$ time of Spark shuffle and improves ~$40\%$ of the overall completion time of TPC-DS on average.
 Meanwhile, Hadoop MapReduce with SCache optimizes job completion time by up to $15\%$ and an average of $13\%$.
+\edited{We performed the experiments for about three to five times each variously, which ensured the accuracy of the evaluation.}
 }
 
 
@@ -125,12 +126,14 @@ As a result, the utilization and multiplexing of hardware resource are increased
 % For each stage, we pick the task that has median completion time. 
 In the map stage, the disk operations are replaced by the memory copies to decouple the shuffle write. 
 It helps eliminate $40\%$ of shuffle write time (Figure \ref{fig:maptask}), which leads to a $10\%$ improvement of map stage completion time in Figure \ref{fig:mapstage}. 
-% Note that the shuffle write time can be observed even with the optimization of SCache. 
-% The reason is that before moving data out of Spark's JVM, the serialization is inevitable and CPU intensive \cite{makingsense}. 
+\edited{Note that the shuffle write time can be observed even with the optimization of SCache.
+The reason is that before moving data out of Spark's JVM, the serialization is inevitable and CPU intensive \cite{makingsense}. 
+}
+
 In the reduce stage, most of the shuffle overhead is introduced by network transfer delay. 
 By doing shuffle data pre-fetching, the explicit network transfer is perfectly overlapped in the map stage. 
 % By doing shuffle data pre-fetching based on the pre-scheduling results, the explicit network transfer is perfectly overlapped in the map stage. 
-% With the help of the co-scheduling scheme, SCache guarantees that each reduce task has the benefit of shuffle pre-fetching. 
+\edited{With the help of the co-scheduling scheme, SCache guarantees that each reduce task has the benefit of shuffle pre-fetching.}
 % The in-memory cache of shuffle data further reduces the shuffle read time. 
 As a result, the combination of these optimizations decreases ~$100\%$ overhead of the shuffle read in a reduce task (Figure \ref{fig:reducetask}). 
 In addition, the heuristic algorithm can achieve a balanced pre-scheduling result, thus providing ~$80\%$ improvement in reduce stage completion time (Figure \ref{fig:reducestage}).
@@ -163,7 +166,7 @@ As shown in Figure \ref{fig:tpcds}, the horizontal axis is query name and the ve
 Note that we skip some queries due to \edited{compatible issues}. 
 Spark with SCache outperforms the original Spark in almost all tested queries. 
 Furthermore, in some shuffle-heavy queries, Spark with SCache outperforms original Spark by an order of magnitude. 
-% It is because that those queries contain shuffle-heavy operations such as \textit{groupby}, \textit{union}, etc.
+\edited{It is because that those queries contain shuffle-heavy operations such as \texttt{groupby}, \texttt{union}, etc.}
 The overall reduction portion of query time that SCache achieved is $40\%$ on average. 
 Since this evaluation presents the overall job completion time of queries, we believe that our shuffle optimization is promising.
 

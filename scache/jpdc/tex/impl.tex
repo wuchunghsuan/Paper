@@ -75,7 +75,7 @@ SCache leverages two constraints to manage the shuffle blocks: \textit{all-or-no
 As discussed in the observation in Subsection \ref{observation}, it is common to have multi-round execution of each stage. 
 If one of the tasks in a round missed a memory cache, the re-fetch overhead will become a bottleneck and then slow down the whole stage. 
 % If one task missed a memory cache and exceeded the original bottleneck of this round, that task might become the new bottleneck and then slow down the whole stage. 
-% PACMan \cite{pacman} has also proved that for multi-round stage/job, the completion time improves in steps when $n\times number\ of\ tasks\ in\ one\ round$ of tasks have data cached simultaneously. 
+\edited{PACMan \cite{pacman} has also proved that for multi-round stage/job, the completion time improves in steps when $n\times number\ of\ tasks\ in\ one\ round$ of tasks have data cached simultaneously.}
 % Therefore, the cached shuffle blocks need to match the demand of all tasks in one running round at least.
 Therefore, SCache master sets blocks of one round as the minimum unit of storage management.
 We refer to this as the all-or-nothing constraint.
@@ -87,9 +87,12 @@ We refer to this as the all-or-nothing constraint.
 {\color{black}
 SCache leverages application context to select victim storage units when the reserved memory is full.
 At first, SCache flushes blocks of the incomplete units to disk cluster-widely.
-If all the units are completed, SCache selects victims based on two factors: 
-(a) For the tasks in the different stages, SCache sets the higher priority to storage units with an earlier submission time;
-(b) For the tasks in the same stage, SCache sets the higher priority to storage units with a smaller task ID.
+\edited{SCache master follows the scheduling scheme of Spark to determine the inter-shuffle priority.
+For example, Spark FIFO scheduler schedules the tasks of different stages according to the submission order. 
+}
+If all the units are completed, SCache selects victims \edited{(i.e., tasks with lower priority)} based on two factors: 
+(a) For the tasks in the different stages, SCache sets the \edited{lower} priority to storage units with an earlier submission time;
+(b) For the tasks in the same stage, SCache sets the \edited{lower} priority to storage units with a smaller task ID.
 }
 % If all the units are completed, SCache selects victims based on two factors --- \textit{inter-shuffle} and \textit{intra-shuffle}.
 % \begin{itemize}[noitemsep]
@@ -127,8 +130,7 @@ SCache only restarts failed workers without recovering their data \edited{and} l
 If a failure happens in a SCache worker during shuffle phases, the \edited{\texttt{getBlock}} API will return a \edited{data-not-found} error which causes the DAG framework restarts the current stage.
 During the re-computing, the DAG frameworks still use SCache to gain shuffle optimization.
 
-\edited{We believe that }
-
+\edited{Although the entire computing task has to be re-computed, we consider that there is a trade-off between the efficiency and the overhead of fault recovery with SCache.}
 A possible way to avoid this re-computing is to use replications to recover the data.
 However, such replications can introduce a significant network overhead.
 We believe that the current way is more promising because most DAG frameworks have more advanced fast recovery schemes on the application layer, such as the paralleled recovery of Spark. 

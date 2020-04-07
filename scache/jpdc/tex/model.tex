@@ -30,7 +30,7 @@ Firstly, we introduce five input parameters of the FRQ model:
 	\item Input Data Size \((D)\): The  Input data size of the job.
 	\item Data Conversion Rate \((R)\): The conversion rate of the input data to the shuffle data during a computation phase.
 	% This rate depends on the algorithm used in the computation phase.
-    \item Computation Round Number \((N)\): The number of rounds needed to complete the computation phase. These rounds depend on the current computation resources and the configuration of the framework. Take Hadoop MapReduce as an example. Suppose we have a cluster with 50 CPUs and enough memory, the map phase consists of 200 map tasks, and each map requires 1 CPU. Then we need 4 rounds of computation to complete the map phase.
+    \item Computation Round Number \((N)\): The number of rounds needed to complete the computation phase. These rounds depend on the current computation resources and the configuration of the framework. Take Hadoop MapReduce as an example. Suppose we have a cluster with 50 CPUs and enough memory \edited{(i.e., sufficient for the input data and the run-time memory of the frameworks)}, the map phase consists of 200 map tasks, and each map requires 1 CPU. Then we need 4 rounds of computation to complete the map phase.
     \item Computation Speed \((V_{i})\): 
 	The computation speed for each computation phase.
 	% This speed depends on the algorithm used in the computation phase.
@@ -84,6 +84,10 @@ The formulas of map phase time and shuffle phase time are as follows:
 \end{aligned}
 \end{equation}
 
+\edited{$T_{Penalty}$ is defined as the penalty time of fault recovery, which depends on the fault tolerance mechanism of the frameworks.
+With SCache, since the intermediate data is stored in memory, when fault occurs the entire computing task need to be re-computed from the beginning.
+}
+
 The reduce phase time formula is as follows:
 % \(T_{Reduce}=\frac{D \times R}{V_{Reduce}}+K\times T_{P\_Shuffle}\).
 \begin{equation}
@@ -108,7 +112,7 @@ The reduce phase time formula is as follows:
 \(K\) is an empirical value which represents the overhead caused by shuffle waiting. 
 Because the computation of the reduce phase relies on the \edited{results of data transferring} of the shuffle phase, a portion of the computation needs to wait for the \edited{results of transferring}. This waiting causes the overhead.
 
-According to Equation \ref{equation_Tjob}\&\ref{equation_Treduce}, we can optimize the job completion time by reducing \(T_{P\_Shuffle}\).
+According to Equation \ref{equation_Tjob} \edited{and} \ref{equation_Treduce}, we can optimize the job completion time by reducing \(T_{P\_Shuffle}\).
 By using different resource scheduling strategies, the formulas of \(T_{P\_Shuffle}\) are different.
 In the next subsection, we show the formulas and discuss the performance of different strategies.
 % Improving I/O speed is an effective way to reduce shuffle time. Another optimization method is to use the idle I/O resources in the map phase for pre-fetching (see Figure \ref{fig:model_basic}). Both of the above methods can effectively reduce \(T_{P\_Shuffle}\). 
