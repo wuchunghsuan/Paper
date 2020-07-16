@@ -178,7 +178,7 @@ To solve this problem, we propose a new methodology named \textit{weighted reser
 SCache uses this method instead of the linear regression to predict output when using a RangePartitioner or a customized non-hash partitioner.
 % we introduce another methodology, named \textit{weighted reservoir sampling}, as a substitution of linear regression. 
 % Note that linear regression will be replaced only when a RangePartitioner or a customized non-hash partitioner occurs. 
-For each map task, we use classic reservoir sampling to randomly pick $s \times p$ of samples, where $p$ is the number of reduce tasks and $s$ is a tunable number. 
+For each map task, we use classic reservoir sampling to randomly pick $s \times p$ of samples, where $p$ is the number of reduce tasks and $s$ is a tunable \reedited{parameter}. 
 After that, the map function is called locally to process the sampled data. 
 Finally, the partitioned outputs are collected with the $InputSize_j$ as the weight of the samples.
 The $inputSize_j$ is the input size of $j$th map task. 
@@ -192,7 +192,10 @@ $BlockSize_{ji}$ represents the size of block which is produced by map $task_j$ 
 	sample_i &= \text{number of samples for $reduce_i$}
 \end{aligned}
 \end{equation}
-In Figure \ref{fig:range_pre_sample}, when $s$ is set to $3$, the result of sampling prediction is much better than linear regression. 
+
+\reedited{It can be discovered that as the increase of parameter $s$, more samples are included in the sampling, that is, the result of sampling is more accurate.
+Based on our experiment, we discover that when $s$ is set to $3$, the result of sampling prediction is the best and much better than linear regression, as shown in Figure \ref{fig:range_pre_sample}.}
+% In Figure \ref{fig:range_pre_sample}, when $s$ is set to $3$, the result of sampling prediction is much better than linear regression. 
 Figure \ref{fig:prediction_relative_error} further proves that the sampling prediction can provide a much more accurate result than the linear regression. 
 % The classic reservoir sampling is designed for randomly choosing \textit{k} samples from \textit{n} items, where \textit{n} is either a very large or an unknown number \cite{reservoir}. 
 % In Figure \ref{fig:range_pre_sample}, when $s$ is set to $3$, the result of sampling prediction is much better than linear regression. 
@@ -278,15 +281,16 @@ After balancing load based on the job context (e.g. shuffle size, data locality)
 					\State $upper\_bound \gets \left(1 + norm\right) \times max$
 					\State SWAP\_TASKS$\left(M, reduce, upper\_bound\right)$
 				\EndIf
-			\EndFor\newline
-			\Return $M$
+			\EndFor
+			\State
+			\reedited{\Return $M$}
 		\EndProcedure
 		\Procedure{swap\_tasks}{$M, reduce, upper\_bound$}
 			\State Swap tasks between node $host\_id$ and node $assigned\_id$
 			\State of $reduce$ without exceeding the $upper\_bound$
-			\State of both nodes.\newline
-			% \State Return if it is impossible.
-			\Return
+			\State of both nodes.
+			\State
+			\reedited{\Return}
 		\EndProcedure
 		\end{algorithmic}
 	\end{algorithm}
@@ -329,16 +333,17 @@ To traverse $reduce$ for accumulating previous $shuffle$ and re-shuffling data, 
 				\EndIf
 			\EndFor
 			\State $M\gets$ $SCHEDULE\left(m, host\_id, p\_reduces\right)$
-			\ForAll{$host\_id$ in $M$}
+			\ForAll{\reedited{$host$} in $M$}
 				\Comment Re-shuffle
-				\ForAll{$r$ in $M\left[host\_id\right].reduces$}
+				\ForAll{$r$ in $M\left[\reedited{host}\right].reduces$}
 					\If{$host\neq \text{\textit{shuffles}}\left[r.rid\right].assigned\_host$}
 					\State Re-shuffle data to $host$
 					\State $\text{\textit{shuffles}}\left[r.rid\right].assigned\_host\gets host$
 					\EndIf
 				\EndFor
 			\EndFor
-			\Return $M$
+			\State
+			\reedited{\Return $M$}
 		\EndProcedure
 		\end{algorithmic}
 	\end{algorithm}

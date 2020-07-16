@@ -34,6 +34,7 @@ The SCache records the block ID and the size and sends them to the master.
 % When a block of the map output is received, the SCache worker will send the block ID and the size to the master.
 % If the collected map output data reach the observation threshold, the DAG co-scheduler will run the scheduling Algorithm \ref{hminheap} or \ref{mhminheap} to pre-schedule the reduce tasks and then broadcast the scheduling result to start pre-fetching on each worker.
 If the collected shuffle blocks reach a threshold, \edited{which is defined by the memory usage,} the SCache co-scheduler will run the scheduling Algorithm \ref{hminheap} or \ref{mhminheap} to pre-schedule the reduce tasks.
+\reedited{The lower the threshold is set, the more shuffle requests are issued since the amount of data to be shuffled remains the same.}
 After pre-scheduling, SCache workers start pre-fetching shuffle blocks according to the assignment from the master.
 To enforce the DAG framework to assign tasks according to the SCache pre-scheduled results, we also insert some lines of codes in the framework scheduler.
 }
@@ -123,17 +124,19 @@ If all the units are completed, SCache selects victims \edited{(i.e., tasks with
 
 {\color{black}
 \subsection{Discussion of Fault Tolerance}\label{fault}
-% how to handle faults? -> maybe replication -> tradeoff
-\edited{Due to the characteristic of shuffle data (e.g., short-lived, write-once, read-once),}
-% For now, 
-SCache only restarts failed workers without recovering their data \edited{and} leaves the fault handling to the DAG frameworks.
-If a failure happens in a SCache worker during shuffle phases, the \edited{\texttt{getBlock}} API will return a \edited{data-not-found} error which causes the DAG framework restarts the current stage.
-During the re-computing, the DAG frameworks still use SCache to gain shuffle optimization.
+
+\reedited{For fault tolerance,} SCache only restarts failed workers without recovering their data.
+If a failure happens in a SCache worker during shuffle phases, \reedited{SCache daemon can block the shuffle write/read operations until the worker process restarts without violating the correctness of the DAG computing}.
+During the re-computing, \reedited{the DAG frameworks can still use SCache to gain benefits in the shuffle phase.}
 
 \edited{Although the entire computing task has to be re-computed, we consider that there is a trade-off between the efficiency and the overhead of fault recovery with SCache.}
-A possible way to avoid this re-computing is to use replications to recover the data.
-However, such replications can introduce a significant network overhead.
-We believe that the current way is more promising because most DAG frameworks have more advanced fast recovery schemes on the application layer, such as the paralleled recovery of Spark. 
+\reedited{SCache brings significant performance benefits due to the in-memory shuffle management, although the overhead such as re-computing is also introduced when failure occurs, we believe such drawback is tolerable.
+A possible soltion to avoid re-computing is to use replicas to recover the data.
+However, such a strategy can introduce significant network overhead.}
+% However, such replications can introduce a significant network overhead.
+
+\reedited{Moreover, in the current design of SCache, we leave the server faults (e.g., node failures) to the DAG frameworks, due to the characteristic of shuffle data (e.g., short-lived, write-once, read-once).}
+We believe \reedited{this} way is more promising \reedited{since} most DAG frameworks have more advanced fast recovery schemes on the application layer, such as the paralleled recovery of Spark.
 % Meanwhile, SCache can still provide shuffle optimization during the re-computing.
 }
 
